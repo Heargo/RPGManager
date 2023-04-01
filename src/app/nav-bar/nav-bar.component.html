@@ -1,0 +1,24 @@
+<nav>
+    <!-- Logo & user type -->
+    <div class="left">
+        <a routerLink="/" class="logo" >RPG manager</a>
+        <p *ngIf="isConnected && isMJ">MJ</p>
+        <p *ngIf="isConnected && !isMJ">Player</p>
+    </div>
+
+    <!-- Not connected -->
+    <div *ngIf="!isConnected" class="right">
+        <a routerLink="/login" routerLinkActive="active" >Login</a>
+        <a routerLink="/signup" routerLinkActive="active" class="black-btn">Sign-up</a>
+    </div>
+    
+    <!-- Connected -->
+    <div *ngIf="isConnected" class="right">
+        <div *ngIf="isMJ" >
+            <a routerLink="/npcs" routerLinkActive="active">NPCS</a>
+            <a routerLink="/items" routerLinkActive="active">Items</a>
+        </div>
+        <a routerLink="/map" routerLinkActive="active">Map</a>
+        <a routerLink="/settings" routerLinkActive="active">Settings</a>
+    </div>
+</nav>

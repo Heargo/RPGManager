@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght@300;400;500;600;700;800;900;1000&display=swap');
+@import "app/global-styles/var.scss";
+
+body {
+  font-family: 'Recursive', sans-serif;
+  background-color: $background;
+  
+}
+
+*{
+  color: $text1;
+}
+
+.black-btn{
+  color: $background;
+  background-color: $text1;
+  border: none;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: ease 0.2s;
+
+  &:hover{
+    transform: scale(1.05);
+  }
+}

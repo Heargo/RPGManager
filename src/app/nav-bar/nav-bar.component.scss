@@ -1,0 +1,18 @@
+@import "../global-styles/var.scss";
+
+nav{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+
+    div{
+        display:flex;
+        align-items: center;
+    }
+
+    a{
+        margin: 0 10px;
+        text-decoration: none;
+        
+    }
+}
