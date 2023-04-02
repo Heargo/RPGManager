@@ -7,7 +7,6 @@
         <input type="password" formControlName="password" class="form-control" id="password" placeholder="Password">
         <input type="password" formControlName="passwordVerification" class="form-control" id="password" placeholder="Confirm password">
         <p *ngIf="errorInForm" class="error-message" >{{errorMessage}}</p>
-        {{validForm()}}
         <button type="submit" (click)="onSubmitForm()" class="btn btn-primary" [disabled]="!validForm()" >Submit</button>
     </form>
     <img class="illustration" src="../../../assets/illustration/signup.svg" alt="login illustration">

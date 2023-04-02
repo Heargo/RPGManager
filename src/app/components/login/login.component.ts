@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   async onSubmitForm(){
     
-    let response = await this.authService.CreateAccount(this.loginForm.value.email,this.loginForm.value.password);
+    let response = await this.authService.Login(this.loginForm.value.email,this.loginForm.value.password);
     this.errorInForm = (response.type == ResponseType.Error);
     this.errorMessage = response.value;
   }
