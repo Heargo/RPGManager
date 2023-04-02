@@ -1,0 +1,45 @@
+@import "../../global-styles/auth.scss";
+
+section{
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.logo{
+    width: 100%;
+    max-height: 600px;
+    transform: translateY(-50px);
+}
+
+.arrow{
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transform: translateY(-50px);
+}
+
+.background-green{
+    height: 100vh;
+    background-color: $text2;
+    flex-direction: row;
+    
+
+    div{
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap:1rem;
+        p,h3{
+            color: $background;
+        }
+    }
+
+    img{
+        width:50%;
+    }
+}

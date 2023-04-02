@@ -1,4 +1,4 @@
-<a routerLink=""><img src="../../../assets/logo.svg" alt="logo" class="fixed-logo-left"></a>
+<a routerLink=""><img src="assets/logo.svg" alt="logo" class="fixed-logo-left"></a>
 
 <div class="fullscreen-center">
     <form [formGroup]="loginForm">
@@ -9,6 +9,6 @@
         <p *ngIf="errorInForm" class="error-message" >{{errorMessage}}</p>
         <button type="submit" (click)="onSubmitForm()" class="btn btn-primary" [disabled]="!validForm()" >Submit</button>
     </form>
-    <img class="illustration" src="../../../assets/illustration/signup.svg" alt="login illustration">
+    <img class="illustration" src="assets/illustrations/signup.svg" alt="login illustration">
 </div>
 

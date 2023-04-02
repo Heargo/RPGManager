@@ -3,3 +3,6 @@ export function getErrorMessage(error: unknown) {
     return String(error)
   }
   
+export function scroll(el: HTMLElement) {
+    el.scrollIntoView({behavior: 'smooth'});
+}
