@@ -1,1 +1,15 @@
-<p>signup works!</p>
+<a routerLink=""><img src="../../../assets/logo.svg" alt="logo" class="fixed-logo-left"></a>
+
+<div class="fullscreen-center">
+    <form [formGroup]="loginForm">
+        <h1>Login</h1>
+        <input type="email" formControlName="email" class="form-control" id="email" placeholder="Enter email">
+        <input type="password" formControlName="password" class="form-control" id="password" placeholder="Password">
+        <input type="password" formControlName="passwordVerification" class="form-control" id="password" placeholder="Confirm password">
+        <p *ngIf="errorInForm" class="error-message" >{{errorMessage}}</p>
+        {{validForm()}}
+        <button type="submit" (click)="onSubmitForm()" class="btn btn-primary" [disabled]="!validForm()" >Submit</button>
+    </form>
+    <img class="illustration" src="../../../assets/illustration/signup.svg" alt="login illustration">
+</div>
+
