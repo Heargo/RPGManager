@@ -1,0 +1,26 @@
+@import "../../global-styles/mixins.scss";
+@import "../../global-styles/var.scss";
+
+.fullscreen-center{
+    gap:2rem;
+}
+
+form{
+    width: 200px;
+}
+
+.illustration{
+    width: 50vw;
+    max-width: 500px;
+
+    @include width-under(600px){
+        display: none;
+    }
+}
+
+.error-message{
+    font-size: .7rem;
+    padding: .5rem;
+    color: $red;
+    width: 100%;
+}
