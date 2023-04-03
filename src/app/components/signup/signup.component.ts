@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthentificationService } from 'src/app/services/auth.services';
 import { ResponseType } from 'src/app/models/responses';
+import { passwordMatchValidator } from 'src/app/Utils/utils';
 
 @Component({
   selector: 'app-signup',
@@ -10,7 +11,7 @@ import { ResponseType } from 'src/app/models/responses';
 })
 export class SignupComponent implements OnInit, OnDestroy  {
 
-  loginForm!:FormGroup;
+  signupForm!:FormGroup;
   errorMessage:string = "";
   errorInForm:boolean = false;
   formObserver$!:any;
@@ -19,36 +20,26 @@ export class SignupComponent implements OnInit, OnDestroy  {
 
   async onSubmitForm(){
 
-    if(this.loginForm.value.password != this.loginForm.value.passwordVerification){
+    if(this.signupForm.value.password != this.signupForm.value.passwordVerification){
       this.errorInForm = true;
       this.errorMessage = "Passwords do not match";
       return;
     }
 
-    let response = await this.authService.CreateAccount(this.loginForm.value.email,this.loginForm.value.password);
+    let response = await this.authService.CreateAccount(this.signupForm.value.email,this.signupForm.value.password);
     this.errorInForm = (response.type == ResponseType.Error);
     this.errorMessage = response.value;
   }
 
-  validForm(){
-    let valid = true;
-    for(let key in this.loginForm.value){
-      if(this.loginForm.value[key] == null || this.loginForm.value[key] == ""){
-        valid = false;
-      }
-    }
-    return valid && this.loginForm.value.password === this.loginForm.value.passwordVerification ;
-  }
-
   ngOnInit(): void {
-    this.loginForm = this.formBuilder.group({
-      email: [null],
-      password: [null],
-      passwordVerification: [null]
-    });
+    this.signupForm = this.formBuilder.group({
+      email: [null,[Validators.required,Validators.email]],
+      password: [null,[Validators.required,Validators.minLength(8)]],
+      passwordVerification: [null,[Validators.required,Validators.minLength(8)]]
+    }, passwordMatchValidator);
 
     //listen to changes in the form and update the error message accordingly
-    this.formObserver$ = this.loginForm.valueChanges.subscribe((value) => {
+    this.formObserver$ = this.signupForm.valueChanges.subscribe((value) => {
       if(value.password != value.passwordVerification && value.password != null && value.passwordVerification != null){
         this.errorInForm = true;
         this.errorMessage = "Passwords do not match";
