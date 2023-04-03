@@ -1,4 +1,4 @@
-@import "../../global-styles/var.scss";
+@import "../../styles/var.scss";
 
 nav{
     height: 50px;
@@ -11,9 +11,24 @@ nav{
         align-items: center;
     }
 
-    a{
+    a,p{
         margin: 0 10px;
         text-decoration: none;
-        
+    }
+}
+
+.logo{
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.left{
+    p{
+        font-size: .7rem;
+        color:$background;
+        background-color: $red;
+        padding: 5px 10px;
+        border-radius: 10px;
+
     }
 }
