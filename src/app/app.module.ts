@@ -13,6 +13,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { GamesComponent } from './views/games/games.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { AuthentificationService } from './services/auth.services';
+import { GamePreviewComponent } from './components/game-preview/game-preview.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { AuthentificationService } from './services/auth.services';
     SignupComponent,
     FooterComponent,
     GamesComponent,
-    SettingsComponent
+    SettingsComponent,
+    GamePreviewComponent
   ],
   imports: [
     BrowserModule,

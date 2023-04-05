@@ -1,0 +1,107 @@
+@import '../../styles/var.scss';
+
+.preview{
+    width: 80vw;
+    height: 80vw;
+    max-width: 250px;
+    max-height: 250px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    //center background image
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+button{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.play-button{
+    position: absolute;
+    top:50%;
+    transform: translate(0, -50%);
+    background-color: $background-60;
+    width: 30%;
+    height: 30%;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    img{
+        width: 55%;
+        height: 55%;
+        transform: translateX(8%);
+    }
+}
+
+.bottom-shadow{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    color:$background;
+    text-align: center;
+    padding-bottom: .5rem;
+    font-size: 1.3rem;
+    height: 25%;
+    width: 100%;
+    border-radius: 10px;
+    background: linear-gradient(0deg, rgba(14, 12, 7, 0.62) 54.59%, rgba(14, 12, 7, 0) 100%);
+}
+
+.top-shadow{
+    width: 100%;
+    height: 25%;
+    border-radius: 10px;
+    background: linear-gradient(0deg, rgba(14, 12, 7, 0) 57.43%, rgba(14, 12, 7, 0.62) 100%);
+
+    div{
+        position:absolute;
+        top: 5px;
+        right: 10px;
+        ul{
+            position: absolute;
+            top: 25px;
+            right: 0;
+            list-style: none;
+            border-radius: 5px;
+            //first child
+            
+            li{
+                color:$text1;
+                width: 100px;
+                padding: 5px;
+                background-color: $background;
+                $radius: 5px;
+                cursor: pointer;
+                &:first-child{
+                    border-top-right-radius: $radius;
+                    border-top-left-radius: $radius;
+                }
+
+                &:last-child{
+                    border-bottom-right-radius:$radius;
+                    border-bottom-left-radius: $radius;
+                }
+
+                &:hover{
+                    background-color: $red;
+                    color:$background;
+                }
+            }
+
+        }
+    }
+
+}

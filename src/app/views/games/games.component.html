@@ -1,1 +1,8 @@
-<p>games works!</p>
+<section>
+    <app-game-preview *ngFor="let game of userGames" [game]="game"></app-game-preview>
+</section>
+<div class="actions-container">
+    <input *ngIf="showIdInput" type="text" placeholder="game id">
+    <button class="black-btn" (click)="onJoinGame()">Join</button>
+    <button *ngIf="!showIdInput" class="black-btn">Create</button>
+</div>

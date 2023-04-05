@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Client, Databases,  Account, ID, Models } from "appwrite";
-import { DATABASE_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID } from './endpoints';
+import { Client, Databases, Storage} from "appwrite";
+import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID } from './endpoints';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
@@ -13,6 +13,7 @@ export class GamesService {
 
     client:Client;
     databases:Databases;
+    storage:Storage;
 
     constructor(private auth:AuthentificationService) {
 
@@ -22,6 +23,7 @@ export class GamesService {
             .setProject(PROJECT_ID) // Your project ID
         ;
         this.databases = new Databases(this.client);
+        this.storage = new Storage(this.client);
     }
 
     async LoadGames(){
@@ -37,7 +39,8 @@ export class GamesService {
                     id:doc.$id,
                     name:doc.name,
                     description:doc.description,
-                    image:doc.image,
+                    image:this.GetImageUrlPreview(doc.image),
+                    host:doc.host
                 }
             });
         }catch(error){
@@ -45,6 +48,11 @@ export class GamesService {
         }
 
         return games;
+    }
+
+    GetImageUrlPreview(id:string):string{
+        const result = this.storage.getFilePreview(GAMES_PREVIEWS_ID, id);
+        return result.href;
     }
 
     async CreateGame(name:string,description:string,image:string): Promise<Response> {

@@ -1,0 +1,17 @@
+<div class="preview" [ngStyle]="{'background-image': 'url(' + game.image + ')'}">
+    <div class="top-shadow">
+        <div>
+            <button (click)="showOptions=!showOptions">
+                <img src="assets/icons/dots.svg" alt="">
+            </button>
+            <ul *ngIf="showOptions">
+                <li *ngIf="!isHost()" (click)="LeaveGame()">Leave</li>
+                <li *ngIf="isHost()" (click)="DeleteGame()">Delete</li>
+            </ul>
+        </div>
+    </div>
+    <button class="play-button">
+        <img src="assets/icons/play.svg" alt="">
+    </button>
+    <div class="bottom-shadow">{{game.name}}</div>
+</div>

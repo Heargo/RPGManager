@@ -3,4 +3,5 @@ export interface Game{
     name: string;
     description: string;
     image: string;
+    host: string;
 }

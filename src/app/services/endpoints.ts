@@ -4,3 +4,5 @@ export const PROJECT_ID = '64245af1ebbd1755d53b';
 
 export const DATABASE_ID = '642473470c82a9f670f4';
 export const GAMES_COLLECTION_ID = '6424734d045e68e643b9';
+
+export const GAMES_PREVIEWS_ID = '642da7a3cab17dd1a4d8';
