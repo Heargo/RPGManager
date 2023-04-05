@@ -11,6 +11,7 @@ import { LoginComponent } from './views/login/login.component';
 import { SignupComponent } from './views/signup/signup.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { GamesComponent } from './views/games/games.component';
+import { SettingsComponent } from './views/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { GamesComponent } from './views/games/games.component';
     LoginComponent,
     SignupComponent,
     FooterComponent,
-    GamesComponent
+    GamesComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
