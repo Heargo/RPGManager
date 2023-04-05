@@ -27,4 +27,8 @@ export class GamePreviewComponent {
     //TODO
   }
 
+  async ConnectToGame(){
+    //TODO
+  }
+
 }

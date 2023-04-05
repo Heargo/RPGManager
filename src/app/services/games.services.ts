@@ -50,11 +50,6 @@ export class GamesService {
         return games;
     }
 
-    GetImageUrlPreview(id:string):string{
-        const result = this.storage.getFilePreview(GAMES_PREVIEWS_ID, id);
-        return result.href;
-    }
-
     async CreateGame(name:string,description:string,image:string): Promise<Response> {
 
         let val:string;
@@ -62,6 +57,9 @@ export class GamesService {
 
         try{
             //TODO
+            //create a team with the same name
+            //add the user to the team as host
+            //create the game
             val = "The game has been created";
             type = ResponseType.Success;
         }catch(error){
@@ -79,6 +77,7 @@ export class GamesService {
 
         try{
             //TODO
+            //make all the user leave the game, ending with the host
             val = "The game has been deleted";
             type = ResponseType.Success;
         }catch(error){
@@ -96,6 +95,7 @@ export class GamesService {
 
         try{
             //TODO
+            //add user to the team list
             val = "You have joined the game";
             type = ResponseType.Success;
         }catch(error){
@@ -113,6 +113,9 @@ export class GamesService {
 
         try{
             //TODO
+            //delete the user character from the game
+            //include : Items, Attribute, Character
+            //delete the user from the team list (if host, delete the game then team)
             val = "You have left the game";
             type = ResponseType.Success;
         }catch(error){
@@ -122,5 +125,11 @@ export class GamesService {
 
         return {value:val,type:type}
     }
+
+    GetImageUrlPreview(id:string):string{
+        const result = this.storage.getFilePreview(GAMES_PREVIEWS_ID, id);
+        return result.href;
+    }
+
 
 }
