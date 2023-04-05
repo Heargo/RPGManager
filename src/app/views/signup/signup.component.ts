@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthentificationService } from 'src/app/services/auth.services';
 import { ResponseType } from 'src/app/models/responses';
 import { passwordMatchValidator } from 'src/app/Utils/utils';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -16,7 +17,7 @@ export class SignupComponent implements OnInit, OnDestroy  {
   errorInForm:boolean = false;
   formObserver$!:any;
 
-  constructor(private authService:AuthentificationService,private formBuilder: FormBuilder) { }
+  constructor(private authService:AuthentificationService,private formBuilder: FormBuilder,private router:Router) { }
 
   async onSubmitForm(){
 
@@ -27,8 +28,13 @@ export class SignupComponent implements OnInit, OnDestroy  {
     }
 
     let response = await this.authService.CreateAccount(this.signupForm.value.email,this.signupForm.value.password);
-    this.errorInForm = (response.type == ResponseType.Error);
-    this.errorMessage = response.value;
+
+    if(response.type == ResponseType.Success){
+      this.router.navigate(['/login']);
+    }else{
+      this.errorInForm = true;
+      this.errorMessage = response.value;
+    }
   }
 
   ngOnInit(): void {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthentificationService } from 'src/app/services/auth.services';
 import { ResponseType } from 'src/app/models/responses';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,13 +15,18 @@ export class LoginComponent implements OnInit {
   errorMessage:string = "";
   errorInForm:boolean = false;
 
-  constructor(private authService:AuthentificationService,private formBuilder: FormBuilder) { }
+  constructor(private authService:AuthentificationService,private formBuilder: FormBuilder,private router:Router) { }
 
   async onSubmitForm(){
     
     let response = await this.authService.Login(this.loginForm.value.email,this.loginForm.value.password);
-    this.errorInForm = (response.type == ResponseType.Error);
-    this.errorMessage = response.value;
+   
+    if(response.type == ResponseType.Success){
+      this.router.navigate(['/games']);
+    }else{
+      this.errorInForm = true;
+      this.errorMessage = response.value;
+    }
   }
 
   ngOnInit(): void {
