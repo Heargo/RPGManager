@@ -12,6 +12,7 @@ import { SignupComponent } from './views/signup/signup.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { GamesComponent } from './views/games/games.component';
 import { SettingsComponent } from './views/settings/settings.component';
+import { AuthentificationService } from './services/auth.services';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,7 @@ import { SettingsComponent } from './views/settings/settings.component';
     AppRoutingModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [AuthentificationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

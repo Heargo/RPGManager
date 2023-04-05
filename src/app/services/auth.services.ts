@@ -102,6 +102,9 @@ export class AuthentificationService {
         console.log("Is connected: " + this.isConnected)
     }
 
+    GetUserID():string{
+        return (this.session == null) ? "" : this.session.$id;
+    }
 
     DeleteAccount(){
         //TODO
