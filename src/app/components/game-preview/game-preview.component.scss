@@ -43,6 +43,10 @@ button{
         width: 55%;
         height: 55%;
         transform: translateX(8%);
+        transition: all .1s ease;
+        &:hover{
+            transform: scale(1.1) translateX(8%);
+        }
     }
 }
 
