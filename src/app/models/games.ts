@@ -5,3 +5,8 @@ export interface Game{
     image: string;
     host: string;
 }
+
+export interface GameAttribute{
+    name: string;
+    baseValue: number;
+}

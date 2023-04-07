@@ -5,6 +5,11 @@
     height: 80vw;
     max-width: 250px;
     max-height: 250px;
+
+    &.big-preview{
+        max-width: 400px;
+        max-height: 400px;
+    }
     position: relative;
     display: flex;
     flex-direction: column;

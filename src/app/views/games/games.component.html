@@ -5,5 +5,5 @@
 <div class="actions-container">
     <input *ngIf="showIdInput" type="text" placeholder="game id">
     <button class="black-btn" (click)="onJoinGame()">Join</button>
-    <button *ngIf="!showIdInput" class="black-btn">Create</button>
+    <button *ngIf="!showIdInput" class="black-btn" (click)="onCreateGame()">Create</button>
 </div>

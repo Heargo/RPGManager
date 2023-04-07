@@ -10,6 +10,8 @@ import { AuthentificationService } from 'src/app/services/auth.services';
 export class GamePreviewComponent {
 
   @Input() game!:Game;
+  @Input() interractable = true;
+  @Input() bigPreview = false;
   showOptions = false;
   
   constructor(private auth:AuthentificationService) { }
@@ -20,14 +22,17 @@ export class GamePreviewComponent {
   }
 
   async LeaveGame(){
+    if(!this.interractable) return;
     //TODO
   }
 
   async DeleteGame(){
+    if(!this.interractable) return;
     //TODO
   }
 
   async ConnectToGame(){
+    if(!this.interractable) return;
     //TODO
   }
 
