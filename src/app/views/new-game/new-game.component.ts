@@ -27,7 +27,8 @@ export class NewGameComponent {
     description: '',
     image: 'assets/illustrations/default_icon.jpg',
     host: ''
-  }
+  };
+  imageFile:File = new File([], 'default_icon.jpg');
 
   constructor(private games:GamesService, private sanitizer:DomSanitizer) { }
 
@@ -54,6 +55,7 @@ export class NewGameComponent {
     console.log(event.target.files[0]);
     if(event.target.files[0]){
       this.game.image = URL.createObjectURL(event.target.files[0]);
+      this.imageFile = event.target.files[0];
     }
   }
 
@@ -61,8 +63,20 @@ export class NewGameComponent {
     this.attributes = this.attributes.filter(a => a.name !== name);
   }
 
-  onCreateGame(){
-    //this.games.createGame();
+  isValidGame():boolean{
+    if(this.game.name === '') return false;
+    if(this.game.image === '') return false;
+
+    return true;
+  }
+
+  async onCreateGame(){
+    if(!this.isValidGame()) return;
+
+    const response = await this.games.CreateGame(this.game, this.imageFile, this.attributes);
+    console.log(response);
+
+
   }
 
   onUploadImage(){

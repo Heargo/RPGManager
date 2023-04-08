@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Client, Databases, Storage} from "appwrite";
-import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID } from './endpoints';
+import { Client, Databases, ID, Storage, Teams} from "appwrite";
+import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID, GAMES_ATTRIBUTES_COLLECTION_ID } from './endpoints';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
-import { Game } from '../models/games';
+import { Game, GameAttribute } from '../models/games';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,7 @@ export class GamesService {
     client:Client;
     databases:Databases;
     storage:Storage;
+    teams:Teams;
 
     constructor(private auth:AuthentificationService) {
 
@@ -24,6 +25,7 @@ export class GamesService {
         ;
         this.databases = new Databases(this.client);
         this.storage = new Storage(this.client);
+        this.teams = new Teams(this.client);
     }
 
     async LoadGames(){
@@ -50,16 +52,49 @@ export class GamesService {
         return games;
     }
 
-    async CreateGame(name:string,description:string,image:string): Promise<Response> {
+    async CreateGame(gameData:Game,image:File,attributes:GameAttribute[]): Promise<Response> {
 
         let val:string;
         let type:ResponseType;
-
         try{
-            //TODO
-            //create a team with the same name
-            //add the user to the team as host
-            //create the game
+
+            //step 1: create a team for the game 
+            const team = await this.teams.create(ID.unique(), gameData.name);
+            console.log('team :',team);
+
+            //step 2: upload the image if not default one
+            let imageID:string;
+            if(gameData.image !== 'assets/illustrations/default_icon.jpg'){
+                const img = await this.storage.createFile(GAMES_PREVIEWS_ID, ID.unique(), image);
+                console.log('image :',img);
+                imageID = img.$id;
+            }else{
+                imageID = DEFAULT_GAME_PREVIEW;
+            }
+                
+            //step 2: create the game
+            const game = await this.databases.createDocument(DATABASE_ID, GAMES_COLLECTION_ID, ID.unique(), {
+                name: gameData.name,
+                host: this.auth.GetUserID(),
+                description: gameData.description,
+                image: imageID, //!TODO FIX : Invalid document structure: Attribute "image" has invalid format. Value must be a valid URL
+                team: team.$id
+            });
+            console.log(game);
+            
+            //step 3: add the attributes to the game
+            attributes.forEach(async (attribute) => {
+                let atr = await this.databases.createDocument(DATABASE_ID, ATTRIBUTES_COLLECTION_ID, ID.unique(), {
+                    name: attribute.name,
+                });
+                //add the attribute to the game
+                this.databases.createDocument(DATABASE_ID, GAMES_ATTRIBUTES_COLLECTION_ID, ID.unique(), {
+                    gameID: game.$id,
+                    attributeID: atr.$id,
+                    defaultValue: attribute.baseValue
+                });
+            });
+
             val = "The game has been created";
             type = ResponseType.Success;
         }catch(error){

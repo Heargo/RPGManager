@@ -28,6 +28,6 @@
     <div class="flex-col half preview-container">
         <h3>Preview</h3>
         <app-game-preview [game]="game" [bigPreview]="true" ></app-game-preview>
-        <button class="black-btn">Create</button>
+        <button [ngClass]="{'disabled':!isValidGame()}" class="black-btn" (click)="onCreateGame()">Create</button>
     </div>
 </section>
