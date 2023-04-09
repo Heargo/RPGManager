@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client, Databases, ID, Query, Storage, Teams} from "appwrite";
+import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
 import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID } from './endpoints';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
@@ -15,6 +15,7 @@ export class GamesService {
     databases:Databases;
     storage:Storage;
     teams:Teams;
+    functions:Functions;
 
     constructor(private auth:AuthentificationService) {
 
@@ -26,6 +27,7 @@ export class GamesService {
         this.databases = new Databases(this.client);
         this.storage = new Storage(this.client);
         this.teams = new Teams(this.client);
+        this.functions = new Functions(this.client);
     }
 
     async LoadGames(){
@@ -79,7 +81,12 @@ export class GamesService {
                 description: gameData.description,
                 image: imageID, 
                 team: team.$id
-            });
+            },
+            [
+                //team permissions for read
+                Permission.read(Role.team(team.$id))
+            ]
+            );
             
             //step 3: add the attributes to the game
             attributes.forEach(async (attribute) => {
@@ -136,8 +143,13 @@ export class GamesService {
         let type:ResponseType;
 
         try{
-            //TODO
-            //add user to the team list
+            //call server function joinTeam
+            //get user email
+            const email = this.auth.session?.email;
+            console.log(email)
+            let data = JSON.stringify({email:email,teamID:id});
+            const result = await this.functions.createExecution('64334bdf525fa8020b93', data);
+            console.log(result);
             val = "You have joined the game";
             type = ResponseType.Success;
         }catch(error){

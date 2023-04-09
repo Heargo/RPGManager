@@ -12,6 +12,7 @@ export class GamesComponent implements OnInit {
 
   userGames:Game[] = [];
   showIdInput = false;
+  teamID:string = '';
   
   constructor(private games:GamesService,private router:Router) {}
   
@@ -27,11 +28,13 @@ export class GamesComponent implements OnInit {
     this.router.navigate(['/new-game']);
   }
 
-  onJoinGame(){
+  async onJoinGame(){
 
     if(this.showIdInput){
       //join game
-
+      console.log(this.teamID)
+      let response = await this.games.JoinGame(this.teamID);
+      console.log(response);
       //if success, hide input
       this.showIdInput = false;
     }else{

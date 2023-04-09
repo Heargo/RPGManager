@@ -3,7 +3,7 @@
 
 </section>
 <div class="actions-container">
-    <input *ngIf="showIdInput" type="text" placeholder="game id">
+    <input *ngIf="showIdInput" type="text" placeholder="game id" [(ngModel)]="teamID">
     <button class="black-btn" (click)="onJoinGame()">Join</button>
     <button *ngIf="!showIdInput" class="black-btn" (click)="onCreateGame()">Create</button>
 </div>
