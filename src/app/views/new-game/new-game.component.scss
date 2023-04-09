@@ -21,6 +21,12 @@ section{
     padding-bottom: 50px;
     align-items: flex-start;
     justify-content: flex-start;
+
+    @include width-under(1050px){
+        width: 100%;
+        align-items: center;
+        padding: 0;
+    }
 }
 
 .preview-container{
@@ -35,14 +41,27 @@ section{
     }
 }
 
+.create-btn{
+    display: none;
+    @include width-under(1050px){
+        display: block;
+        margin: auto;
+    }
+}
+
 .basic-infos{
     align-items: flex-start;
-
+    max-width: 550px;
     input{
         border:0;
         padding: 0;
         font-family: "Recursive", sans-serif;
         font-size: 1.5rem;
+    }
+
+    @include width-under(1050px){
+        width: 90%;
+        flex-direction: column-reverse;
     }
 }
 
@@ -70,16 +89,19 @@ section{
 }
 
 .attributes{
-    width: 100%;
+    width: calc(100% - 1rem);
     justify-content: space-between;
     padding: .2rem .5rem;
+    
 
     p{
         font-size: 1rem;
-        width: 300px;
+        width:50%;
+        max-width: 300px;
         
         &.num{
-            width: 120px;
+            width:30%;
+            max-width: 120px;
         }
     }
 
@@ -98,12 +120,13 @@ section{
 }
 
 .new-attribute{
-    width: 100%;
+    width: calc(100% - 1rem);
     justify-content: space-between;
     background-color: $background-light;
     padding: .2rem .5rem;
     input{
-        width: 300px;
+        width:50%;
+        max-width: 300px;
         border: none;
         outline: none;
         font-size: 1.2rem;
@@ -113,7 +136,8 @@ section{
         border-radius: 0;
         
         &.num{
-            width: 120px;
+            width:30%;
+            max-width: 120px;
         }
     }
     button{
@@ -135,12 +159,16 @@ section{
     max-width: 550px;
     align-items: flex-start;
 
+    @include width-under(1050px){
+        width: 90%;
+    }
+
     h3{
         position: relative;
         background-color: $text1;
         color: $background;
-        width: 100%;
-        cursor: pointer;
+        width: calc(100% - 1rem);
+        cursor: pointer; 
         padding:.2rem .5rem;
         font-weight: 400;
 
@@ -167,7 +195,7 @@ section{
 }
 
 textarea{
-    width: 100%;
+    width: calc(100% - 1rem);
     height: 100px;
     border: none;
     outline: none;

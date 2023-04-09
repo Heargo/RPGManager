@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        
+        <button [ngClass]="{'disabled':!isValidGame()}" class="black-btn create-btn" (click)="onCreateGame()">Create</button>
     </div>
     <div class="flex-col half preview-container">
         <h3>Preview</h3>
