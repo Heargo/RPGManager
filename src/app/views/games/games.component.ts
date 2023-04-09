@@ -19,6 +19,10 @@ export class GamesComponent implements OnInit {
     this.userGames =  await this.games.LoadGames();
   }
 
+  onRemoveGame(game:Game){
+    this.userGames = this.userGames.filter((g:Game) => g.id !== game.id);
+  }
+
   onCreateGame(){
     this.router.navigate(['/new-game']);
   }

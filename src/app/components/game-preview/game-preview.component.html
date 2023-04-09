@@ -1,4 +1,4 @@
-<div [ngClass]="{'big-preview':bigPreview}" class="preview" [ngStyle]="{'background-image': 'url(' + game.image + ')'}">
+<div [ngClass]="{'big-preview':bigPreview}" class="preview" [ngStyle]="{'background-image': 'url(' + GetImageUrlPreview() + ')'}">
     <div class="top-shadow">
         <div>
             <button (click)="showOptions=!showOptions">

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Client, Databases, ID, Storage, Teams} from "appwrite";
-import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID, GAMES_ATTRIBUTES_COLLECTION_ID } from './endpoints';
+import { Client, Databases, ID, Query, Storage, Teams} from "appwrite";
+import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID } from './endpoints';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
@@ -41,8 +41,9 @@ export class GamesService {
                     id:doc.$id,
                     name:doc.name,
                     description:doc.description,
-                    image:this.GetImageUrlPreview(doc.image),
-                    host:doc.host
+                    image:doc.image,
+                    host:doc.host,
+                    teamID:doc.team
                 }
             });
         }catch(error){
@@ -60,38 +61,32 @@ export class GamesService {
 
             //step 1: create a team for the game 
             const team = await this.teams.create(ID.unique(), gameData.name);
-            console.log('team :',team);
 
             //step 2: upload the image if not default one
             let imageID:string;
+            //we compare the image url with the default one since it's comming from the front app
+            //and we gat and url from it and not an id. However we will save the id in the database
             if(gameData.image !== 'assets/illustrations/default_icon.jpg'){
                 const img = await this.storage.createFile(GAMES_PREVIEWS_ID, ID.unique(), image);
-                console.log('image :',img);
                 imageID = img.$id;
             }else{
                 imageID = DEFAULT_GAME_PREVIEW;
             }
-                
             //step 2: create the game
             const game = await this.databases.createDocument(DATABASE_ID, GAMES_COLLECTION_ID, ID.unique(), {
                 name: gameData.name,
                 host: this.auth.GetUserID(),
                 description: gameData.description,
-                image: imageID, //!TODO FIX : Invalid document structure: Attribute "image" has invalid format. Value must be a valid URL
+                image: imageID, 
                 team: team.$id
             });
-            console.log(game);
             
             //step 3: add the attributes to the game
             attributes.forEach(async (attribute) => {
                 let atr = await this.databases.createDocument(DATABASE_ID, ATTRIBUTES_COLLECTION_ID, ID.unique(), {
                     name: attribute.name,
-                });
-                //add the attribute to the game
-                this.databases.createDocument(DATABASE_ID, GAMES_ATTRIBUTES_COLLECTION_ID, ID.unique(), {
                     gameID: game.$id,
-                    attributeID: atr.$id,
-                    defaultValue: attribute.baseValue
+                    baseValue: attribute.baseValue
                 });
             });
 
@@ -105,14 +100,26 @@ export class GamesService {
         return {value:val,type:type}
     }
 
-    async DeleteGame(id:string): Promise<Response> {
+    async DeleteGame(game:Game): Promise<Response> {
 
         let val:string;
         let type:ResponseType;
 
         try{
-            //TODO
-            //make all the user leave the game, ending with the host
+            await this.teams.delete(game.teamID);
+            console.log("team deleted")
+            await this.databases.deleteDocument(DATABASE_ID, GAMES_COLLECTION_ID, game.id);
+            console.log("game deleted")
+            if(game.image !== DEFAULT_GAME_PREVIEW){
+                await this.storage.deleteFile(GAMES_PREVIEWS_ID, game.image);
+                console.log("game preview deleted")
+            }
+            //delete attributes
+            const attributes = await this.databases.listDocuments(DATABASE_ID, ATTRIBUTES_COLLECTION_ID,[Query.equal('gameID',game.id)]);
+            attributes.documents.forEach(async (attribute) => {
+                this.databases.deleteDocument(DATABASE_ID, ATTRIBUTES_COLLECTION_ID, attribute.$id);
+            });
+            console.log("attributes deleted")
             val = "The game has been deleted";
             type = ResponseType.Success;
         }catch(error){

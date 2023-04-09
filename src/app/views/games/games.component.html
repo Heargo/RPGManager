@@ -1,5 +1,5 @@
 <section>
-    <app-game-preview *ngFor="let game of userGames" [game]="game"></app-game-preview>
+    <app-game-preview *ngFor="let game of userGames" [game]="game" (removeGame)="onRemoveGame(game)" ></app-game-preview>
 
 </section>
 <div class="actions-container">

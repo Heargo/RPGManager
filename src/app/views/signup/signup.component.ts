@@ -53,7 +53,6 @@ export class SignupComponent implements OnInit, OnDestroy  {
         this.errorInForm = false;
         this.errorMessage = "";
       }
-      console.log("Form changed")
     });
   }
 

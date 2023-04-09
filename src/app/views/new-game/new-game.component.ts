@@ -3,6 +3,8 @@ import { Game, GameAttribute } from 'src/app/models/games';
 import { GamesService } from 'src/app/services/games.services';
 
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ResponseType } from 'src/app/models/responses';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-new-game',
   templateUrl: './new-game.component.html',
@@ -26,11 +28,12 @@ export class NewGameComponent {
     name: '',
     description: '',
     image: 'assets/illustrations/default_icon.jpg',
-    host: ''
+    host: '',
+    teamID:''
   };
   imageFile:File = new File([], 'default_icon.jpg');
 
-  constructor(private games:GamesService, private sanitizer:DomSanitizer) { }
+  constructor(private games:GamesService, private sanitizer:DomSanitizer,private router:Router) { }
 
   onAddAttribute(){
     //if attribute name not in attributes array and attribute name not empty 
@@ -52,7 +55,6 @@ export class NewGameComponent {
   }
 
   onIconChange(event:any){
-    console.log(event.target.files[0]);
     if(event.target.files[0]){
       this.game.image = URL.createObjectURL(event.target.files[0]);
       this.imageFile = event.target.files[0];
@@ -74,8 +76,10 @@ export class NewGameComponent {
     if(!this.isValidGame()) return;
 
     const response = await this.games.CreateGame(this.game, this.imageFile, this.attributes);
-    console.log(response);
 
+    if(response.type === ResponseType.Success){
+      this.router.navigate(['/games']);
+    }
 
   }
 

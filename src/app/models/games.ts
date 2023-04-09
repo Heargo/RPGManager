@@ -4,6 +4,7 @@ export interface Game{
     description: string;
     image: string;
     host: string;
+    teamID: string;
 }
 
 export interface GameAttribute{
