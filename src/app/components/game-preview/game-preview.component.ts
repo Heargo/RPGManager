@@ -60,7 +60,8 @@ export class GamePreviewComponent {
     if(!this.interractable) return;
     
     let player = await this.players.LoadPlayer(this.game.id);
-    if(player!==undefined){
+    //if the user already has a player in this game or if he is the host (MJ, so no player) 
+    if(player!==undefined || this.auth.GetUserID() === this.game.host){
       //console.log("user already has a player in this game");
       this.router.navigate(['/game']);
     }else{
