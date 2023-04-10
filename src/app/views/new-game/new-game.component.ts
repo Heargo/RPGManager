@@ -15,12 +15,12 @@ import { MAX_FILE_SIZE, MAX_GAME_ATTRIBUTE_NAME_SIZE, MAX_GAME_DESCRIPTION_SIZE,
 export class NewGameComponent {
 
   attributes:GameAttribute[] = [
-    {name: 'Strength', baseValue: 0},
-    {name: 'Dexterity', baseValue: 0},
-    {name: 'Constitution', baseValue: 0},
-    {name: 'Intelligence', baseValue: 0},
-    {name: 'Wisdom', baseValue: 0},
-    {name: 'Charisma', baseValue: 0}
+    {name: 'Strength', baseValue: 0,value:0},
+    {name: 'Dexterity', baseValue: 0,value:0},
+    {name: 'Constitution', baseValue: 0,value:0},
+    {name: 'Intelligence', baseValue: 0,value:0},
+    {name: 'Wisdom', baseValue: 0,value:0},
+    {name: 'Charisma', baseValue: 0,value:0}
   ];
   attributeName = '';
   attributeDefaultValue = 0;
@@ -47,7 +47,7 @@ export class NewGameComponent {
     //if attribute name is empty
     if(this.attributeName === '') { this.toast.Show('Attribute name is empty', ResponseType.Warning);return;}
 
-    this.attributes.push({name: this.attributeName, baseValue: this.attributeDefaultValue});
+    this.attributes.push({name: this.attributeName, baseValue: this.attributeDefaultValue,value:0});
     this.attributeName = '';
     this.attributeDefaultValue = 0;
   }

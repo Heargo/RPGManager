@@ -1,0 +1,6 @@
+<section class="flex-col">
+    <label class="icon-label" for="icon"><img  [src]="getUrlPreview()" alt=""></label>
+    <input id="icon" type="file" (change)="onIconChange($event)">
+    <input type="text" placeholder="Enter your character name" [(ngModel)]="name">
+    <button [ngClass]="{'disabled':(name.length===0)}" class="black-btn" (click)="onPlayerCreation()">Create your character</button>
+</section>

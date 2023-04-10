@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID } from '../Utils/appwrite.values.utils';
+import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID, SERVER_FUNCTIONS } from '../Utils/appwrite.values.utils';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
-import { Game, GameAttribute } from '../models/games';
+import { Game, GameAttribute, Player } from '../models/games';
 import { ToastService } from './toast.services';
 
 @Injectable({
@@ -17,6 +17,7 @@ export class GamesService {
     storage:Storage;
     teams:Teams;
     functions:Functions;
+    currentGame:Game | null;
 
     constructor(private auth:AuthentificationService,private toast:ToastService) {
 
@@ -29,6 +30,11 @@ export class GamesService {
         this.storage = new Storage(this.client);
         this.teams = new Teams(this.client);
         this.functions = new Functions(this.client);
+        this.currentGame = null;
+    }
+
+    ConnectToGame(game:Game) {
+        this.currentGame = game;
     }
 
     async LoadGames(){
@@ -44,11 +50,12 @@ export class GamesService {
                     id:doc.$id,
                     name:doc.name,
                     description:doc.description,
-                    image:doc.image,
-                    host:doc.host,
-                    teamID:doc.team
+                    image:doc.imageID,
+                    host:doc.hostID,
+                    teamID:doc.teamID
                 }
             });
+
         }catch(error){
             console.log(error);
             this.toast.Show("Can't load games",ResponseType.Error);
@@ -80,10 +87,10 @@ export class GamesService {
             //step 2: create the game
             const game = await this.databases.createDocument(DATABASE_ID, GAMES_COLLECTION_ID, ID.unique(), {
                 name: gameData.name,
-                host: hostID,
+                hostID: hostID,
                 description: gameData.description,
-                image: imageID, 
-                team: team.$id
+                imageID: imageID, 
+                teamID: team.$id
             },
             [
                 //team permissions for read
@@ -199,6 +206,5 @@ export class GamesService {
         const result = this.storage.getFilePreview(GAMES_PREVIEWS_ID, id);
         return result.href;
     }
-
 
 }

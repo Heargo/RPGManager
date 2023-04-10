@@ -1,0 +1,22 @@
+section{
+    //width: 100vh;
+    height: 100vh;
+    label{
+        img{
+            $size:200px;
+            width: $size;
+            height: $size;
+            border-radius: 100%;
+            object-fit: cover;
+        }
+    }
+    #icon{
+        display: none;
+    }
+
+    input{
+        width: 80%;
+        max-width: 300px;
+    }
+
+}

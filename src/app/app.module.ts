@@ -16,6 +16,8 @@ import { AuthentificationService } from './services/auth.services';
 import { GamePreviewComponent } from './components/game-preview/game-preview.component';
 import { NewGameComponent } from './views/new-game/new-game.component';
 import { ToastComponent } from './components/toast/toast.component';
+import { CreatePlayerComponent } from './views/create-player/create-player.component';
+import { GameComponent } from './views/game/game.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { ToastComponent } from './components/toast/toast.component';
     SettingsComponent,
     GamePreviewComponent,
     NewGameComponent,
-    ToastComponent
+    ToastComponent,
+    CreatePlayerComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,

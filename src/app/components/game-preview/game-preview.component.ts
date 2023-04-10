@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { Game } from 'src/app/models/games';
 import { ResponseType } from 'src/app/models/responses';
 import { AuthentificationService } from 'src/app/services/auth.services';
 import { GamesService } from 'src/app/services/games.services';
+import { PlayersService } from 'src/app/services/players.services';
 
 @Component({
   selector: 'app-game-preview',
@@ -19,7 +21,9 @@ export class GamePreviewComponent {
 
   showOptions = false;
   
-  constructor(private auth:AuthentificationService,public games:GamesService) { }
+  constructor(private auth:AuthentificationService,
+    public games:GamesService,private players:PlayersService,
+    private router:Router) { }
   
 
   isHost(){
@@ -38,6 +42,12 @@ export class GamePreviewComponent {
     //TODO
   }
 
+  async GetPlayers(){
+    if(!this.interractable) return;
+    
+    await this.players.GetPlayers(this.game.id);
+  }
+
   async DeleteGame(){
     if(!this.interractable) return;
     let response = await this.games.DeleteGame(this.game);
@@ -48,7 +58,16 @@ export class GamePreviewComponent {
 
   async ConnectToGame(){
     if(!this.interractable) return;
-    //TODO
+    
+    let player = await this.players.LoadPlayer(this.game.id);
+    if(player!==undefined){
+      //console.log("user already has a player in this game");
+      this.router.navigate(['/game']);
+    }else{
+      this.games.ConnectToGame(this.game);
+      this.router.navigate(['/create-player']);
+    }
+    
   }
 
 }

@@ -7,6 +7,7 @@
             <ul *ngIf="showOptions">
                 <li *ngIf="!isHost()" (click)="LeaveGame()">Leave</li>
                 <li *ngIf="isHost()" (click)="DeleteGame()">Delete</li>
+                <li (click)="GetPlayers()">get players</li>
             </ul>
         </div>
     </div>

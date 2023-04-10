@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CreatePlayerComponent } from './views/create-player/create-player.component';
+import { GameComponent } from './views/game/game.component';
 import { GamesComponent } from './views/games/games.component';
 import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
@@ -13,8 +15,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'games', component:GamesComponent },
+  { path: 'game', component:GameComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'new-game', component: NewGameComponent },
+  { path: 'create-player', component: CreatePlayerComponent },
   { path: '**', redirectTo: '/home' }
 ];
 
