@@ -1,0 +1,39 @@
+@import '../../styles/var.scss';
+
+div{
+    position: fixed;
+    transform: translateX(130%);
+    display: none;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    min-width: 80px;
+    max-width: 400px;
+    background-color: $green;
+    color: $background;
+    border-radius: 1rem;
+    &.error {
+        background-color: $red;
+        color:$background;
+    }
+    &.warning {
+        background-color: $yellow;
+        color:$text1;
+    }
+    &.visible{
+        display: block;
+        animation: slide-in-then-vanish 2.5s ease;
+        animation-fill-mode: forwards;
+    }
+    @keyframes slide-in-then-vanish {
+        0% {
+            transform: translateX(130%);
+        }
+        10%{
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(0);
+        }
+    }
+}

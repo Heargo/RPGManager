@@ -1,0 +1,1 @@
+<div *ngIf="toast.visible" [ngClass]="{'visible':toast.visible,'error':toast.type=='error','warning':toast.type=='warning'}">{{ toast.message }}</div>

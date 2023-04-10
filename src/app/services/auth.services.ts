@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Client, Account, ID, Models } from "appwrite";
-import { API_URL, PROJECT_ID } from './endpoints';
+import { API_URL, PROJECT_ID } from '../Utils/appwrite.values.utils';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
+import { ToastService } from './toast.services';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AuthentificationService {
     session!:Models.Account<Models.Preferences> | null;
     isConnected!:boolean;
 
-    constructor() {
+    constructor(private toast : ToastService) {
         this.isConnected=false;
         this.client = new Client();
         this.client
@@ -40,6 +41,7 @@ export class AuthentificationService {
             type = ResponseType.Error;
         }
 
+        this.toast.Show(val,type);
         return {value:val,type:type}
     }
 
@@ -59,6 +61,7 @@ export class AuthentificationService {
 
         this.CheckConnection();
 
+        this.toast.Show(val,type);
         return {value:val,type:type};
     }
 
@@ -77,6 +80,7 @@ export class AuthentificationService {
             type = ResponseType.Error;
         }
 
+        this.toast.Show(val,type);
         return {value:val,type:type};
     }
 
@@ -95,11 +99,11 @@ export class AuthentificationService {
             }
         } catch (error) {
             console.log("error when connecting",error)
+            this.toast.Show("error when connecting",ResponseType.Error);
             this.isConnected = false;
             this.session = null;
-        }
 
-        console.log("Is connected: " + this.isConnected)
+        }
     }
 
     GetUserID():string{

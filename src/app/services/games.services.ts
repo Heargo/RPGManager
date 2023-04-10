@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID } from './endpoints';
+import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID } from '../Utils/appwrite.values.utils';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute } from '../models/games';
+import { ToastService } from './toast.services';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class GamesService {
     teams:Teams;
     functions:Functions;
 
-    constructor(private auth:AuthentificationService) {
+    constructor(private auth:AuthentificationService,private toast:ToastService) {
 
         this.client = new Client();
         this.client
@@ -50,6 +51,7 @@ export class GamesService {
             });
         }catch(error){
             console.log(error);
+            this.toast.Show("Can't load games",ResponseType.Error);
         }
 
         return games;
@@ -68,23 +70,29 @@ export class GamesService {
             let imageID:string;
             //we compare the image url with the default one since it's comming from the front app
             //and we gat and url from it and not an id. However we will save the id in the database
-            if(gameData.image !== 'assets/illustrations/default_icon.jpg'){
+            if(gameData.image !== 'assets/illustrations/default_icon.jpg' && image.size < 2){
                 const img = await this.storage.createFile(GAMES_PREVIEWS_ID, ID.unique(), image);
                 imageID = img.$id;
             }else{
                 imageID = DEFAULT_GAME_PREVIEW;
             }
+            const hostID = this.auth.GetUserID();
             //step 2: create the game
             const game = await this.databases.createDocument(DATABASE_ID, GAMES_COLLECTION_ID, ID.unique(), {
                 name: gameData.name,
-                host: this.auth.GetUserID(),
+                host: hostID,
                 description: gameData.description,
                 image: imageID, 
                 team: team.$id
             },
             [
                 //team permissions for read
-                Permission.read(Role.team(team.$id))
+                Permission.read(Role.team(team.$id)),
+                //host permissions
+                Permission.read(Role.user(hostID)),
+                Permission.write(Role.user(hostID)),
+                Permission.delete(Role.user(hostID)),
+                Permission.update(Role.user(hostID))
             ]
             );
             
@@ -104,6 +112,7 @@ export class GamesService {
             type = ResponseType.Error;
         }
 
+        this.toast.Show(val,type);
         return {value:val,type:type}
     }
 
@@ -134,6 +143,7 @@ export class GamesService {
             type = ResponseType.Error;
         }
 
+        this.toast.Show(val,type);
         return {value:val,type:type}
     }
 
@@ -157,10 +167,11 @@ export class GamesService {
             type = ResponseType.Error;
         }
 
+        this.toast.Show(val,type);
         return {value:val,type:type}
     }
 
-    async LeaveGame(id:string): Promise<Response> {
+    async LeaveGame(game:Game): Promise<Response> {
 
         let val:string;
         let type:ResponseType;
@@ -169,7 +180,11 @@ export class GamesService {
             //TODO
             //delete the user character from the game
             //include : Items, Attribute, Character
-            //delete the user from the team list (if host, delete the game then team)
+            //delete the user from the team list
+            //get user membership id
+            const memberships = await this.teams.listMemberships(game.teamID);
+            const membership = memberships.memberships.find((m) => m.$id === this.auth.GetUserID());
+            console.log(membership);
             val = "You have left the game";
             type = ResponseType.Success;
         }catch(error){

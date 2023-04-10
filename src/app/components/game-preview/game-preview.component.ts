@@ -28,6 +28,8 @@ export class GamePreviewComponent {
   
   GetImageUrlPreview(){
     if(this.game.image === 'assets/illustrations/default_icon.jpg') return this.game.image;
+    //if it's a blob url
+    if(this.game.image.startsWith('blob:')) return this.game.image;
     else return this.games.GetImageUrlPreview(this.game.image);
   }
 

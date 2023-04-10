@@ -15,6 +15,7 @@ import { SettingsComponent } from './views/settings/settings.component';
 import { AuthentificationService } from './services/auth.services';
 import { GamePreviewComponent } from './components/game-preview/game-preview.component';
 import { NewGameComponent } from './views/new-game/new-game.component';
+import { ToastComponent } from './components/toast/toast.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { NewGameComponent } from './views/new-game/new-game.component';
     GamesComponent,
     SettingsComponent,
     GamePreviewComponent,
-    NewGameComponent
+    NewGameComponent,
+    ToastComponent
   ],
   imports: [
     BrowserModule,

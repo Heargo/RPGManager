@@ -8,5 +8,6 @@ export interface Response {
 //ResponseValue is a enum
 export enum ResponseType {
     Success = "success",
+    Warning = "warning",
     Error = "error"
 }
