@@ -39,7 +39,10 @@ export class GamePreviewComponent {
 
   async LeaveGame(){
     if(!this.interractable) return;
-    //TODO
+    let response = await this.games.LeaveGame(this.game);
+    if(response.type === ResponseType.Success){
+      this.removeGame.emit();
+    }
   }
 
   async GetPlayers(){

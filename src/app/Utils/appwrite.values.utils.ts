@@ -21,7 +21,8 @@ export const DEFAULT_GAME_PREVIEW = '643410ec4556ad4b1911';
 export const enum SERVER_FUNCTIONS{
     joinGame = '64334bdf525fa8020b93',
     getPlayers = 'getPlayers',
-    createPlayer = 'createPlayer'
+    createPlayer = 'createPlayer',
+    deletePlayer = 'deletePlayer'
 }
 
 

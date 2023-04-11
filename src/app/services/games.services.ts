@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID, SERVER_FUNCTIONS } from '../Utils/appwrite.values.utils';
+import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID, SERVER_FUNCTIONS, PLAYERS_COLLECTION_ID } from '../Utils/appwrite.values.utils';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute, Player } from '../models/games';
 import { ToastService } from './toast.services';
+import { PlayersService } from './players.services';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class GamesService {
     functions:Functions;
     currentGame:Game | null;
 
-    constructor(private auth:AuthentificationService,private toast:ToastService) {
+    constructor(private auth:AuthentificationService,private toast:ToastService,private playersService:PlayersService) {
 
         this.client = new Client();
         this.client
@@ -44,7 +45,6 @@ export class GamesService {
 
         try{
             const response = await this.databases.listDocuments(DATABASE_ID, GAMES_COLLECTION_ID);
-            console.log(response);
             games = response.documents.map((doc:any) => {
                 return {
                     id:doc.$id,
@@ -69,7 +69,7 @@ export class GamesService {
         let val:string;
         let type:ResponseType;
         try{
-
+            this.toast.ShowLoading("Creating the game");
             //step 1: create a team for the game 
             const team = await this.teams.create(ID.unique(), gameData.name);
 
@@ -111,7 +111,6 @@ export class GamesService {
                     baseValue: attribute.baseValue
                 });
             });
-
             val = "The game has been created";
             type = ResponseType.Success;
         }catch(error){
@@ -119,6 +118,9 @@ export class GamesService {
             type = ResponseType.Error;
         }
 
+        
+
+        this.toast.HideLoading();
         this.toast.Show(val,type);
         return {value:val,type:type}
     }
@@ -129,6 +131,7 @@ export class GamesService {
         let type:ResponseType;
 
         try{
+            this.toast.ShowLoading("Deleting the game");
             await this.teams.delete(game.teamID);
             console.log("team deleted")
             await this.databases.deleteDocument(DATABASE_ID, GAMES_COLLECTION_ID, game.id);
@@ -142,7 +145,15 @@ export class GamesService {
             attributes.documents.forEach(async (attribute) => {
                 this.databases.deleteDocument(DATABASE_ID, ATTRIBUTES_COLLECTION_ID, attribute.$id);
             });
-            console.log("attributes deleted")
+            console.log("games attributes deleted")
+
+            //delete all players
+            let players = await this.databases.listDocuments(DATABASE_ID, PLAYERS_COLLECTION_ID,[Query.equal('gameID',game.id)]);
+            players.documents.forEach(async (player) => {
+                await this.playersService.DeletePlayer(player.$id);
+            });
+            console.log("all players deleted")
+
             val = "The game has been deleted";
             type = ResponseType.Success;
         }catch(error){
@@ -150,6 +161,7 @@ export class GamesService {
             type = ResponseType.Error;
         }
 
+        this.toast.HideLoading();
         this.toast.Show(val,type);
         return {value:val,type:type}
     }
@@ -160,12 +172,13 @@ export class GamesService {
         let type:ResponseType;
 
         try{
+            this.toast.ShowLoading("Joining the game");
             //call server function joinTeam
             //get user email
-            const email = this.auth.session?.email;
+            let email = this.auth.session?.email;
             console.log(email)
             let data = JSON.stringify({email:email,teamID:id});
-            const result = await this.functions.createExecution('64334bdf525fa8020b93', data);
+            let result = await this.functions.createExecution('64334bdf525fa8020b93', data);
             console.log(result);
             val = "You have joined the game";
             type = ResponseType.Success;
@@ -174,6 +187,7 @@ export class GamesService {
             type = ResponseType.Error;
         }
 
+        this.toast.HideLoading();
         this.toast.Show(val,type);
         return {value:val,type:type}
     }
@@ -184,14 +198,19 @@ export class GamesService {
         let type:ResponseType;
 
         try{
-            //TODO
-            //delete the user character from the game
-            //include : Items, Attribute, Character
-            //delete the user from the team list
-            //get user membership id
-            const memberships = await this.teams.listMemberships(game.teamID);
-            const membership = memberships.memberships.find((m) => m.$id === this.auth.GetUserID());
-            console.log(membership);
+            this.toast.ShowLoading("Leaving the game");
+            let players = await this.playersService.GetPlayers(game.id);
+            let player = players.find((p) => p.ownerID === this.auth.GetUserID());
+            if(player!==undefined)
+                await this.playersService.DeletePlayer(player.id);
+
+            let memberships = await this.teams.listMemberships(game.teamID);
+            console.log("memberships",memberships)
+            let membership = memberships.memberships.find((m) => m.userId === this.auth.GetUserID());
+            console.log("membership",membership)
+            if(membership!==undefined)
+                await this.teams.deleteMembership(game.teamID, membership.$id);
+
             val = "You have left the game";
             type = ResponseType.Success;
         }catch(error){
@@ -199,6 +218,8 @@ export class GamesService {
             type = ResponseType.Error;
         }
 
+        this.toast.HideLoading();
+        this.toast.Show(val,type);
         return {value:val,type:type}
     }
 

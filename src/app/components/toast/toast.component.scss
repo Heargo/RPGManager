@@ -37,3 +37,51 @@ div{
         }
     }
 }
+
+
+.loading-screen{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: $background;
+    z-index: 1000;
+    opacity: 0;
+    animation: fade-in .5s ease .5s forwards;
+    pointer-events: none;
+
+    app-loading{
+        width: 80%;
+        max-width: 700px;
+    }
+
+    .dots-pulse:after {
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: bottom;
+        animation: ellipsis steps(4, end) 2000ms infinite;
+        content: "\2026";
+        /* ascii code for the ellipsis character */
+        width: 0px;
+    }
+        
+    @keyframes ellipsis {
+        to {
+            width: 2ch;
+        }
+    }
+      
+    @keyframes fade-in {
+        0% {
+            pointer-events: inherit;
+            opacity: 0;
+        }
+        100% {
+            pointer-events: inherit;
+            opacity: 1;
+        }
+    }
+        
+      
+}

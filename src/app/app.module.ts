@@ -18,6 +18,7 @@ import { NewGameComponent } from './views/new-game/new-game.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { CreatePlayerComponent } from './views/create-player/create-player.component';
 import { GameComponent } from './views/game/game.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { GameComponent } from './views/game/game.component';
     NewGameComponent,
     ToastComponent,
     CreatePlayerComponent,
-    GameComponent
+    GameComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

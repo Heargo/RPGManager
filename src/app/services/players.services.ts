@@ -81,6 +81,7 @@ export class PlayersService {
         let userID = this.auth.GetUserID();
 
         try{
+            this.toast.ShowLoading("Creating the player "+name);
             let imageID:string;
             //upload image
             if(portrait != null){
@@ -123,8 +124,22 @@ export class PlayersService {
             response = {value:getErrorMessage(error),type:ResponseType.Error}
         }
 
+        this.toast.HideLoading();
         this.toast.Show(response.value,response.type);
         return response
+    }
+
+    async DeletePlayer(playerID:string): Promise<Response> {
+        let response:Response;
+        try{
+            await this.functions.createExecution(SERVER_FUNCTIONS.deletePlayer, JSON.stringify({playerID}));
+            response = {value:'Player deleted',type:ResponseType.Success};
+        }
+        catch(error){
+            console.log(error);
+            response= {value:getErrorMessage(error),type:ResponseType.Error};
+        }
+        return response;
     }
 
 

@@ -8,6 +8,8 @@ export class ToastService {
 
     visible:boolean=false;
     message:string;
+    loadingMessage:string = '';
+    loading:boolean = false;
     type:ResponseType;
     triggerNumber:number;
 
@@ -19,7 +21,7 @@ export class ToastService {
     }
 
     Show(message:string,type:ResponseType) {
-        console.log("TOAST",message,type)
+        //console.log("TOAST",message,type)
         this.triggerNumber++
         this.HidePrevious()
 
@@ -30,7 +32,6 @@ export class ToastService {
 
             setTimeout(() => {
                 this.triggerNumber--
-                console.log(this.triggerNumber, 'triggerNumber','can we hide?',this.triggerNumber == 0)
                 if(this.triggerNumber == 0)
                     this.HidePrevious()
             }, Math.max(3*1000,Math.min(message.length*50,10*1000))) // 3s minimum, 10s maximum, 50ms per character (between 3s and 10s)
@@ -38,8 +39,17 @@ export class ToastService {
         
     }
 
+    ShowLoading(message:string) {
+        this.loadingMessage = message
+        this.loading = true
+    }
+
+    HideLoading() {
+        this.loadingMessage = ''
+        this.loading = false
+    }
+
     HidePrevious() {
-        console.log('we hide')
         this.visible = false
         this.message = ''
     }
