@@ -6,7 +6,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ResponseType } from 'src/app/models/responses';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.services';
-import { MAX_FILE_SIZE, MAX_GAME_ATTRIBUTE_NAME_SIZE, MAX_GAME_DESCRIPTION_SIZE, MAX_GAME_NAME_SIZE, MIN_GAME_ATTRIBUTE_DEFAULTVALUE } from 'src/app/Utils/appwrite.values.utils';
+import { MAX_FILE_SIZE, MAX_GAME_ATTRIBUTE_NAME_SIZE, MAX_GAME_DESCRIPTION_SIZE, MAX_GAME_NAME_SIZE, MIN_GAME_ATTRIBUTE_DEFAULTVALUE } from 'src/app/environment';
 @Component({
   selector: 'app-new-game',
   templateUrl: './new-game.component.html',

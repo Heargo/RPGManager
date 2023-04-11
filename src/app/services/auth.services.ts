@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client, Account, ID, Models } from "appwrite";
-import { API_URL, PROJECT_ID } from '../Utils/appwrite.values.utils';
+import { API_URL, PROJECT_ID } from '../environment';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { ToastService } from './toast.services';

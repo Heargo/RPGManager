@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID, SERVER_FUNCTIONS, PROFILES_ID, DEFAULT_CHARACTER_PORTRAIT_ID } from '../Utils/appwrite.values.utils';
+import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID, SERVER_FUNCTIONS, PROFILES_ID, DEFAULT_CHARACTER_PORTRAIT_ID } from '../environment';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
