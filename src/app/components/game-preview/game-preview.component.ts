@@ -5,6 +5,7 @@ import { ResponseType } from 'src/app/models/responses';
 import { AuthentificationService } from 'src/app/services/auth.services';
 import { GamesService } from 'src/app/services/games.services';
 import { PlayersService } from 'src/app/services/players.services';
+import { ToastService } from 'src/app/services/toast.services';
 
 @Component({
   selector: 'app-game-preview',
@@ -23,7 +24,7 @@ export class GamePreviewComponent {
   
   constructor(private auth:AuthentificationService,
     public games:GamesService,private players:PlayersService,
-    private router:Router) { }
+    private router:Router,private toast:ToastService) { }
   
 
   isHost(){
@@ -62,15 +63,19 @@ export class GamePreviewComponent {
   async ConnectToGame(){
     if(!this.interractable) return;
     
+    this.toast.ShowLoading("Connecting to game");
     let player = await this.players.LoadPlayer(this.game.id);
     //if the user already has a player in this game or if he is the host (MJ, so no player) 
     if(player!==undefined || this.auth.GetUserID() === this.game.host){
       //console.log("user already has a player in this game");
+      this.toast.HideLoading();
       this.router.navigate(['/game']);
     }else{
       this.games.ConnectToGame(this.game);
+      this.toast.HideLoading();
       this.router.navigate(['/create-player']);
     }
+
     
   }
 
