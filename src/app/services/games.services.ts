@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID, SERVER_FUNCTIONS, PLAYERS_COLLECTION_ID } from '../environment';
+import { DATABASE_ID, API_URL, PROJECT_ID, SERVER_FUNCTIONS, GAME_COLLECTION_ID, ATTRIBUTE_COLLECTION_ID, GAMEPREVIEWS_STORAGE_ID, PLAYER_COLLECTION_ID } from '../environment';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
@@ -19,6 +19,7 @@ export class GamesService {
     teams:Teams;
     functions:Functions;
     currentGame:Game | null;
+    DEFAULT_GAME_PREVIEW = "assets/illustrations/default_icon.jpg";
 
     constructor(private auth:AuthentificationService,private toast:ToastService,private playersService:PlayersService) {
 
@@ -44,7 +45,7 @@ export class GamesService {
         let games:Game[] = [];
 
         try{
-            const response = await this.databases.listDocuments(DATABASE_ID, GAMES_COLLECTION_ID);
+            const response = await this.databases.listDocuments(DATABASE_ID, GAME_COLLECTION_ID);
             games = response.documents.map((doc:any) => {
                 return {
                     id:doc.$id,
@@ -78,14 +79,14 @@ export class GamesService {
             //we compare the image url with the default one since it's comming from the front app
             //and we gat and url from it and not an id. However we will save the id in the database
             if(gameData.image !== 'assets/illustrations/default_icon.jpg' && image.size < 2){
-                const img = await this.storage.createFile(GAMES_PREVIEWS_ID, ID.unique(), image);
+                const img = await this.storage.createFile(GAME_COLLECTION_ID, ID.unique(), image);
                 imageID = img.$id;
             }else{
-                imageID = DEFAULT_GAME_PREVIEW;
+                imageID = this.DEFAULT_GAME_PREVIEW;
             }
             const hostID = this.auth.GetUserID();
             //step 2: create the game
-            const game = await this.databases.createDocument(DATABASE_ID, GAMES_COLLECTION_ID, ID.unique(), {
+            const game = await this.databases.createDocument(DATABASE_ID, GAME_COLLECTION_ID, ID.unique(), {
                 name: gameData.name,
                 hostID: hostID,
                 description: gameData.description,
@@ -105,12 +106,16 @@ export class GamesService {
             
             //step 3: add the attributes to the game
             attributes.forEach(async (attribute) => {
-                let atr = await this.databases.createDocument(DATABASE_ID, ATTRIBUTES_COLLECTION_ID, ID.unique(), {
+                let atr = await this.databases.createDocument(DATABASE_ID, ATTRIBUTE_COLLECTION_ID, ID.unique(), {
                     name: attribute.name,
                     gameID: game.$id,
                     baseValue: attribute.baseValue
                 });
             });
+
+            //fake waiting time
+            await new Promise(resolve => setTimeout(resolve, 3000));
+
             val = "The game has been created";
             type = ResponseType.Success;
         }catch(error){
@@ -134,21 +139,21 @@ export class GamesService {
             this.toast.ShowLoading("Deleting the game");
             await this.teams.delete(game.teamID);
             console.log("team deleted")
-            await this.databases.deleteDocument(DATABASE_ID, GAMES_COLLECTION_ID, game.id);
+            await this.databases.deleteDocument(DATABASE_ID, GAME_COLLECTION_ID, game.id);
             console.log("game deleted")
-            if(game.image !== DEFAULT_GAME_PREVIEW){
-                await this.storage.deleteFile(GAMES_PREVIEWS_ID, game.image);
+            if(game.image !== this.DEFAULT_GAME_PREVIEW){
+                await this.storage.deleteFile(GAMEPREVIEWS_STORAGE_ID, game.image);
                 console.log("game preview deleted")
             }
             //delete attributes
-            const attributes = await this.databases.listDocuments(DATABASE_ID, ATTRIBUTES_COLLECTION_ID,[Query.equal('gameID',game.id)]);
+            const attributes = await this.databases.listDocuments(DATABASE_ID, ATTRIBUTE_COLLECTION_ID,[Query.equal('gameID',game.id)]);
             attributes.documents.forEach(async (attribute) => {
-                this.databases.deleteDocument(DATABASE_ID, ATTRIBUTES_COLLECTION_ID, attribute.$id);
+                this.databases.deleteDocument(DATABASE_ID, ATTRIBUTE_COLLECTION_ID, attribute.$id);
             });
             console.log("games attributes deleted")
 
             //delete all players
-            let players = await this.databases.listDocuments(DATABASE_ID, PLAYERS_COLLECTION_ID,[Query.equal('gameID',game.id)]);
+            let players = await this.databases.listDocuments(DATABASE_ID, PLAYER_COLLECTION_ID,[Query.equal('gameID',game.id)]);
             players.documents.forEach(async (player) => {
                 await this.playersService.DeletePlayer(player.$id);
             });
@@ -224,7 +229,7 @@ export class GamesService {
     }
 
     GetImageUrlPreview(id:string):string{
-        const result = this.storage.getFilePreview(GAMES_PREVIEWS_ID, id);
+        const result = this.storage.getFilePreview(GAMEPREVIEWS_STORAGE_ID, id);
         return result.href;
     }
 

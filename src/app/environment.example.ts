@@ -1,28 +1,30 @@
-//export api url and project id 
-export const API_URL = 'https://example.com/v1';
-export const PROJECT_ID = 'XXXXX';
-export const DATABASE_ID = 'XXXX';
+//GENERAL
+export const API_URL = "test";
+export const PROJECT_ID = "projectID";
+export const DATABASE_ID = "databaseID";
 
-//database
-export const GAMES_COLLECTION_ID = 'XXXX';
-export const ATTRIBUTES_COLLECTION_ID = 'XXXX';
-export const PLAYERS_COLLECTION_ID = 'XXXX';
+//COLLECTIONS
+export const GAME_COLLECTION_ID = "Game";
+export const PLAYER_COLLECTION_ID = "Player";
+export const ATTRIBUTE_COLLECTION_ID = "Attribute";
+export const ITEM_COLLECTION_ID = "Item";
+export const PLAYERATTRIBUTES_COLLECTION_ID = "PlayerAttributes";
+export const PLAYERITEMS_COLLECTION_ID = "PlayerItems";
+export const ITEMATTRIBUTES_COLLECTION_ID = "ItemAttributes";
 
-//storage
-export const GAMES_PREVIEWS_ID = 'XXXX';
-export const PROFILES_ID = 'XXXX';
+//STORAGE
+export const MAPS_STORAGE_ID = "64247684a99da3b8a6a7";
+export const ITEMS_STORAGE_ID = "6424768a80ef122f265d";
+export const PROFILES_STORAGE_ID = "6424769b1baa624b77a7";
+export const GAMEPREVIEWS_STORAGE_ID = "642da7a3cab17dd1a4d8";
 
-//default files
-export const DEFAULT_CHARACTER_PORTRAIT_ID = 'XXXX';
-export const DEFAULT_GAME_PREVIEW = 'XXXX';
-
-//server side functions
+//SERVER FUNCTIONS
 export const enum SERVER_FUNCTIONS{
-    joinGame = 'joinGame',
-    getPlayers = 'getPlayers',
-    createPlayer = 'createPlayer',
-    deletePlayer = 'deletePlayer'
-}
+	joinTeam = "joinTeam",
+	getPlayers = "getPlayers",
+	createPlayer = "createPlayer",
+	deletePlayer = "deletePlayer",
+};
 
 
 //MAX SIZES

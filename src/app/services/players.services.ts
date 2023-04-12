@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { DATABASE_ID,GAMES_PREVIEWS_ID, GAMES_COLLECTION_ID, API_URL, PROJECT_ID, DEFAULT_GAME_PREVIEW, ATTRIBUTES_COLLECTION_ID, SERVER_FUNCTIONS, PROFILES_ID, DEFAULT_CHARACTER_PORTRAIT_ID } from '../environment';
+import { API_URL, PROJECT_ID, SERVER_FUNCTIONS, PROFILES_STORAGE_ID, GAMEPREVIEWS_STORAGE_ID } from '../environment';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
-import { Game, GameAttribute, Player } from '../models/games';
+import { Game, Player } from '../models/games';
 import { ToastService } from './toast.services';
 
 @Injectable({
@@ -18,6 +18,7 @@ export class PlayersService {
     teams:Teams;
     functions:Functions;
     currentPlayer:Player|null = null;
+    DEFAULT_CHARACTER_PORTRAIT = "default_portrait"
 
     constructor(private auth:AuthentificationService,private toast:ToastService) {
 
@@ -35,7 +36,7 @@ export class PlayersService {
     
 
     GetImageUrlPreview(id:string):string{
-        let result = this.storage.getFilePreview(GAMES_PREVIEWS_ID, id);
+        let result = this.storage.getFilePreview(GAMEPREVIEWS_STORAGE_ID, id);
         return result.href;
     }
 
@@ -56,6 +57,7 @@ export class PlayersService {
         try{
             let result = await this.functions.createExecution(SERVER_FUNCTIONS.getPlayers,
                 JSON.stringify({playerID:this.auth.GetUserID(),gameID:gameID}));
+            console.log(result);
             let response = JSON.parse(result.response);
             players = response.players.map((doc:any) => {
                 return {
@@ -86,7 +88,7 @@ export class PlayersService {
             //upload image
             if(portrait != null){
 
-                let image = await this.storage.createFile(PROFILES_ID,ID.unique(),portrait,[
+                let image = await this.storage.createFile(PROFILES_STORAGE_ID,ID.unique(),portrait,[
                     Permission.read(Role.team(game.teamID)),
                     
                     //user all permissions on his own files
@@ -99,7 +101,7 @@ export class PlayersService {
                 imageID = image.$id;
             }
             else{
-                imageID = DEFAULT_CHARACTER_PORTRAIT_ID;
+                imageID = this.DEFAULT_CHARACTER_PORTRAIT;
             }
             let result = await this.functions.createExecution(SERVER_FUNCTIONS.createPlayer,
                 JSON.stringify({
