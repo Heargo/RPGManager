@@ -85,13 +85,22 @@ export class GamesService {
                 imageID = this.DEFAULT_GAME_PREVIEW;
             }
             const hostID = this.auth.GetUserID();
+
+            let atrs = attributes.map((atr) => {
+                return {
+                    name:atr.name,
+                    baseValue:atr.baseValue,
+                    $id:ID.unique()
+                }
+            });
             //step 2: create the game
             const game = await this.databases.createDocument(DATABASE_ID, GAME_COLLECTION_ID, ID.unique(), {
                 name: gameData.name,
                 hostID: hostID,
                 description: gameData.description,
                 imageID: imageID, 
-                teamID: team.$id
+                teamID: team.$id,
+                attributes: atrs
             },
             [
                 //team permissions for read
@@ -104,14 +113,14 @@ export class GamesService {
             ]
             );
             
-            //step 3: add the attributes to the game
-            attributes.forEach(async (attribute) => {
-                let atr = await this.databases.createDocument(DATABASE_ID, ATTRIBUTE_COLLECTION_ID, ID.unique(), {
-                    name: attribute.name,
-                    gameID: game.$id,
-                    baseValue: attribute.baseValue
-                });
-            });
+            // //step 3: add the attributes to the game
+            // attributes.forEach(async (attribute) => {
+            //     let atr = await this.databases.createDocument(DATABASE_ID, ATTRIBUTE_COLLECTION_ID, ID.unique(), {
+            //         name: attribute.name,
+            //         gameID: game.$id,
+            //         baseValue: attribute.baseValue
+            //     });
+            // });
 
             //fake waiting time
             await new Promise(resolve => setTimeout(resolve, 3000));
@@ -145,12 +154,6 @@ export class GamesService {
                 await this.storage.deleteFile(GAMEPREVIEWS_STORAGE_ID, game.image);
                 console.log("game preview deleted")
             }
-            //delete attributes
-            const attributes = await this.databases.listDocuments(DATABASE_ID, ATTRIBUTE_COLLECTION_ID,[Query.equal('gameID',game.id)]);
-            attributes.documents.forEach(async (attribute) => {
-                this.databases.deleteDocument(DATABASE_ID, ATTRIBUTE_COLLECTION_ID, attribute.$id);
-            });
-            console.log("games attributes deleted")
 
             //delete all players
             let players = await this.databases.listDocuments(DATABASE_ID, PLAYER_COLLECTION_ID,[Query.equal('gameID',game.id)]);

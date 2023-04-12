@@ -10,7 +10,8 @@ export interface Game{
 export interface GameAttribute{
     name: string;
     baseValue: number;
-    value: number; // value to add to the base value
+    valueAddition: number; // value to add to the base value, both make the max value
+    value: number; // the current value of the attribute (max value = baseValue + valueAddition)
 }
 
 export interface Player{

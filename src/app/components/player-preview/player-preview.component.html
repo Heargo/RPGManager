@@ -1,0 +1,14 @@
+<div class="player-preview flex-row">
+    <img [src]="GetPlayerImage()" alt="{{player.name +' portrait'}}">
+    <div class="data flex-col">
+        <h3>{{player.name}}</h3>
+        <div class="bar-container flex-col">
+            <p>{{GetAttributeProgress('life').display}}</p> 
+            <div class="life bar"><span></span></div>
+        </div>
+        <div class="bar-container flex-col">
+            <p>{{GetAttributeProgress('mana').display}}</p>
+            <div class="mana bar"><span></span></div>
+        </div>
+    </div>
+</div>

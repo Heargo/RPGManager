@@ -19,6 +19,9 @@ import { ToastComponent } from './components/toast/toast.component';
 import { CreatePlayerComponent } from './views/create-player/create-player.component';
 import { GameComponent } from './views/game/game.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { PlayerPreviewComponent } from './components/player-preview/player-preview.component';
+import { PlayerDetailsComponent } from './components/player-details/player-details.component';
+import { DiceComponent } from './components/dice/dice.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,10 @@ import { LoadingComponent } from './components/loading/loading.component';
     ToastComponent,
     CreatePlayerComponent,
     GameComponent,
-    LoadingComponent
+    LoadingComponent,
+    PlayerPreviewComponent,
+    PlayerDetailsComponent,
+    DiceComponent
   ],
   imports: [
     BrowserModule,

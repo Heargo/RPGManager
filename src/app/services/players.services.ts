@@ -18,7 +18,7 @@ export class PlayersService {
     teams:Teams;
     functions:Functions;
     currentPlayer:Player|null = null;
-    DEFAULT_CHARACTER_PORTRAIT = "default_portrait"
+    DEFAULT_CHARACTER_PORTRAIT = "assets/illustrations/default_character.jpg"
 
     constructor(private auth:AuthentificationService,private toast:ToastService) {
 
@@ -36,7 +36,11 @@ export class PlayersService {
     
 
     GetImageUrlPreview(id:string):string{
-        let result = this.storage.getFilePreview(GAMEPREVIEWS_STORAGE_ID, id);
+        if(id == undefined || id == "" || id === this.DEFAULT_CHARACTER_PORTRAIT)
+            return this.DEFAULT_CHARACTER_PORTRAIT;
+
+        console.log("valid id")
+        let result = this.storage.getFilePreview(PROFILES_STORAGE_ID, id);
         return result.href;
     }
 
