@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { API_URL, PROJECT_ID, SERVER_FUNCTIONS, PROFILES_STORAGE_ID, GAMEPREVIEWS_STORAGE_ID, DATABASE_ID, PLAYER_COLLECTION_ID } from '../environment';
+import { API_URL, PROJECT_ID, PROFILES_STORAGE_ID, GAMEPREVIEWS_STORAGE_ID, DATABASE_ID, PLAYER_COLLECTION_ID } from '../environment';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
-import { Game, Player } from '../models/games';
+import { Game, GameAttribute, Player } from '../models/games';
 import { ToastService } from './toast.services';
 
 @Injectable({
@@ -54,6 +54,18 @@ export class PlayersService {
         return userPlayer;
     }
 
+    FormatAttributes(attributes:any[]):GameAttribute[]{
+        return attributes.map((atr) => {
+            return {
+                id: atr.$id,
+                value: atr.value,
+                valueAddition: atr.valueAddition,
+                name: atr.attribute.name,
+                baseValue: atr.attribute.baseValue,
+            }
+        });
+    }
+
     async GetPlayers(gameID:string): Promise<Player[]> {
 
         let players = new Array<Player>();
@@ -69,7 +81,7 @@ export class PlayersService {
                     imageID: doc.imageID,
                     name: doc.name,
                     money: doc.money,
-                    attributes: doc.attributes,
+                    attributes: this.FormatAttributes(doc.attributes),
                 }
             });
         }
