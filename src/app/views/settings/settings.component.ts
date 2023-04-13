@@ -22,7 +22,9 @@ export class SettingsComponent {
     }else{
       console.log(response.value);
     }
-    
+  }
 
+  GetUserEmail(){
+    return this.authService.session?.email;
   }
 }

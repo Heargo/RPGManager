@@ -200,7 +200,9 @@ export class GamesService {
             console.log(email)
             let data = JSON.stringify({email:email,teamID:id});
             let result = await this.functions.createExecution(SERVER_FUNCTIONS.joinTeam, data);
-            console.log(result);
+            if(result.statusCode !== 200)
+                throw new Error("Can't join the game, verify the invitation code and try again");
+
             val = "You have joined the game";
             type = ResponseType.Success;
         }catch(error){

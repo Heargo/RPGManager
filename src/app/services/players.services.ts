@@ -135,11 +135,19 @@ export class PlayersService {
             await this.databases.createDocument(DATABASE_ID, PLAYER_COLLECTION_ID, ID.unique() , playerData, [
                 //team permissions for read
                 Permission.read(Role.team(game.teamID)),
+                Permission.write(Role.team(game.teamID)),
+                Permission.delete(Role.team(game.teamID)),
+                Permission.update(Role.team(game.teamID)),
                 //owner permissions
                 Permission.read(Role.user(playerData.ownerID)),
                 Permission.write(Role.user(playerData.ownerID)),
                 Permission.delete(Role.user(playerData.ownerID)),
-                Permission.update(Role.user(playerData.ownerID))
+                Permission.update(Role.user(playerData.ownerID)),
+
+                //team (owner permissions don't work, to investigate)
+                // Permission.write(Role.team(game.teamID, 'owner')),
+                // Permission.delete(Role.team(game.teamID, 'owner')),
+                // Permission.update(Role.team(game.teamID, 'owner')),
              ]);
              
             response = {value:'Player created',type:ResponseType.Success}
@@ -157,7 +165,7 @@ export class PlayersService {
     async DeletePlayer(playerID:string): Promise<Response> {
         let response:Response;
         try{
-            await this.functions.createExecution(SERVER_FUNCTIONS.deletePlayer, JSON.stringify({playerID}));
+            await this.databases.deleteDocument(DATABASE_ID, PLAYER_COLLECTION_ID, playerID);
             response = {value:'Player deleted',type:ResponseType.Success};
         }
         catch(error){

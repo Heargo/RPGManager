@@ -86,10 +86,10 @@ button{
             list-style: none;
             border-radius: 5px;
             //first child
-            
+            z-index: 10;
             li{
                 color:$text1;
-                width: 100px;
+                width: 150px;
                 padding: 5px;
                 background-color: $background;
                 $radius: 5px;

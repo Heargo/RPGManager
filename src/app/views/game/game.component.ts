@@ -1,71 +1,32 @@
-import { Component } from '@angular/core';
-import { Player } from '../../models/games';
+import { Component, OnInit } from '@angular/core';
+import { GamesService } from 'src/app/services/games.services';
+import { PlayersService } from 'src/app/services/players.services';
+import { Game, Player } from 'src/app/models/games';
+import { ToastService } from 'src/app/services/toast.services';
+import { ResponseType } from 'src/app/models/responses';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
-export class GameComponent {
+export class GameComponent implements OnInit {
 
-  constructor() { }
+  playerList!:Player[];
+  game!:Game|null;
+  constructor(private players:PlayersService,private games:GamesService,private toast:ToastService,private router:Router) {}
 
-  players:Player[] = [
-      {
-        id: "playerid",
-        gameID: "gameid",
-        ownerID: "ownerid",
-        imageID: "assets/illustrations/default_character.jpg",
-        name: "Character Name Here",
-        money: 0.0,
-        attributes: [
-            {
-              id:'',
-              name: "life",
-              baseValue: 10,
-              valueAddition:20,
-              value: 25,
-          },
-          {
-            id:'',
-            name: "mana",
-            baseValue: 5,
-            valueAddition:5,
-            value: 3,
-        }
-        ]
-    },
-    {
-      id: "playerid",
-      gameID: "gameid",
-      ownerID: "ownerid",
-      imageID: "assets/illustrations/default_character.jpg",
-      name: "Character Name Here 2",
-      money: 0.0,
-      attributes: [
-        {
-          id:'',
-          name: "life",
-          baseValue: 10,
-          valueAddition:20,
-          value: 25,
-      },
-      {
-        id:'',
-        name: "mana",
-        baseValue: 5,
-        valueAddition:5,
-        value: 3,
-    },
-          {
-            id:'',
-            name: "attribute",
-            baseValue: 0,
-            valueAddition:5,
-            value: 5,
-        }
-      ]
+  async ngOnInit(){
+    this.game = this.games.currentGame;
+    if(this.game == null){
+      this.toast.Show("No game selected",ResponseType.Error);
+      this.router.navigate(['/games']);
+    }else{
+      this.playerList = await this.players.GetPlayers(this.game.id);
+    }
   }
-  ];
+
+  
 
 }

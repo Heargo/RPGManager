@@ -46,10 +46,45 @@ export class GamePreviewComponent {
     }
   }
 
-  async GetPlayers(){
+  CopyInvitationCodeToClipboard(){
+    if(!this.interractable) return;
+
+    let input = document.createElement('input');
+    input.setAttribute('value', this.game.teamID);
+    document.body.appendChild(input);
+    input.select();
+    let result = document.execCommand('copy');
+    document.body.removeChild(input);
+    if(result){
+      this.toast.Show("Invitation code copied to clipboard",ResponseType.Success);
+    }else{
+      this.toast.Show("Failed to copy invitation code to clipboard",ResponseType.Error);
+
+    }
+  }
+
+  async DeletePlayer(){
+    if(!this.interractable) return;
+
+    let player = await this.GetPlayer();
+
+    if(player === undefined){
+      this.toast.Show("You don't have a player in this game",ResponseType.Warning);
+    }else{
+      let response = await this.players.DeletePlayer(player.id);
+      this.toast.Show(response.value,response.type);
+    }
+  }
+
+  async GetPlayer(){
     if(!this.interractable) return;
     
-    await this.players.GetPlayers(this.game.id);
+    let players = await this.players.GetPlayers(this.game.id);
+
+    let player = players.find((p) => p.ownerID === this.auth.GetUserID());
+
+    return player;
+
   }
 
   async DeleteGame(){
@@ -68,6 +103,7 @@ export class GamePreviewComponent {
     //if the user already has a player in this game or if he is the host (MJ, so no player) 
     if(player!==undefined || this.auth.GetUserID() === this.game.host){
       //console.log("user already has a player in this game");
+      this.games.ConnectToGame(this.game);
       this.toast.HideLoading();
       this.router.navigate(['/game']);
     }else{

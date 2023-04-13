@@ -5,7 +5,9 @@
                 <img src="assets/icons/dots.svg" alt="">
             </button>
             <ul *ngIf="showOptions">
+                <li *ngIf="!isHost()" (click)="DeletePlayer()">Delete player</li>
                 <li *ngIf="!isHost()" (click)="LeaveGame()">Leave</li>
+                <li *ngIf="isHost()" (click)="CopyInvitationCodeToClipboard()">Copy invitation code</li>
                 <li *ngIf="isHost()" (click)="DeleteGame()">Delete</li>
             </ul>
         </div>

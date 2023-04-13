@@ -35,7 +35,9 @@ export class GamesComponent implements OnInit {
       console.log(this.teamID)
       let response = await this.games.JoinGame(this.teamID);
       console.log(response);
-      //if success, hide input
+      //if success, hide input and reload games
+      console.log("reload games")
+      this.userGames =  await this.games.LoadGames();
       this.showIdInput = false;
     }else{
       this.showIdInput = true;
