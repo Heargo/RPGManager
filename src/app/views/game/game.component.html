@@ -1,24 +1,30 @@
 <section class="flex-row">
     
-    <div class="flex-col">
-        <!-- if MJ List of players LIST OF [COMPONENT] -->
+    <div class="flex-col left-panel">
+        <!--List of players -->
+        <div *ngIf="isMJ" class="flex-col player-list">
+            <h3>Players</h3>
+            <app-player-preview *ngFor="let player of playerList" [player]="player"></app-player-preview>
+        </div>
         <!-- player details [COMPONENT] -->
-        <app-player-preview *ngFor="let player of playerList" [player]="player"></app-player-preview>
+        <app-player-details></app-player-details>
         <!-- if player notes -->
         <!-- if player roll dice [COMPONENT] -->
     </div>
-    <div class="flex-col">
+    <div class="flex-col center">
         <!-- current illustration -->
-        <!-- <div *ngIf="MJ">
-             list of quick illustrations 
-             add illustration
-        </div> --->
+        <img class="current-illustration" src="assets/illustrations/default_icon.jpg" alt="">
+        <div class="quick-changes" *ngIf="isMJ">
+            <div class="images">
+                list of quick illustrations 
+            </div>
+            <button>+</button>
+        </div>
 
     </div>
 
-    <!-- <div *ngIf="MJ" class="flex-col">
-        notes 
-        rool dice [COMPONENT]
-    </div> -->
-<p>Let's play</p>
+    <div *ngIf="isMJ" class="flex-col right-panel">
+        <textarea (change)="onNotesChange($event)">{{userNotes}}</textarea> 
+        <p>DICE COMPONENT</p>
+    </div>
 </section>

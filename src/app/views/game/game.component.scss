@@ -1,3 +1,63 @@
+@import 'src/app/styles/var.scss';
+
 section{
-    min-height:100vh;
+    height:calc(100vh - #{$nav-height});
+    padding-top: $nav-height;
+}
+
+.left-panel, .right-panel{
+    height:calc(100% - 2rem);//calc(100vh - #{$nav-height});
+    padding: 1rem;
+}
+
+.left-panel{
+    width: 25%;
+    padding-right: 0;
+}
+
+.right-panel{
+    width: 15%;
+    padding-left: 0;
+    justify-content: flex-start;
+}
+
+
+.player-list{
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 50%;
+    width: 100%;
+}
+
+app-player-details{
+    height: 50%;
+    width: 100%;
+    background-color: $text1-50;
+}
+
+.center{
+    width: 60%;
+    height:calc(100% - 2rem);
+    padding: 1rem 0;
+    .current-illustration{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .quick-changes{
+        height: 200px;
+    }
+}
+
+.right-panel{
+    textarea{
+        height: 80%;
+        width: calc(100% - 1rem);
+        resize: none;
+        background-color: $background-light;
+        border:solid 2px $text1;
+        padding: .5rem;
+
+    }
 }

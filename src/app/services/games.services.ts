@@ -246,6 +246,14 @@ export class GamesService {
         return {value:val,type:type}
     }
 
+    IsUserHost():boolean{
+        return this.currentGame?.host == this.auth.GetUserID();
+    }
+
+    IsConnectedToGame():boolean{
+        return this.currentGame !== undefined;
+    }
+
     GetImageUrlPreview(id:string):string{
         const result = this.storage.getFilePreview(GAMEPREVIEWS_STORAGE_ID, id);
         return result.href;
