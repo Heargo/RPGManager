@@ -39,6 +39,18 @@ export class GamesService {
         this.currentGame = game;
     }
 
+    MapAttributes(attributes:any[]):GameAttribute[]{
+        return attributes.map((attr:any) => {
+            return {
+                id: attr.$id,
+                name: attr.name,
+                baseValue: attr.baseValue,
+                valueAddition: 0,
+                value: attr.baseValue
+            }
+        });
+    }
+
     async LoadGames(){
         await this.auth.CheckConnection();
         
@@ -53,7 +65,8 @@ export class GamesService {
                     description:doc.description,
                     image:doc.imageID,
                     host:doc.hostID,
-                    teamID:doc.teamID
+                    teamID:doc.teamID,
+                    attributes:this.MapAttributes(doc.attributes)
                 }
             });
 
@@ -61,11 +74,11 @@ export class GamesService {
             console.log(error);
             this.toast.Show("Can't load games",ResponseType.Error);
         }
-
+        console.log(games);
         return games;
     }
 
-    async CreateGame(gameData:Game,image:File,attributes:GameAttribute[]): Promise<Response> {
+    async CreateGame(gameData:Game,image:File): Promise<Response> {
 
         let val:string;
         let type:ResponseType;
@@ -86,7 +99,7 @@ export class GamesService {
             }
             const hostID = this.auth.GetUserID();
 
-            let atrs = attributes.map((atr) => {
+            let atrs = gameData.attributes.map((atr) => {
                 return {
                     name:atr.name,
                     baseValue:atr.baseValue,
@@ -186,7 +199,7 @@ export class GamesService {
             let email = this.auth.session?.email;
             console.log(email)
             let data = JSON.stringify({email:email,teamID:id});
-            let result = await this.functions.createExecution('64334bdf525fa8020b93', data);
+            let result = await this.functions.createExecution(SERVER_FUNCTIONS.joinTeam, data);
             console.log(result);
             val = "You have joined the game";
             type = ResponseType.Success;

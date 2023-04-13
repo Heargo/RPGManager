@@ -15,7 +15,6 @@ export class PlayerPreviewComponent {
 
   GetPlayerImage():string{
     let urlPreview =this.players.GetImageUrlPreview(this.player.imageID);
-    console.log(urlPreview);
     return urlPreview
   }
 

@@ -20,12 +20,14 @@ export class GameComponent {
         money: 0.0,
         attributes: [
             {
+              id:'',
               name: "life",
               baseValue: 10,
               valueAddition:20,
               value: 25,
           },
           {
+            id:'',
             name: "mana",
             baseValue: 5,
             valueAddition:5,
@@ -42,18 +44,21 @@ export class GameComponent {
       money: 0.0,
       attributes: [
         {
+          id:'',
           name: "life",
           baseValue: 10,
           valueAddition:20,
           value: 25,
       },
       {
+        id:'',
         name: "mana",
         baseValue: 5,
         valueAddition:5,
         value: 3,
     },
           {
+            id:'',
             name: "attribute",
             baseValue: 0,
             valueAddition:5,

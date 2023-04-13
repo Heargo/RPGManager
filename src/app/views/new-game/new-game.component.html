@@ -16,7 +16,7 @@
                     <input class="num" type="text" placeholder="Default value" [(ngModel)]="attributeDefaultValue">
                     <button (click)="onAddAttribute()">+</button>
                 </div>
-                <div *ngFor="let attribute of attributes" class="attributes flex-row">
+                <div *ngFor="let attribute of game.attributes" class="attributes flex-row">
                     <p>{{attribute.name}}</p>
                     <p class="num">{{attribute.baseValue}}</p>
                     <img (click)="onDeleteAttribute(attribute.name)" src="assets/icons/bin.svg" alt="">

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { API_URL, PROJECT_ID, SERVER_FUNCTIONS, PROFILES_STORAGE_ID, GAMEPREVIEWS_STORAGE_ID } from '../environment';
+import { API_URL, PROJECT_ID, SERVER_FUNCTIONS, PROFILES_STORAGE_ID, GAMEPREVIEWS_STORAGE_ID, DATABASE_ID, PLAYER_COLLECTION_ID } from '../environment';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
@@ -59,11 +59,9 @@ export class PlayersService {
         let players = new Array<Player>();
         
         try{
-            let result = await this.functions.createExecution(SERVER_FUNCTIONS.getPlayers,
-                JSON.stringify({playerID:this.auth.GetUserID(),gameID:gameID}));
-            console.log(result);
-            let response = JSON.parse(result.response);
-            players = response.players.map((doc:any) => {
+            let result = await this.databases.listDocuments(DATABASE_ID, PLAYER_COLLECTION_ID, [Query.equal('gameID',gameID)]);
+            console.log(result.documents);
+            players = result.documents.map((doc:any) => {
                 return {
                     id: doc.$id,
                     gameID: doc.gameID,
@@ -81,6 +79,41 @@ export class PlayersService {
         return players;
     }
 
+    GetGamesAttributesForPlayer(game:Game): any[] {
+        return game.attributes.map((atr) => {
+            return {
+                $id:ID.unique(),
+                value: 0,
+                valueAddition: atr.valueAddition,
+                attribute : atr.id
+
+            }
+        });
+    }
+
+    async UploadPlayerImage(file:File | null,teamID:string,userID:string): Promise<string> {
+        let imageID
+        //upload image
+        if(file != null){
+
+            let image = await this.storage.createFile(PROFILES_STORAGE_ID,ID.unique(),file,[
+                Permission.read(Role.team(teamID)),
+                
+                //user all permissions on his own files
+                Permission.read(Role.user(userID)),
+                Permission.write(Role.user(userID)),
+                Permission.update(Role.user(userID)),
+                Permission.delete(Role.user(userID))
+                
+            ] );
+            imageID = image.$id;
+        }
+        else{
+            imageID = this.DEFAULT_CHARACTER_PORTRAIT;
+        }
+        return imageID;
+    }
+
     async CreatePlayer(name:string,portrait:File|null,game:Game): Promise<Response> {
         
         let response:Response;
@@ -88,42 +121,28 @@ export class PlayersService {
 
         try{
             this.toast.ShowLoading("Creating the player "+name);
-            let imageID:string;
-            //upload image
-            if(portrait != null){
-
-                let image = await this.storage.createFile(PROFILES_STORAGE_ID,ID.unique(),portrait,[
-                    Permission.read(Role.team(game.teamID)),
-                    
-                    //user all permissions on his own files
-                    Permission.read(Role.user(userID)),
-                    Permission.write(Role.user(userID)),
-                    Permission.update(Role.user(userID)),
-                    Permission.delete(Role.user(userID))
-                    
-                ] );
-                imageID = image.$id;
+            let imageID= await this.UploadPlayerImage(portrait,game.teamID,userID);
+            //create player
+            let playerData={
+                gameID: game.id,
+                ownerID: this.auth.GetUserID(),
+                imageID: imageID,
+                name: name,
+                money: 0,
+                attributes: this.GetGamesAttributesForPlayer(game)
             }
-            else{
-                imageID = this.DEFAULT_CHARACTER_PORTRAIT;
-            }
-            let result = await this.functions.createExecution(SERVER_FUNCTIONS.createPlayer,
-                JSON.stringify({
-                    player:{
-                        gameID: game.id,
-                        ownerID: this.auth.GetUserID(),
-                        imageID: imageID,
-                        name: name,
-                        money: 0
-                    },
-                    teamID:game.teamID
-                }));
-            console.log("result",result)
-            
-            if(result.statusCode == 200)
-                response = {value:'Player created',type:ResponseType.Success}
-            else
-                response = {value:'Error creating player',type:ResponseType.Error}
+            console.log(playerData);
+            await this.databases.createDocument(DATABASE_ID, PLAYER_COLLECTION_ID, ID.unique() , playerData, [
+                //team permissions for read
+                Permission.read(Role.team(game.teamID)),
+                //owner permissions
+                Permission.read(Role.user(playerData.ownerID)),
+                Permission.write(Role.user(playerData.ownerID)),
+                Permission.delete(Role.user(playerData.ownerID)),
+                Permission.update(Role.user(playerData.ownerID))
+             ]);
+             
+            response = {value:'Player created',type:ResponseType.Success}
         }
         catch(error){
             console.log(error);

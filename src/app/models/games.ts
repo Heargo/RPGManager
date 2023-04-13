@@ -5,9 +5,11 @@ export interface Game{
     image: string;
     host: string;
     teamID: string;
+    attributes: GameAttribute[];
 }
 
 export interface GameAttribute{
+    id: string;
     name: string;
     baseValue: number;
     valueAddition: number; // value to add to the base value, both make the max value

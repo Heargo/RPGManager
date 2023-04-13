@@ -14,14 +14,6 @@ import { MAX_FILE_SIZE, MAX_GAME_ATTRIBUTE_NAME_SIZE, MAX_GAME_DESCRIPTION_SIZE,
 })
 export class NewGameComponent {
 
-  attributes:GameAttribute[] = [
-    {name: 'Strength', baseValue: 0,valueAddition:0,value:0},
-    {name: 'Dexterity', baseValue: 0,valueAddition:0,value:0},
-    {name: 'Constitution', baseValue: 0,valueAddition:0,value:0},
-    {name: 'Intelligence', baseValue: 0,valueAddition:0,value:0},
-    {name: 'Wisdom', baseValue: 0,valueAddition:0,value:0},
-    {name: 'Charisma', baseValue: 0,valueAddition:0,value:0}
-  ];
   attributeName = '';
   attributeDefaultValue = 0;
   accordions = {'description':true, 'attributes':true};
@@ -31,7 +23,17 @@ export class NewGameComponent {
     description: '',
     image: 'assets/illustrations/default_icon.jpg',
     host: '',
-    teamID:''
+    teamID:'',
+    attributes: [
+      {id:'',name: 'Life', baseValue: 0,valueAddition:0,value:0},
+      {id:'',name: 'Mana', baseValue: 0,valueAddition:0,value:0},
+      {id:'',name: 'Strength', baseValue: 0,valueAddition:0,value:0},
+      {id:'',name: 'Dexterity', baseValue: 0,valueAddition:0,value:0},
+      {id:'',name: 'Constitution', baseValue: 0,valueAddition:0,value:0},
+      {id:'',name: 'Intelligence', baseValue: 0,valueAddition:0,value:0},
+      {id:'',name: 'Wisdom', baseValue: 0,valueAddition:0,value:0},
+      {id:'',name: 'Charisma', baseValue: 0,valueAddition:0,value:0}
+    ]
   };
   imageFile:File = new File([], 'default_icon.jpg');
 
@@ -43,11 +45,11 @@ export class NewGameComponent {
     //min attribute default value is 0
     if(this.attributeDefaultValue < MIN_GAME_ATTRIBUTE_DEFAULTVALUE) { this.toast.Show('Attribute default value is too low, min 0', ResponseType.Warning);return;}
     //if attribute name already exist
-    if(this.attributes.find(a => a.name === this.attributeName)) { this.toast.Show('Attribute name already exist', ResponseType.Warning);return;}
+    if(this.game.attributes.find(a => a.name === this.attributeName)) { this.toast.Show('Attribute name already exist', ResponseType.Warning);return;}
     //if attribute name is empty
     if(this.attributeName === '') { this.toast.Show('Attribute name is empty', ResponseType.Warning);return;}
 
-    this.attributes.push({name: this.attributeName, baseValue: this.attributeDefaultValue,valueAddition:0,value:0});
+    this.game.attributes.push({id:'',name: this.attributeName, baseValue: this.attributeDefaultValue,valueAddition:0,value:0});
     this.attributeName = '';
     this.attributeDefaultValue = 0;
   }
@@ -70,7 +72,7 @@ export class NewGameComponent {
   }
 
   onDeleteAttribute(name:string){
-    this.attributes = this.attributes.filter(a => a.name !== name);
+    this.game.attributes = this.game.attributes.filter(a => a.name !== name);
   }
 
   isValidGame():boolean{
@@ -88,11 +90,11 @@ export class NewGameComponent {
     //max game description length is 1000
     if(this.game.description.length > MAX_GAME_DESCRIPTION_SIZE) { this.toast.Show('Game description is too long, max 1000 characters', ResponseType.Warning);return;}
     //max attribute name length is 40
-    if(this.attributes.find(a => a.name.length > MAX_GAME_ATTRIBUTE_NAME_SIZE)) { this.toast.Show('Attribute name is too long, max 40 characters', ResponseType.Warning);return;}
+    if(this.game.attributes.find(a => a.name.length > MAX_GAME_ATTRIBUTE_NAME_SIZE)) { this.toast.Show('Attribute name is too long, max 40 characters', ResponseType.Warning);return;}
     //min attribute default value is 0
-    if(this.attributes.find(a => a.baseValue < MIN_GAME_ATTRIBUTE_DEFAULTVALUE)) { this.toast.Show('Attribute default value must be greater than 0', ResponseType.Warning);return;}
+    if(this.game.attributes.find(a => a.baseValue < MIN_GAME_ATTRIBUTE_DEFAULTVALUE)) { this.toast.Show('Attribute default value must be greater than 0', ResponseType.Warning);return;}
 
-    const response = await this.games.CreateGame(this.game, this.imageFile, this.attributes);
+    const response = await this.games.CreateGame(this.game, this.imageFile);
 
     if(response.type === ResponseType.Success){
       this.router.navigate(['/games']);
