@@ -104,3 +104,11 @@ input[type="submit"], button[type="submit"]{
 .flex-col{
   flex-direction: column;
 }
+
+.selectDisable {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}

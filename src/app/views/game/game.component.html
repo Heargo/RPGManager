@@ -13,12 +13,14 @@
     </div>
     <div class="flex-col center">
         <!-- current illustration -->
-        <img class="current-illustration" src="assets/illustrations/default_icon.jpg" alt="">
-        <div class="quick-changes" *ngIf="isMJ">
-            <div class="images">
-                list of quick illustrations 
+        <img class="current-illustration" [src]="illustration" alt="">
+        <div class="quick-changes flex-row" *ngIf="isMJ">
+            <div class="card" *ngFor="let img of quickImages" (click)="onQuickImageClick($event,img)">
+                <img [src]="img.url"  alt="quick image" >
+                <img class="upload-icon" src="assets/icons/upload.svg" alt="">
             </div>
-            <button>+</button>
+            <label class="card" for="newQuickImage"><img src="assets/icons/add.svg" alt=""></label>
+            <input type="file" id="newQuickImage" (change)="onAddQuickImage($event)">
         </div>
 
     </div>

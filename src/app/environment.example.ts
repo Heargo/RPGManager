@@ -17,13 +17,11 @@ export const MAPS_STORAGE_ID = "64247684a99da3b8a6a7";
 export const ITEMS_STORAGE_ID = "6424768a80ef122f265d";
 export const PROFILES_STORAGE_ID = "6424769b1baa624b77a7";
 export const GAMEPREVIEWS_STORAGE_ID = "642da7a3cab17dd1a4d8";
+export const GAMEILLUSTRATION_STORAGE_ID = "6439b56f1c616eec169e";
 
 //SERVER FUNCTIONS
 export const enum SERVER_FUNCTIONS{
-	joinTeam = "joinTeam",
-	getPlayers = "getPlayers",
-	createPlayer = "createPlayer",
-	deletePlayer = "deletePlayer",
+	joinTeam = "joinTeam"
 };
 
 

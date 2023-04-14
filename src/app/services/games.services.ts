@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { DATABASE_ID, API_URL, PROJECT_ID, SERVER_FUNCTIONS, GAME_COLLECTION_ID, ATTRIBUTE_COLLECTION_ID, GAMEPREVIEWS_STORAGE_ID, PLAYER_COLLECTION_ID } from '../environment';
-import { getErrorMessage } from '../Utils/utils';
+import { DATABASE_ID, API_URL, PROJECT_ID, SERVER_FUNCTIONS, GAME_COLLECTION_ID, ATTRIBUTE_COLLECTION_ID, GAMEPREVIEWS_STORAGE_ID, PLAYER_COLLECTION_ID, GAMEILLUSTRATION_STORAGE_ID } from '../environment';
+import { getErrorMessage, hasPermission } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute, Player } from '../models/games';
@@ -246,6 +246,45 @@ export class GamesService {
         return {value:val,type:type}
     }
 
+    async UploadGameIllustration(image:File): Promise<Response> {
+        if(this.currentGame == null ) return {value:"You are not connected to a game",type:ResponseType.Error};
+        let teamID = this.currentGame.teamID;
+        
+        //select old file (the one that as team id in permission)
+        let images = await this.storage.listFiles(GAMEILLUSTRATION_STORAGE_ID);
+        console.log("images",images)
+        let oldImage = images.files.find((file) => hasPermission(file.$permissions,Role.team(teamID)));
+        //delete if exists
+        if(oldImage) this.storage.deleteFile(GAMEILLUSTRATION_STORAGE_ID, oldImage.$id);
+
+        let userid = this.auth.GetUserID();
+        //upload the new image
+        this.storage.createFile(GAMEILLUSTRATION_STORAGE_ID, ID.unique(), image,
+        [
+            Permission.read(Role.team(teamID)),
+
+            Permission.read(Role.user(userid)),
+            Permission.write(Role.user(userid)),
+            Permission.delete(Role.user(userid)),
+            Permission.update(Role.user(userid))
+        ]);
+
+        return {value:"The image has been uploaded",type:ResponseType.Success}
+
+    }
+
+    async LoadGameIllustration(): Promise<string> {
+        if(this.currentGame == null ) return this.DEFAULT_GAME_PREVIEW;
+
+        //get illustration
+        let teamID = this.currentGame.teamID;
+        let images = await this.storage.listFiles(GAMEILLUSTRATION_STORAGE_ID);
+        let image = images.files.find((file) => hasPermission(file.$permissions,Role.team(teamID)));
+        if(image) return this.GetIllustrationUrlPreview(image.$id);
+
+        return this.DEFAULT_GAME_PREVIEW;
+    }
+
     IsUserHost():boolean{
         return this.currentGame?.host == this.auth.GetUserID();
     }
@@ -254,8 +293,13 @@ export class GamesService {
         return this.currentGame !== undefined;
     }
 
-    GetImageUrlPreview(id:string):string{
+    GetPreviewUrlPreview(id:string):string{
         const result = this.storage.getFilePreview(GAMEPREVIEWS_STORAGE_ID, id);
+        return result.href;
+    }
+
+    GetIllustrationUrlPreview(id:any):string{
+        const result = this.storage.getFilePreview(GAMEILLUSTRATION_STORAGE_ID, id);
         return result.href;
     }
 
