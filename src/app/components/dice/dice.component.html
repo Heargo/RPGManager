@@ -3,10 +3,10 @@
         <input class="number" type="text" [(ngModel)]="diceNumber" [ngStyle]="{'width':getSize(diceNumber)}">
         <p>d</p>
         <input class="faces" type="text" [(ngModel)]="diceFaces" [ngStyle]="{'width':getSize(diceFaces)}">
-        <p *ngIf="rolls.length>0">= {{getSum()}}</p>
+        <p *ngIf="rolls.length>0">= <span [ngStyle]="{'color':getColor(getSum(),diceFaces*diceNumber)}">{{getSum()}}</span></p> 
     </div>
     <div *ngIf="rolls.length>1" class="details flex-row">
-        <p *ngFor="let roll of rolls">{{roll}}</p>
+        <p *ngFor="let roll of rolls" [ngStyle]="{'color':getColor(roll,diceFaces)}">{{roll}}</p>
     </div>
     <button (click)="onRollClick()">Roll</button>
 </div>

@@ -22,6 +22,16 @@ export class DiceComponent {
     return Math.floor(Math.log10(n)) + 1 +'ch';
   }
 
+  getColor(n:number,max:number):string{
+    //gradient from #6A8550 (max) to #7F1919 (min) depending on the value
+    let min = 0;
+    let percent = 1 - ((n - min) / (max - min));
+    let r = Math.floor(0x6A + (0x7F - 0x6A) * percent);
+    let g = Math.floor(0x85 + (0x19 - 0x85) * percent);
+    let b = Math.floor(0x50 + (0x19 - 0x50) * percent);
+    return `rgb(${r},${g},${b})`;
+  }
+
   async RollAnimation()
   {
     //set the value to a random number and wait for .2s before changing it again
