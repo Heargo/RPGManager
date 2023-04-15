@@ -1,24 +1,46 @@
 @import 'src/app/styles/var.scss';
+@import 'src/app/styles/mixins.scss';
+
+$phoneBreakpoint: 1000px;
 
 section{
     height:calc(100vh - #{$nav-height});
     padding-top: $nav-height;
+
+    @include width-under($phoneBreakpoint)
+    {
+        flex-direction: column;
+        height: auto;
+    }
 }
 
-.left-panel, .right-panel{
-    height:calc(100% - 2rem);//calc(100vh - #{$nav-height});
-    padding: 1rem;
-}
+
+
+
 
 .left-panel{
     width: 20%;
     padding-right: 0;
+    min-width: 300px;
 }
 
 .right-panel{
     width: 15%;
     padding-left: 0;
     justify-content: flex-start;
+    min-width: 200px;
+}
+.left-panel, .right-panel{
+    height:calc(100% - 2rem);//calc(100vh - #{$nav-height});
+    padding: 1rem;
+    
+
+    @include width-under($phoneBreakpoint)
+    {
+        width: 90%;
+        height: auto;
+        justify-content: center;
+    }
 }
 
 
@@ -27,6 +49,10 @@ section{
     justify-content: flex-start;
     height: 50%;
     width: 100%;
+    @include width-under($phoneBreakpoint)
+    {
+        width: auto;
+    }
 }
 
 app-player-details{
@@ -40,9 +66,13 @@ app-dice{
 }
 
 .center{
-    width: 65%;
+    width: 100%;
     height:calc(100% - 2rem);
     padding: 1rem 0;
+    @include width-under($phoneBreakpoint)
+    {
+        width: 90%;
+    }
     .current-illustration{
         width: 100%;
         height: 100%;
@@ -107,6 +137,7 @@ app-dice{
     textarea{
         height: 80%;
         width: calc(100% - 1rem);
+        min-height: 200px;
         resize: none;
         background-color: $background-light;
         border:solid 2px $text1;
