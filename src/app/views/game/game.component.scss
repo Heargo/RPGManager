@@ -11,7 +11,7 @@ section{
 }
 
 .left-panel{
-    width: 25%;
+    width: 20%;
     padding-right: 0;
 }
 
@@ -35,8 +35,12 @@ app-player-details{
     background-color: $text1-50;
 }
 
+app-dice{
+    width: 100%;
+}
+
 .center{
-    width: 60%;
+    width: 65%;
     height:calc(100% - 2rem);
     padding: 1rem 0;
     .current-illustration{

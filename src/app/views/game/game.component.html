@@ -8,8 +8,18 @@
         </div>
         <!-- player details [COMPONENT] -->
         <app-player-details></app-player-details>
-        <!-- if player notes -->
-        <!-- if player roll dice [COMPONENT] -->
+        <!-- Life & mana bar -->
+        <div  *ngIf="!isMJ">
+            <div>
+                <p>life bar</p>
+                <div><span></span></div>
+            </div>
+            <div>
+                <p>mana bar</p>
+                <div><span></span></div>
+            </div>
+        </div>
+        <app-dice *ngIf="!isMJ"></app-dice>
     </div>
     <div class="flex-col center">
         <!-- current illustration -->
@@ -27,6 +37,6 @@
 
     <div *ngIf="isMJ" class="flex-col right-panel">
         <textarea (change)="onNotesChange($event)">{{userNotes}}</textarea> 
-        <p>DICE COMPONENT</p>
+        <app-dice></app-dice>
     </div>
 </section>
