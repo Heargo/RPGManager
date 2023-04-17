@@ -1,1 +1,31 @@
-<p>player-details works!</p>
+<section class="flex-row">
+    <div class="flex-col left">
+        <img class="player-image" [src]="playerPortrait" alt="player portait">
+        <div class="equipment">
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+        </div>
+    </div>
+    <div class="flex-col right">
+        <h3>{{player?.name}}</h3>
+        <div class="stats">
+            //TODO add pin in db
+            <div class="flex-row" *ngFor="let atr of player?.attributes">
+                <p> {{atr.name}}</p>  
+                <input value="{{atr.valueAddition + atr.baseValue}} "> 
+                <img src="assets/icons/pin.svg" alt="">
+            </div>
+        </div>
+        <div class="inventory">
+            <div *ngFor="let i of minimumInventory"><img src="assets/icons/inventory/empty.svg" alt=""></div>
+        </div>
+    </div>
+</section>

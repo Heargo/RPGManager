@@ -26,6 +26,7 @@ export class GameComponent implements OnInit, OnDestroy {
   quickImages:{file:File;url:SafeUrl}[] = [];
   illustrationUnsubscribe!:any;
   illustration!:string;
+  selectedPlayer:Player|null = null;
 
 
 
@@ -70,6 +71,16 @@ export class GameComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.games.currentGame = null;
     this.illustrationUnsubscribe();
+  }
+
+  getPlayerDetails():Player|null{
+    let player = null;
+    if(this.isMJ) player =  this.selectedPlayer;
+    else{
+      player = this.playerList.find(p => p.ownerID == this.auth.GetUserID());
+      player == undefined ? player = null : player;
+    }
+    return player;
   }
 
 

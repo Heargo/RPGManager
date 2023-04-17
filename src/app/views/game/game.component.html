@@ -7,7 +7,7 @@
             <app-player-preview *ngFor="let player of playerList" [player]="player"></app-player-preview>
         </div>
         <!-- player details [COMPONENT] -->
-        <app-player-details></app-player-details>
+        <app-player-details *ngIf="getPlayerDetails()!=null" [player]="getPlayerDetails()"></app-player-details>
         <!-- Life & mana bar -->
         <div  *ngIf="!isMJ">
             <div>
