@@ -2,8 +2,8 @@
 
 section{
     background-color: $text1-07;
-    //height: 688px;
-    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
     aspect-ratio: 611/688;
     //max-width: calc(300px - .5rem);
     padding: .5rem;
@@ -88,7 +88,7 @@ section{
         padding:0 .2rem;
         border: 0;
         border-radius: 2px;
-        background-color: $background-light;
+        background-color: $background-60;
     }
     
     p{

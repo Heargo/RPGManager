@@ -20,6 +20,8 @@
     }
 }
 .details{
+    width: 100%;
+    overflow: scroll;
     p{
         font-size: 1rem;
         color:$text2;

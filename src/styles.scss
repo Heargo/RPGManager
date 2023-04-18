@@ -112,3 +112,34 @@ input[type="submit"], button[type="submit"]{
   -o-user-select: none;
   user-select: none;
 }
+
+
+.bar{
+  position: relative;
+  justify-content:flex-start;
+  align-items: center;
+  background-color: $background-60;
+  height: .5rem;
+  border-radius: 2px;
+  width: 60%;
+  
+  span{
+      //display: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: $red;
+      height: 100%;
+      width: 80%;
+      border-radius: 2px;
+  }
+
+  &.mana{
+      // width: 65%;
+      // height: .4rem;
+      // font-size: .7rem;
+      span{
+          background-color: $blue;
+      }
+  }
+}

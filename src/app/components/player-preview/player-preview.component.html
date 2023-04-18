@@ -3,12 +3,12 @@
     <div class="data flex-col">
         <h3>{{player.name}}</h3>
         <div class="bar-container flex-row">
-            <p>{{GetAttributeProgress(lifeAttribute).display}}</p> 
-            <div class="life bar"><span [ngStyle]="{width:GetAttributeProgress(lifeAttribute).prct}"></span></div>
+            <p>{{AttributeProgress(lifeAttribute).display}}</p> 
+            <div class="life bar"><span [ngStyle]="{width:AttributeProgress(lifeAttribute).prct}"></span></div>
         </div>
         <div class="bar-container flex-row">
-            <p>{{GetAttributeProgress(manaAttribute).display}}</p>
-            <div class="mana bar" ><span [ngStyle]="{width:GetAttributeProgress(manaAttribute).prct+'%'}"></span></div>
+            <p>{{AttributeProgress(manaAttribute).display}}</p>
+            <div class="mana bar" ><span [ngStyle]="{width:AttributeProgress(manaAttribute).prct+'%'}"></span></div>
         </div>
     </div>
 </div>

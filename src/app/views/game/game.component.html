@@ -4,19 +4,19 @@
         <!--List of players -->
         <div *ngIf="isMJ" class="flex-col player-list">
             <h3>Players</h3>
-            <app-player-preview *ngFor="let player of playerList" [player]="player"></app-player-preview>
+            <app-player-preview *ngFor="let player of playerList" [player]="player" (click)="selectPlayer(player)"></app-player-preview>
         </div>
         <!-- player details [COMPONENT] -->
         <app-player-details *ngIf="getPlayerDetails()!=null" [player]="getPlayerDetails()"></app-player-details>
         <!-- Life & mana bar -->
-        <div  *ngIf="!isMJ">
-            <div>
-                <p>life bar</p>
-                <div><span></span></div>
+        <div *ngIf="!isMJ" class="playerBar">
+            <div class="flex-row ">
+                <p>{{AttributeProgress(lifeAttribute).display}} Life</p>
+                <div class="bar" ><span [ngStyle]="{width:AttributeProgress(lifeAttribute).prct+'%'}"></span></div>
             </div>
-            <div>
-                <p>mana bar</p>
-                <div><span></span></div>
+            <div class="flex-row">
+                <p>{{AttributeProgress(manaAttribute).display}} Mana</p>
+                <div class="mana bar" ><span [ngStyle]="{width:AttributeProgress(manaAttribute).prct+'%'}"></span></div>
             </div>
         </div>
         <app-dice *ngIf="!isMJ"></app-dice>

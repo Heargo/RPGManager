@@ -4,6 +4,7 @@
 $phoneBreakpoint: 1000px;
 
 section{
+    width: 100vw;
     height:calc(100vh - #{$nav-height});
     padding-top: $nav-height;
 
@@ -15,6 +16,51 @@ section{
 }
 
 
+.playerUI{
+
+    .left-panel{
+        width: 40%;
+        max-width: 450px;
+    }
+
+    .center{
+        width: calc(100% - 1rem);
+        padding-right: 1rem;
+    }
+    app-player-details{
+        height: 75%;
+    }
+
+    @include width-under($phoneBreakpoint)
+    {
+       
+        .left-panel,.center{
+            width: 90%;
+            height: auto;
+            justify-content: center;
+        }
+    }
+}
+
+.playerBar{
+    width: 100%;
+    //align-items: flex-start;
+    p{
+        width: 30%;
+    }
+
+    div{
+        justify-content: flex-start;
+    }
+
+    .bar{
+        width: 70%;
+        height: 1rem;
+        background-color: $text1-07;
+    }
+
+}
+
 
 
 
@@ -22,6 +68,7 @@ section{
     width: 20%;
     padding-right: 0;
     min-width: 300px;
+    justify-content: flex-start;
 }
 
 .right-panel{
@@ -49,18 +96,24 @@ section{
     justify-content: flex-start;
     height: 50%;
     width: 100%;
+    overflow: scroll;
     @include width-under($phoneBreakpoint)
     {
         width: auto;
+    }
+
+    app-player-preview{
+        cursor: pointer;
     }
 }
 
 app-dice{
     width: 100%;
+    max-width: 300px;
 }
 
 .center{
-    width: 100%;
+    width: calc(100% - 500px - 6rem);
     height:calc(100% - 2rem);
     padding: 1rem 0;
     @include width-under($phoneBreakpoint)
@@ -138,20 +191,4 @@ app-dice{
         padding: .5rem;
 
     }
-}
-
-.playerUI{
-
-
-    .left-panel{
-        width: 30%;
-    }
-
-    .center{
-        width: 70%;
-    }
-
-    // app-player-details{
-    //     width:400px;
-    // }
 }

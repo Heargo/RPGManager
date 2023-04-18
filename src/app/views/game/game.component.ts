@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GamesService } from 'src/app/services/games.services';
 import { PlayersService } from 'src/app/services/players.services';
-import { Game, Player } from 'src/app/models/games';
+import { Game, GameAttribute, Player } from 'src/app/models/games';
 import { ToastService } from 'src/app/services/toast.services';
 import { ResponseType } from 'src/app/models/responses';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { AuthentificationService } from 'src/app/services/auth.services';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { GAMEILLUSTRATION_STORAGE_ID } from 'src/app/environment';
+import { GetAttributeProgress } from 'src/app/Utils/utils';
 
 @Component({
   selector: 'app-game',
@@ -27,6 +28,8 @@ export class GameComponent implements OnInit, OnDestroy {
   illustrationUnsubscribe!:any;
   illustration!:string;
   selectedPlayer:Player|null = null;
+  lifeAttribute:GameAttribute = {id:"",name:"",value:0,baseValue:0,valueAddition:0};
+  manaAttribute:GameAttribute = {id:"",name:"",value:0,baseValue:0,valueAddition:0};
 
 
 
@@ -51,6 +54,12 @@ export class GameComponent implements OnInit, OnDestroy {
     this.isMJ = this.games.IsUserHost();
     this.userNotes = "default notes";
 
+    //get life and mana attributes
+    if(this.selectedPlayer){
+      this.lifeAttribute = this.GetAttribute("Life");
+      this.manaAttribute = this.GetAttribute("Mana");
+    }
+
     //get illustration
     this.illustration = await this.games.LoadGameIllustration();
     console.log("illustration",this.illustration)
@@ -66,11 +75,17 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     });
 
+
+
   }
 
   ngOnDestroy(){
     this.games.currentGame = null;
     this.illustrationUnsubscribe();
+  }
+
+  GetAttribute(atr:string):GameAttribute{
+    return this.selectedPlayer?.attributes.find(x=>x.name==atr)!;
   }
 
   getPlayerDetails():Player|null{
@@ -81,6 +96,12 @@ export class GameComponent implements OnInit, OnDestroy {
       player == undefined ? player = null : player;
     }
     return player;
+  }
+
+  selectPlayer(player:Player){
+    //if this player is already selected, unselect it
+    if(this.selectedPlayer == player) this.selectedPlayer = null;
+    else if(this.isMJ) this.selectedPlayer = player;
   }
 
 
@@ -108,5 +129,10 @@ export class GameComponent implements OnInit, OnDestroy {
     let reponse = await this.games.UploadGameIllustration(img.file);
     this.toast.Show(reponse.value,reponse.type);
   }
+
+  AttributeProgress(attribute:GameAttribute){
+    return GetAttributeProgress(attribute);
+  }
+
 
 }

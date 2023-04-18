@@ -1,4 +1,5 @@
 import { FormGroup } from "@angular/forms";
+import { GameAttribute } from "../models/games";
 
 export function getErrorMessage(error: unknown) {
     if (error instanceof Error) return error.message
@@ -24,4 +25,15 @@ export function hasPermission(permissions: string[], id: string) {
   });
   
   return hasPermission;
+}
+
+export function GetAttributeProgress(attribute:GameAttribute){
+  if(attribute == undefined) return {display:"0/0",prct:0}
+
+  let display = attribute.value + "/" + (attribute.baseValue + attribute.valueAddition)+" "+attribute.name.toUpperCase(); 
+  
+  //case where max is 0
+  if((attribute.baseValue + attribute.valueAddition) ==0) return {display:display,prct:0}
+  
+  return {display:display,prct:attribute.value/(attribute.baseValue + attribute.valueAddition)*100 }
 }
