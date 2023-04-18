@@ -145,21 +145,17 @@ export class PlayersService {
                 statPoints: game.baseStatPoints,
                 attributes: this.GetGamesAttributesForPlayer(game)
             }
-            console.log(playerData);
             await this.databases.createDocument(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID, ID.unique() , playerData, [
                 //team permissions for read
                 Permission.read(Role.team(game.teamID)),
-                Permission.write(Role.team(game.teamID)),
                 Permission.delete(Role.team(game.teamID)),
                 Permission.update(Role.team(game.teamID)),
                 //owner permissions
                 Permission.read(Role.user(playerData.ownerID)),
-                Permission.write(Role.user(playerData.ownerID)),
                 Permission.delete(Role.user(playerData.ownerID)),
                 Permission.update(Role.user(playerData.ownerID)),
 
                 //team (owner permissions don't work, to investigate)
-                // Permission.write(Role.team(game.teamID, 'owner')),
                 // Permission.delete(Role.team(game.teamID, 'owner')),
                 // Permission.update(Role.team(game.teamID, 'owner')),
              ]);
@@ -192,6 +188,7 @@ export class PlayersService {
 
     async UpdateAttribute(attributeID:string,data:Object) : Promise<Response> {
         let response:Response;
+        console.log("updating attribute",attributeID,data)
         try{
             await this.databases.updateDocument(environment.DATABASE_ID, environment.PLAYERATTRIBUTES_COLLECTION_ID, attributeID, data);
             response = {value:'Attribute updated',type:ResponseType.Success};

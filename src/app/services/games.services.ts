@@ -126,7 +126,6 @@ export class GamesService {
                 Permission.read(Role.team(team.$id)),
                 //host permissions
                 Permission.read(Role.user(hostID)),
-                Permission.write(Role.user(hostID)),
                 Permission.delete(Role.user(hostID)),
                 Permission.update(Role.user(hostID))
             ]
