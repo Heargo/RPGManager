@@ -17,13 +17,15 @@
     <div class="flex-col right">
         <h3>{{player?.name}}</h3>
         <div class="stats">
-            //TODO add pin in db
-            <div class="flex-row" *ngFor="let atr of player?.attributes">
+            <div class="flex-row stat" *ngFor="let atr of player?.attributes">
                 <p> {{atr.name}}</p>  
-                <input value="{{atr.valueAddition + atr.baseValue}} "> 
-                <img src="assets/icons/pin.svg" alt="">
+                <div class="flex-row interractables">
+                    <input value="{{atr.valueAddition + atr.baseValue}} "> 
+                    <img src="assets/icons/pin.svg" alt="">
+                </div>
             </div>
         </div>
+        <p>Availaible stats point : xx</p>
         <div class="inventory">
             <div *ngFor="let i of minimumInventory"><img src="assets/icons/inventory/empty.svg" alt=""></div>
         </div>
