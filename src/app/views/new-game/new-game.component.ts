@@ -6,7 +6,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ResponseType } from 'src/app/models/responses';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.services';
-import { MAX_FILE_SIZE, MAX_GAME_ATTRIBUTE_NAME_SIZE, MAX_GAME_DESCRIPTION_SIZE, MAX_GAME_NAME_SIZE, MIN_GAME_ATTRIBUTE_DEFAULTVALUE } from 'src/app/environment';
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-new-game',
   templateUrl: './new-game.component.html',
@@ -41,9 +42,9 @@ export class NewGameComponent {
 
   onAddAttribute(){
     //max attribute name length is 40
-    if(this.attributeName.length > MAX_GAME_ATTRIBUTE_NAME_SIZE) { this.toast.Show('Attribute name is too long, max 40 characters', ResponseType.Warning);return;}
+    if(this.attributeName.length > environment.MAX_GAME_ATTRIBUTE_NAME_SIZE) { this.toast.Show('Attribute name is too long, max 40 characters', ResponseType.Warning);return;}
     //min attribute default value is 0
-    if(this.attributeDefaultValue < MIN_GAME_ATTRIBUTE_DEFAULTVALUE) { this.toast.Show('Attribute default value is too low, min 0', ResponseType.Warning);return;}
+    if(this.attributeDefaultValue < environment.MIN_GAME_ATTRIBUTE_DEFAULTVALUE) { this.toast.Show('Attribute default value is too low, min 0', ResponseType.Warning);return;}
     //if attribute name already exist
     if(this.game.attributes.find(a => a.name === this.attributeName)) { this.toast.Show('Attribute name already exist', ResponseType.Warning);return;}
     //if attribute name is empty
@@ -84,15 +85,15 @@ export class NewGameComponent {
     if(!this.isValidGame()) return;
 
     //size file is 2 MB max
-    if(this.imageFile.size > MAX_FILE_SIZE) { this.toast.Show('Image size is too big, max 2MB', ResponseType.Warning);return;}
+    if(this.imageFile.size > environment.MAX_FILE_SIZE) { this.toast.Show('Image size is too big, max 2MB', ResponseType.Warning);return;}
     //max game name length is 40
-    if(this.game.name.length > MAX_GAME_NAME_SIZE) { this.toast.Show('Game name is too long, max 40 characters', ResponseType.Warning);return;}
+    if(this.game.name.length > environment.MAX_GAME_NAME_SIZE) { this.toast.Show('Game name is too long, max 40 characters', ResponseType.Warning);return;}
     //max game description length is 1000
-    if(this.game.description.length > MAX_GAME_DESCRIPTION_SIZE) { this.toast.Show('Game description is too long, max 1000 characters', ResponseType.Warning);return;}
+    if(this.game.description.length > environment.MAX_GAME_DESCRIPTION_SIZE) { this.toast.Show('Game description is too long, max 1000 characters', ResponseType.Warning);return;}
     //max attribute name length is 40
-    if(this.game.attributes.find(a => a.name.length > MAX_GAME_ATTRIBUTE_NAME_SIZE)) { this.toast.Show('Attribute name is too long, max 40 characters', ResponseType.Warning);return;}
+    if(this.game.attributes.find(a => a.name.length > environment.MAX_GAME_ATTRIBUTE_NAME_SIZE)) { this.toast.Show('Attribute name is too long, max 40 characters', ResponseType.Warning);return;}
     //min attribute default value is 0
-    if(this.game.attributes.find(a => a.baseValue < MIN_GAME_ATTRIBUTE_DEFAULTVALUE)) { this.toast.Show('Attribute default value must be greater than 0', ResponseType.Warning);return;}
+    if(this.game.attributes.find(a => a.baseValue < environment.MIN_GAME_ATTRIBUTE_DEFAULTVALUE)) { this.toast.Show('Attribute default value must be greater than 0', ResponseType.Warning);return;}
 
     const response = await this.games.CreateGame(this.game, this.imageFile);
 

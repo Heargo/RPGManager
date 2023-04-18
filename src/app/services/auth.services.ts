@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client, Account, ID, Models } from "appwrite";
-import { API_URL, PROJECT_ID } from '../environment';
+import { environment } from 'src/environments/environment';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { ToastService } from './toast.services';
@@ -8,7 +8,7 @@ import { ToastService } from './toast.services';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthentificationService {
+export class AuthentificationService {  
 
     client!:Client;
     account!:Account;
@@ -19,8 +19,8 @@ export class AuthentificationService {
         this.isConnected=false;
         this.client = new Client();
         this.client
-        .setEndpoint(API_URL) // Your API Endpoint
-        .setProject(PROJECT_ID) // Your project ID
+        .setEndpoint(environment.API_URL) // Your API Endpoint
+        .setProject(environment.PROJECT_ID) // Your project ID
         ;
 
         this.account = new Account(this.client);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { API_URL, PROJECT_ID, PROFILES_STORAGE_ID, GAMEPREVIEWS_STORAGE_ID, DATABASE_ID, PLAYER_COLLECTION_ID } from '../environment';
+import { environment } from 'src/environments/environment';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
@@ -24,8 +24,8 @@ export class PlayersService {
 
         this.client = new Client();
         this.client
-            .setEndpoint(API_URL) // Your API Endpoint
-            .setProject(PROJECT_ID) // Your project ID
+            .setEndpoint(environment.API_URL) // Your API Endpoint
+            .setProject(environment.PROJECT_ID) // Your project ID
         ;
         this.databases = new Databases(this.client);
         this.storage = new Storage(this.client);
@@ -40,7 +40,7 @@ export class PlayersService {
             return this.DEFAULT_CHARACTER_PORTRAIT;
 
         console.log("valid id")
-        let result = this.storage.getFilePreview(PROFILES_STORAGE_ID, id);
+        let result = this.storage.getFilePreview(environment.PROFILES_STORAGE_ID, id);
         return result.href;
     }
 
@@ -71,7 +71,7 @@ export class PlayersService {
         let players = new Array<Player>();
         
         try{
-            let result = await this.databases.listDocuments(DATABASE_ID, PLAYER_COLLECTION_ID, [Query.equal('gameID',gameID)]);
+            let result = await this.databases.listDocuments(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID, [Query.equal('gameID',gameID)]);
             console.log(result.documents);
             players = result.documents.map((doc:any) => {
                 return {
@@ -108,7 +108,7 @@ export class PlayersService {
         //upload image
         if(file != null){
 
-            let image = await this.storage.createFile(PROFILES_STORAGE_ID,ID.unique(),file,[
+            let image = await this.storage.createFile(environment.PROFILES_STORAGE_ID,ID.unique(),file,[
                 Permission.read(Role.team(teamID)),
                 
                 //user all permissions on his own files
@@ -144,7 +144,7 @@ export class PlayersService {
                 attributes: this.GetGamesAttributesForPlayer(game)
             }
             console.log(playerData);
-            await this.databases.createDocument(DATABASE_ID, PLAYER_COLLECTION_ID, ID.unique() , playerData, [
+            await this.databases.createDocument(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID, ID.unique() , playerData, [
                 //team permissions for read
                 Permission.read(Role.team(game.teamID)),
                 Permission.write(Role.team(game.teamID)),
@@ -177,7 +177,7 @@ export class PlayersService {
     async DeletePlayer(playerID:string): Promise<Response> {
         let response:Response;
         try{
-            await this.databases.deleteDocument(DATABASE_ID, PLAYER_COLLECTION_ID, playerID);
+            await this.databases.deleteDocument(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID, playerID);
             response = {value:'Player deleted',type:ResponseType.Success};
         }
         catch(error){

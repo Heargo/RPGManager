@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
-import { DATABASE_ID, API_URL, PROJECT_ID, SERVER_FUNCTIONS, GAME_COLLECTION_ID, ATTRIBUTE_COLLECTION_ID, GAMEPREVIEWS_STORAGE_ID, PLAYER_COLLECTION_ID, GAMEILLUSTRATION_STORAGE_ID } from '../environment';
+import { environment } from 'src/environments/environment';
 import { getErrorMessage, hasPermission } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute, Player } from '../models/games';
 import { ToastService } from './toast.services';
 import { PlayersService } from './players.services';
+
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +26,8 @@ export class GamesService {
 
         this.client = new Client();
         this.client
-            .setEndpoint(API_URL) // Your API Endpoint
-            .setProject(PROJECT_ID) // Your project ID
+            .setEndpoint(environment.API_URL) // Your API Endpoint
+            .setProject(environment.PROJECT_ID) // Your project ID
         ;
         this.databases = new Databases(this.client);
         this.storage = new Storage(this.client);
@@ -57,7 +58,7 @@ export class GamesService {
         let games:Game[] = [];
 
         try{
-            const response = await this.databases.listDocuments(DATABASE_ID, GAME_COLLECTION_ID);
+            const response = await this.databases.listDocuments(environment.DATABASE_ID, environment.GAME_COLLECTION_ID);
             games = response.documents.map((doc:any) => {
                 return {
                     id:doc.$id,
@@ -92,7 +93,7 @@ export class GamesService {
             //we compare the image url with the default one since it's comming from the front app
             //and we gat and url from it and not an id. However we will save the id in the database
             if(gameData.image !== 'assets/illustrations/default_icon.jpg' && image.size < 2){
-                const img = await this.storage.createFile(GAME_COLLECTION_ID, ID.unique(), image);
+                const img = await this.storage.createFile(environment.GAME_COLLECTION_ID, ID.unique(), image);
                 imageID = img.$id;
             }else{
                 imageID = this.DEFAULT_GAME_PREVIEW;
@@ -107,7 +108,7 @@ export class GamesService {
                 }
             });
             //step 2: create the game
-            const game = await this.databases.createDocument(DATABASE_ID, GAME_COLLECTION_ID, ID.unique(), {
+            const game = await this.databases.createDocument(environment.DATABASE_ID, environment.GAME_COLLECTION_ID, ID.unique(), {
                 name: gameData.name,
                 hostID: hostID,
                 description: gameData.description,
@@ -161,15 +162,15 @@ export class GamesService {
             this.toast.ShowLoading("Deleting the game");
             await this.teams.delete(game.teamID);
             console.log("team deleted")
-            await this.databases.deleteDocument(DATABASE_ID, GAME_COLLECTION_ID, game.id);
+            await this.databases.deleteDocument(environment.DATABASE_ID, environment.GAME_COLLECTION_ID, game.id);
             console.log("game deleted")
             if(game.image !== this.DEFAULT_GAME_PREVIEW){
-                await this.storage.deleteFile(GAMEPREVIEWS_STORAGE_ID, game.image);
+                await this.storage.deleteFile(environment.GAMEPREVIEWS_STORAGE_ID, game.image);
                 console.log("game preview deleted")
             }
 
             //delete all players
-            let players = await this.databases.listDocuments(DATABASE_ID, PLAYER_COLLECTION_ID,[Query.equal('gameID',game.id)]);
+            let players = await this.databases.listDocuments(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID,[Query.equal('gameID',game.id)]);
             players.documents.forEach(async (player) => {
                 await this.playersService.DeletePlayer(player.$id);
             });
@@ -199,7 +200,7 @@ export class GamesService {
             let email = this.auth.session?.email;
             console.log(email)
             let data = JSON.stringify({email:email,teamID:id});
-            let result = await this.functions.createExecution(SERVER_FUNCTIONS.joinTeam, data);
+            let result = await this.functions.createExecution(environment.SERVER_FUNCTIONS.joinTeam, data);
             if(result.statusCode !== 200)
                 throw new Error("Can't join the game, verify the invitation code and try again");
 
@@ -251,15 +252,15 @@ export class GamesService {
         let teamID = this.currentGame.teamID;
         
         //select old file (the one that as team id in permission)
-        let images = await this.storage.listFiles(GAMEILLUSTRATION_STORAGE_ID);
+        let images = await this.storage.listFiles(environment.GAMEILLUSTRATION_STORAGE_ID);
         console.log("images",images)
         let oldImage = images.files.find((file) => hasPermission(file.$permissions,Role.team(teamID)));
         //delete if exists
-        if(oldImage) this.storage.deleteFile(GAMEILLUSTRATION_STORAGE_ID, oldImage.$id);
+        if(oldImage) this.storage.deleteFile(environment.GAMEILLUSTRATION_STORAGE_ID, oldImage.$id);
 
         let userid = this.auth.GetUserID();
         //upload the new image
-        this.storage.createFile(GAMEILLUSTRATION_STORAGE_ID, ID.unique(), image,
+        this.storage.createFile(environment.GAMEILLUSTRATION_STORAGE_ID, ID.unique(), image,
         [
             Permission.read(Role.team(teamID)),
 
@@ -278,7 +279,7 @@ export class GamesService {
 
         //get illustration
         let teamID = this.currentGame.teamID;
-        let images = await this.storage.listFiles(GAMEILLUSTRATION_STORAGE_ID);
+        let images = await this.storage.listFiles(environment.GAMEILLUSTRATION_STORAGE_ID);
         let image = images.files.find((file) => hasPermission(file.$permissions,Role.team(teamID)));
         if(image) return this.GetIllustrationUrlPreview(image.$id);
 
@@ -294,12 +295,12 @@ export class GamesService {
     }
 
     GetPreviewUrlPreview(id:string):string{
-        const result = this.storage.getFilePreview(GAMEPREVIEWS_STORAGE_ID, id);
+        const result = this.storage.getFilePreview(environment.GAMEPREVIEWS_STORAGE_ID, id);
         return result.href;
     }
 
     GetIllustrationUrlPreview(id:any):string{
-        const result = this.storage.getFilePreview(GAMEILLUSTRATION_STORAGE_ID, id);
+        const result = this.storage.getFilePreview(environment.GAMEILLUSTRATION_STORAGE_ID, id);
         return result.href;
     }
 

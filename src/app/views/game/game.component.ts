@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { AuthentificationService } from 'src/app/services/auth.services';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { fromEvent, Observable, Subscription } from 'rxjs';
-import { GAMEILLUSTRATION_STORAGE_ID } from 'src/app/environment';
+import { environment } from 'src/environments/environment';
 import { GetAttributeProgress } from 'src/app/Utils/utils';
 
 @Component({
@@ -68,7 +68,7 @@ export class GameComponent implements OnInit, OnDestroy {
     console.log("subscribing to files channel")
     this.illustrationUnsubscribe = this.games.client.subscribe('files', response => {
       //console.log('change in files')
-      if(response.events.includes('buckets.'+GAMEILLUSTRATION_STORAGE_ID+'.files.*.create')) {
+      if(response.events.includes('buckets.'+environment.GAMEILLUSTRATION_STORAGE_ID+'.files.*.create')) {
           // Log when a new file is uploaded
           //console.log('change in bucket',response.payload);
           this.illustration = this.games.GetIllustrationUrlPreview((response.payload as any).$id);
