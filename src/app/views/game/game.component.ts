@@ -54,6 +54,12 @@ export class GameComponent implements OnInit, OnDestroy {
     this.isMJ = this.games.IsUserHost();
     this.userNotes = "default notes";
 
+    //load player as selected player if not MJ
+    if(!this.isMJ){
+      let player = this.playerList.find(p => p.ownerID == this.auth.GetUserID());
+      player == undefined ? this.selectedPlayer = null : this.selectedPlayer = player;
+    }
+
     //get life and mana attributes
     if(this.selectedPlayer){
       this.lifeAttribute = this.GetAttribute("Life");
@@ -62,10 +68,9 @@ export class GameComponent implements OnInit, OnDestroy {
 
     //get illustration
     this.illustration = await this.games.LoadGameIllustration();
-    console.log("illustration",this.illustration)
 
     // Subscribe to files channel
-    console.log("subscribing to files channel")
+    //console.log("subscribing to files channel")
     this.illustrationUnsubscribe = this.games.client.subscribe('files', response => {
       //console.log('change in files')
       if(response.events.includes('buckets.'+environment.GAMEILLUSTRATION_STORAGE_ID+'.files.*.create')) {
@@ -88,15 +93,6 @@ export class GameComponent implements OnInit, OnDestroy {
     return this.selectedPlayer?.attributes.find(x=>x.name==atr)!;
   }
 
-  getPlayerDetails():Player|null{
-    let player = null;
-    if(this.isMJ) player =  this.selectedPlayer;
-    else{
-      player = this.playerList.find(p => p.ownerID == this.auth.GetUserID());
-      player == undefined ? player = null : player;
-    }
-    return player;
-  }
 
   selectPlayer(player:Player){
     //if this player is already selected, unselect it

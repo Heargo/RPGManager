@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
 import { environment } from 'src/environments/environment';
-import { getErrorMessage, hasPermission } from '../Utils/utils';
+import { BytesToMegaBytes, getErrorMessage, hasPermission } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute, Player } from '../models/games';
@@ -67,7 +67,9 @@ export class GamesService {
                     image:doc.imageID,
                     host:doc.hostID,
                     teamID:doc.teamID,
-                    attributes:this.MapAttributes(doc.attributes)
+                    attributes:this.MapAttributes(doc.attributes),
+                    baseStatPoints:doc.baseStatPoints,
+                    baseMoney:doc.baseMoney,
                 }
             });
 
@@ -92,8 +94,9 @@ export class GamesService {
             let imageID:string;
             //we compare the image url with the default one since it's comming from the front app
             //and we gat and url from it and not an id. However we will save the id in the database
-            if(gameData.image !== 'assets/illustrations/default_icon.jpg' && image.size < 2){
-                const img = await this.storage.createFile(environment.GAME_COLLECTION_ID, ID.unique(), image);
+            console.log("game image: ",gameData.image)
+            if(gameData.image !== this.DEFAULT_GAME_PREVIEW && BytesToMegaBytes(image.size) < 2){
+                const img = await this.storage.createFile(environment.GAMEPREVIEWS_STORAGE_ID, ID.unique(), image);
                 imageID = img.$id;
             }else{
                 imageID = this.DEFAULT_GAME_PREVIEW;
@@ -114,7 +117,9 @@ export class GamesService {
                 description: gameData.description,
                 imageID: imageID, 
                 teamID: team.$id,
-                attributes: atrs
+                attributes: atrs,
+                baseStatPoints: gameData.baseStatPoints,
+                baseMoney: gameData.baseMoney
             },
             [
                 //team permissions for read
@@ -168,7 +173,9 @@ export class GamesService {
                 await this.storage.deleteFile(environment.GAMEPREVIEWS_STORAGE_ID, game.image);
                 console.log("game preview deleted")
             }
-
+            //delete game ilustrations
+            await this.DeleteGameIllustration(game);
+            console.log("game illustrations deleted")
             //delete all players
             let players = await this.databases.listDocuments(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID,[Query.equal('gameID',game.id)]);
             players.documents.forEach(async (player) => {
@@ -284,6 +291,13 @@ export class GamesService {
         if(image) return this.GetIllustrationUrlPreview(image.$id);
 
         return this.DEFAULT_GAME_PREVIEW;
+    }
+
+    async DeleteGameIllustration(game:Game) {
+        let images = await this.storage.listFiles(environment.GAMEILLUSTRATION_STORAGE_ID);
+        let image = images.files.find((file) => hasPermission(file.$permissions,Role.team(game.teamID)));
+        if(image)
+            await this.storage.deleteFile(environment.GAMEILLUSTRATION_STORAGE_ID, image.$id);
     }
 
     IsUserHost():boolean{

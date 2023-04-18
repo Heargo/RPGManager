@@ -6,6 +6,8 @@ export interface Game{
     host: string;
     teamID: string;
     attributes: GameAttribute[];
+    baseStatPoints: number;
+    baseMoney: number;
 }
 
 export interface GameAttribute{
@@ -23,5 +25,6 @@ export interface Player{
     imageID: string;
     name: string;
     money: number;
+    statPoints: number;
     attributes: GameAttribute[];
 }

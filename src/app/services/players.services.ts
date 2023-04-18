@@ -81,6 +81,7 @@ export class PlayersService {
                     imageID: doc.imageID,
                     name: doc.name,
                     money: doc.money,
+                    statPoints: doc.statPoints,
                     attributes: this.FormatAttributes(doc.attributes),
                 }
             });
@@ -95,7 +96,7 @@ export class PlayersService {
         return game.attributes.map((atr) => {
             return {
                 $id:ID.unique(),
-                value: 0,
+                value: atr.baseValue,
                 valueAddition: atr.valueAddition,
                 attribute : atr.id
 
@@ -140,7 +141,8 @@ export class PlayersService {
                 ownerID: this.auth.GetUserID(),
                 imageID: imageID,
                 name: name,
-                money: 0,
+                money: game.baseMoney,
+                statPoints: game.baseStatPoints,
                 attributes: this.GetGamesAttributesForPlayer(game)
             }
             console.log(playerData);
@@ -187,5 +189,20 @@ export class PlayersService {
         return response;
     }
 
+
+    async UpdateAttribute(attributeID:string,data:Object) : Promise<Response> {
+        let response:Response;
+        try{
+            await this.databases.updateDocument(environment.DATABASE_ID, environment.PLAYERATTRIBUTES_COLLECTION_ID, attributeID, data);
+            response = {value:'Attribute updated',type:ResponseType.Success};
+        }
+        catch(error){
+            console.log(error);
+            response= {value:getErrorMessage(error),type:ResponseType.Error};
+        }
+        this.toast.Show(response.value,response.type);
+        return response;
+
+    }
 
 }
