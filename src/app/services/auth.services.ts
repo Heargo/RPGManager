@@ -90,7 +90,7 @@ export class AuthentificationService {
         if(this.account == null){
             this.isConnected = false;
         }
-
+        console.log("checking connection",this.account)
         try {
             const session = await this.account.get();
             if (session) {
@@ -99,7 +99,6 @@ export class AuthentificationService {
             }
         } catch (error) {
             console.log("error when connecting",error)
-            this.toast.Show("error when connecting",ResponseType.Error);
             this.isConnected = false;
             this.session = null;
 
