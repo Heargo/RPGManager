@@ -1,9 +1,9 @@
 export const environment = {
 	//This file is generated
-	//GENERAL (the actual values are in the .env file since they are the only ones that are secret)
-	API_URL : 'https://example.com/v1',
-	PROJECT_ID : 'project_id',
-	DATABASE_ID : 'database_id',
+	//GENERAL (the actual values are in the .env file since they are the only ones that are "secret")
+	API_URL : process.env['NG_APP_API_URL'] ? process.env['NG_APP_API_URL'] :'https://example.com/v1',
+	PROJECT_ID : process.env['NG_APP_PROJECT_ID'] ? process.env['NG_APP_PROJECT_ID'] :'example_project_id',
+	DATABASE_ID : process.env['NG_APP_DATABASE_ID'] ? process.env['NG_APP_DATABASE_ID'] :'example_database_id',
 
 	//COLLECTIONS
 	GAME_COLLECTION_ID : "Game",
