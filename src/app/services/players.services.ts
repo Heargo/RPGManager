@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
-import { Game, GameAttribute, Player } from '../models/games';
+import { Game, GameAttribute, MoneyFormat, Player } from '../models/games';
 import { ToastService } from './toast.services';
 
 @Injectable({
@@ -200,6 +200,55 @@ export class PlayersService {
         this.toast.Show(response.value,response.type);
         return response;
 
+    }
+
+    async UpdatePlayer(playerID:string,data:Object) : Promise<Response> {
+        let response:Response;
+        console.log("updating player",playerID,data)
+        try{
+            await this.databases.updateDocument(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID, playerID, data);
+            response = {value:'Player updated',type:ResponseType.Success};
+        }
+        catch(error){
+            console.log(error);
+            response= {value:getErrorMessage(error),type:ResponseType.Error};
+        }
+        this.toast.Show(response.value,response.type);
+        return response;
+    }
+
+    FormatMoney(money:number,type:MoneyFormat):string{
+        switch(type){
+            case MoneyFormat.Dollars:
+                return "$"+money;
+            case MoneyFormat.Euros:
+                return "€"+money;
+            case MoneyFormat.Pounds:
+                return "£"+money;
+            case MoneyFormat.Yen:
+                return "¥"+money;
+            case MoneyFormat.Custom:
+                return money+" TODO";
+            case MoneyFormat.FantasyCoins:
+                return this.GetFantasyCoinsFormat(money);
+            default:
+                return "$"+money;
+        }
+
+    }
+
+    GetFantasyCoinsFormat(n:number):string{
+        //1.1203 = 1gold 12silver 3copper
+        let gold = Math.floor(n);
+        let silver = Math.floor((n*100)%100);
+        let copper = Math.floor((n*10000)%100);
+
+        let str = "";
+        //include the image as well to the string "<img src='assets/icons/money/{value}-coin.svg'  />"
+        if(gold>0) str += gold+" <img src='assets/icons/money/gold-coin.svg'  /> ";
+        if(silver>0 || gold>0) str += silver+" <img src='assets/icons/money/silver-coin.svg'  /> ";
+        str += copper+" <img src='assets/icons/money/copper-coin.svg'  /> ";
+        return str;
     }
 
 }

@@ -7,7 +7,7 @@
             <app-player-preview *ngFor="let player of playerList" [player]="player" (click)="selectPlayer(player)"></app-player-preview>
         </div>
         <!-- player details [COMPONENT] -->
-        <app-player-details *ngIf="selectedPlayer!=null" [player]="selectedPlayer"></app-player-details>
+        <app-player-details *ngIf="selectedPlayer!=null" [player]="selectedPlayer" [isMJ]="isMJ"></app-player-details>
         <!-- Life & mana bar -->
         <div *ngIf="!isMJ" class="playerBar">
             <div class="flex-row ">

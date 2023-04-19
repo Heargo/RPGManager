@@ -122,8 +122,9 @@ export class GamesService {
                 baseMoney: gameData.baseMoney
             },
             [
-                //team permissions for read
+                //team permissions for read & update
                 Permission.read(Role.team(team.$id)),
+                Permission.update(Role.team(team.$id)),
                 //host permissions
                 Permission.read(Role.user(hostID)),
                 Permission.delete(Role.user(hostID)),

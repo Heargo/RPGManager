@@ -28,3 +28,12 @@ export interface Player{
     statPoints: number;
     attributes: GameAttribute[];
 }
+
+export enum MoneyFormat{
+    FantasyCoins = 0,
+    Dollars = 1,
+    Euros = 2,
+    Pounds = 3,
+    Yen = 4,
+    Custom = 5,
+}
