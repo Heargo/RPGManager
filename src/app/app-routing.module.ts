@@ -8,6 +8,7 @@ import { LoginComponent } from './views/login/login.component';
 import { NewGameComponent } from './views/new-game/new-game.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { SignupComponent } from './views/signup/signup.component';
+import { ItemsComponent } from './views/items/items.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent },
   { path: 'new-game', component: NewGameComponent },
   { path: 'create-player', component: CreatePlayerComponent },
+  { path: 'items', component: ItemsComponent},
   { path: '**', redirectTo: '/home' }
 ];
 

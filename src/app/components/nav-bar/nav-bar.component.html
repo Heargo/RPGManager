@@ -1,7 +1,8 @@
 <nav>
     <!-- Logo & user type -->
     <div class="left">
-        <a routerLink="/" class="logo" >RPG manager</a>
+        <a *ngIf="!isInGame()" routerLink="/" class="logo" >RPG manager</a>
+        <a *ngIf="isInGame()" class="logo" >RPG manager</a>
         <p *ngIf="isInGame() && isMJ()">MJ</p>
         <p *ngIf="isInGame() && !isMJ()">Player</p>
     </div>
@@ -14,14 +15,13 @@
     
     <!-- Connected -->
     <div *ngIf="isConnected()" class="right">
-        <a routerLink="/games" routerLinkActive="active">My games</a>
+        <a *ngIf="!isInGame()" routerLink="/games" routerLinkActive="active">My games</a>
+        <a *ngIf="isInGame()" routerLink="/game" routerLinkActive="active">Game</a>
         <div *ngIf="isMJ()" >
-            <a routerLink="/npcs" routerLinkActive="active">NPCS</a>
+            <a routerLinkActive="active">NPCS</a>
             <a routerLink="/items" routerLinkActive="active">Items</a>
         </div>
-        <div *ngIf="isInGame()">
-            <a routerLink="/map" routerLinkActive="active">Map</a>
-        </div>
+        <a *ngIf="isInGame()" routerLink="/games" routerLinkActive="active" (click)='ExitGame()' >Exit</a>
         <a routerLink="/settings" routerLinkActive="active">Settings</a>
     </div>
 </nav>

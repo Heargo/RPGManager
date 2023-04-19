@@ -1,10 +1,6 @@
 @import '../../styles/var.scss';
 
 section{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
     gap: 2rem;
     flex-wrap: wrap;
     min-height: calc(100vh - 150px);
@@ -13,6 +9,10 @@ section{
     // margin-bottom: 100px;
     padding-bottom:100px;
     border-radius: 2px red;
+
+    .info-empty{
+        padding: 1rem;
+    }
 }
 
 .actions-container{
@@ -31,4 +31,9 @@ section{
         max-width: 200px;
         background-color: $background-light;
     }
+}
+
+.no-games{
+    width: calc(100% - 1rem);
+    max-width: 700px;
 }

@@ -76,7 +76,6 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
-    this.games.currentGame = null;
     this.filesChangesUnsubscribe();
     this.playerChangesUnsubscribe();
     this.playerAttributesChangesUnsubscribe();
