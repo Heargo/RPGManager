@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { toNumber } from '@vue/shared';
 import { GameAttribute, MoneyFormat, Player } from 'src/app/models/games';
 import { ResponseType } from 'src/app/models/responses';
 import { GamesService } from 'src/app/services/games.services';
@@ -44,9 +43,9 @@ export class PlayerDetailsComponent implements OnInit {
 
   async AddStatPoint(input:HTMLInputElement){
     if(this.player == null) return;
-    if(isNaN(toNumber(input.value))) return;
+    if(isNaN(Number(input.value))) return;
     
-    await this.players.UpdatePlayer(this.player.id,{statPoints:this.player.statPoints+toNumber(input.value)});
+    await this.players.UpdatePlayer(this.player.id,{statPoints:this.player.statPoints+Number(input.value)});
     input.value = "";
 
   }
@@ -60,7 +59,7 @@ export class PlayerDetailsComponent implements OnInit {
     if($event.target.value == "") $event.target.value = 0;
 
     //only allow numbers 
-    if(isNaN(toNumber($event.target.value))){
+    if(isNaN(Number($event.target.value))){
       $event.target.value = atr.baseValue+atr.valueAddition;
       this.toast.Show("Only numbers allowed",ResponseType.Warning);
       return;
@@ -80,7 +79,7 @@ export class PlayerDetailsComponent implements OnInit {
         totalStatPointsUsed += a.valueAddition;
       }
     });
-    totalStatPointsUsed +=toNumber($event.target.value) - atr.baseValue;
+    totalStatPointsUsed +=Number($event.target.value) - atr.baseValue;
     if(totalStatPointsUsed > this.player.statPoints){
       $event.target.value = atr.baseValue+atr.valueAddition;
       this.toast.Show("Not enough stat points",ResponseType.Warning);
@@ -90,7 +89,7 @@ export class PlayerDetailsComponent implements OnInit {
     
     
     //update attribute 
-    let valueAddition = toNumber($event.target.value) - atr.baseValue;    
+    let valueAddition = Number($event.target.value) - atr.baseValue;    
     await this.players.UpdateAttribute(atr.id,{valueAddition:valueAddition});
    
 
