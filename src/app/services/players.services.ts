@@ -38,8 +38,6 @@ export class PlayersService {
     GetImageUrlPreview(id:string):string{
         if(id == undefined || id == "" || id === this.DEFAULT_CHARACTER_PORTRAIT)
             return this.DEFAULT_CHARACTER_PORTRAIT;
-
-        console.log("valid id")
         let result = this.storage.getFilePreview(environment.PROFILES_STORAGE_ID, id);
         return result.href;
     }
@@ -72,24 +70,27 @@ export class PlayersService {
         
         try{
             let result = await this.databases.listDocuments(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID, [Query.equal('gameID',gameID)]);
-            console.log(result.documents);
             players = result.documents.map((doc:any) => {
-                return {
-                    id: doc.$id,
-                    gameID: doc.gameID,
-                    ownerID: doc.ownerID,
-                    imageID: doc.imageID,
-                    name: doc.name,
-                    money: doc.money,
-                    statPoints: doc.statPoints,
-                    attributes: this.FormatAttributes(doc.attributes),
-                }
+                return this.MapAnyToPlayer(doc);
             });
         }
         catch(error){
             console.log(error);
         }
         return players;
+    }
+
+    MapAnyToPlayer(doc:any):Player{
+        return {
+            id: doc.$id,
+            gameID: doc.gameID,
+            ownerID: doc.ownerID,
+            imageID: doc.imageID,
+            name: doc.name,
+            money: doc.money,
+            statPoints: doc.statPoints,
+            attributes: this.FormatAttributes(doc.attributes)
+        }
     }
 
     GetGamesAttributesForPlayer(game:Game): any[] {
@@ -188,7 +189,6 @@ export class PlayersService {
 
     async UpdateAttribute(attributeID:string,data:Object) : Promise<Response> {
         let response:Response;
-        console.log("updating attribute",attributeID,data)
         try{
             await this.databases.updateDocument(environment.DATABASE_ID, environment.PLAYERATTRIBUTES_COLLECTION_ID, attributeID, data);
             response = {value:'Attribute updated',type:ResponseType.Success};
@@ -204,7 +204,6 @@ export class PlayersService {
 
     async UpdatePlayer(playerID:string,data:Object) : Promise<Response> {
         let response:Response;
-        console.log("updating player",playerID,data)
         try{
             await this.databases.updateDocument(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID, playerID, data);
             response = {value:'Player updated',type:ResponseType.Success};

@@ -4,7 +4,7 @@
         <h3>{{player.name}}</h3>
         <div class="bar-container flex-row">
             <p>{{AttributeProgress(lifeAttribute).display}}</p> 
-            <div class="life bar"><span [ngStyle]="{width:AttributeProgress(lifeAttribute).prct}"></span></div>
+            <div class="life bar"><span [ngStyle]="{width:AttributeProgress(lifeAttribute).prct+'%'}"></span></div>
         </div>
         <div class="bar-container flex-row">
             <p>{{AttributeProgress(manaAttribute).display}}</p>

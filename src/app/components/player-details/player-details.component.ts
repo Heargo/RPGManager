@@ -46,7 +46,7 @@ export class PlayerDetailsComponent implements OnInit {
     if(this.player == null) return;
     if(isNaN(toNumber(input.value))) return;
     
-    await this.players.UpdatePlayer(this.player.id,{statPoints:toNumber(input.value)});
+    await this.players.UpdatePlayer(this.player.id,{statPoints:this.player.statPoints+toNumber(input.value)});
     input.value = "";
 
   }
@@ -56,32 +56,33 @@ export class PlayerDetailsComponent implements OnInit {
     if(this.player == null) return;
     if(this.games.currentGame == null) return;
 
+    //if empty, set to 0
+    if($event.target.value == "") $event.target.value = 0;
+
     //only allow numbers 
     if(isNaN(toNumber($event.target.value))){
-      $event.target.value = atr.value;
+      $event.target.value = atr.baseValue+atr.valueAddition;
       this.toast.Show("Only numbers allowed",ResponseType.Warning);
       return;
     }
 
     //dont go below the base value 
-    let baseValue = this.games.currentGame.attributes.filter(a => a.name == atr.name)[0].baseValue;
-    if($event.target.value < baseValue){
-      $event.target.value = baseValue;
+    if($event.target.value < atr.baseValue){
+      $event.target.value = atr.baseValue+atr.valueAddition;
       this.toast.Show("Cannot go below base value",ResponseType.Warning);
       return
     }
 
     //can't spend more stat points than available
-    let totalStatPoints = this.GetAvailablePlayerStatPoints();
     let totalStatPointsUsed = 0;
     this.player.attributes.forEach(a => {
-      if(a.name != atr.name)
+      if(a.name != atr.name){
         totalStatPointsUsed += a.valueAddition;
+      }
     });
-    totalStatPointsUsed +=toNumber($event.target.value);
-    console.log("totalStatPointsUsed: "+totalStatPointsUsed, "totalStatPoints: "+totalStatPoints);
-    if(totalStatPointsUsed > totalStatPoints){
-      $event.target.value = atr.value;
+    totalStatPointsUsed +=toNumber($event.target.value) - atr.baseValue;
+    if(totalStatPointsUsed > this.player.statPoints){
+      $event.target.value = atr.baseValue+atr.valueAddition;
       this.toast.Show("Not enough stat points",ResponseType.Warning);
       return
     }
@@ -89,17 +90,9 @@ export class PlayerDetailsComponent implements OnInit {
     
     
     //update attribute 
-    console.log("update attribute: ",atr.name,"id",atr.id," to value: "+atr.value);
-    
-    let response = await this.players.UpdateAttribute(atr.id,{valueAddition:atr.value});
-    if(response.type == ResponseType.Success){
-      //be sure to only save the number value
-      atr.value = toNumber($event.target.value);
-      $event.target.value = atr.value;      
-    }
-    else{
-      $event.target.value = atr.value;
-    }
+    let valueAddition = toNumber($event.target.value) - atr.baseValue;    
+    await this.players.UpdateAttribute(atr.id,{valueAddition:valueAddition});
+   
 
 
   }
