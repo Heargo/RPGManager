@@ -208,3 +208,17 @@ textarea{
     border: 1px solid $text1;
     border-radius: 10px;
 }
+
+
+.other{
+    width: 100%;
+    div{
+        justify-content: space-between;
+        width: 100%;
+    }
+    input{
+        width: 10ch;
+        padding: .2rem .5rem;
+        background-color: $background-light;
+    }
+}

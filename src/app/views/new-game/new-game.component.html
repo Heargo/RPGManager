@@ -6,8 +6,10 @@
             <input type="text" placeholder="Enter your world name here" [(ngModel)]="game.name">
         </div>
         <div class="flex-col options">
+            <!-- description -->
             <h3 [ngClass]="{'active': accordions.description}" (click)="accordions.description = !accordions.description">Description</h3>
             <textarea *ngIf="accordions.description" placeholder="Enter your world description here"></textarea>
+            <!-- game attributes -->
             <h3 [ngClass]="{'active': accordions.attributes}" (click)="accordions.attributes = !accordions.attributes">Attributes</h3>
             <div *ngIf="accordions.attributes" class="flex-col attributes-container">
 
@@ -20,6 +22,18 @@
                     <p>{{attribute.name}}</p>
                     <p class="num">{{attribute.baseValue}}</p>
                     <img (click)="onDeleteAttribute(attribute.name)" src="assets/icons/bin.svg" alt="">
+                </div>
+            </div>
+            <!-- start stats points & -->
+            <h3 [ngClass]="{'active': accordions.other}" (click)="accordions.other = !accordions.other">Other</h3>
+            <div *ngIf="accordions.other" class="flex-col other">
+                <div class="flex-row">
+                    <label for="startStats">Starting amount of stats points</label>
+                    <input id="startStats" type="text" placeholder="stat points" [(ngModel)]="game.baseStatPoints">
+                </div>
+                <div class="flex-row">
+                    <label for="startMoney">Start money</label>
+                    <input id="startMoney" type="text" placeholder="money" [(ngModel)]="game.baseMoney">
                 </div>
             </div>
         </div>

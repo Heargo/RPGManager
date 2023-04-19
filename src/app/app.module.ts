@@ -22,6 +22,7 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { PlayerPreviewComponent } from './components/player-preview/player-preview.component';
 import { PlayerDetailsComponent } from './components/player-details/player-details.component';
 import { DiceComponent } from './components/dice/dice.component';
+import { ItemsComponent } from './views/items/items.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { DiceComponent } from './components/dice/dice.component';
     LoadingComponent,
     PlayerPreviewComponent,
     PlayerDetailsComponent,
-    DiceComponent
+    DiceComponent,
+    ItemsComponent
   ],
   imports: [
     BrowserModule,

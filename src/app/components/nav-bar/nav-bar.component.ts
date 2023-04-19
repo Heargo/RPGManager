@@ -23,4 +23,8 @@ export class NavBarComponent {
   isConnected():boolean{
     return this.authService.isConnected;
   }
+
+  ExitGame(){
+    this.games.currentGame = null;
+  }
 }

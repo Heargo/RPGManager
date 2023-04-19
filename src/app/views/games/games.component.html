@@ -1,6 +1,7 @@
-<section>
+<section [ngClass]="{'flex-col':(userGames.length==0),'flex-row':(userGames.length!=0)}" >
+    <img *ngIf="(userGames.length==0)" class="no-games" src="assets/illustrations/galaxie.svg" alt="no games">
+    <p *ngIf="(userGames.length==0)" class="info-empty">You haven't join or created a game yet, feel free to start !</p>
     <app-game-preview *ngFor="let game of userGames" [game]="game" (removeGame)="onRemoveGame(game)" ></app-game-preview>
-
 </section>
 <div class="actions-container">
     <input *ngIf="showIdInput" type="text" placeholder="game id" [(ngModel)]="teamID">

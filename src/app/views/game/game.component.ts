@@ -25,7 +25,9 @@ export class GameComponent implements OnInit, OnDestroy {
   isMJ:boolean = false;
   userNotes!:string;
   quickImages:{file:File;url:SafeUrl}[] = [];
-  illustrationUnsubscribe!:any;
+  filesChangesUnsubscribe!:any;
+  playerChangesUnsubscribe!:any;
+  playerAttributesChangesUnsubscribe!:any;
   illustration!:string;
   selectedPlayer:Player|null = null;
   lifeAttribute:GameAttribute = {id:"",name:"",value:0,baseValue:0,valueAddition:0};
@@ -54,6 +56,12 @@ export class GameComponent implements OnInit, OnDestroy {
     this.isMJ = this.games.IsUserHost();
     this.userNotes = "default notes";
 
+    //load player as selected player if not MJ
+    if(!this.isMJ){
+      let player = this.playerList.find(p => p.ownerID == this.auth.GetUserID());
+      player == undefined ? this.selectedPlayer = null : this.selectedPlayer = player;
+    }
+
     //get life and mana attributes
     if(this.selectedPlayer){
       this.lifeAttribute = this.GetAttribute("Life");
@@ -62,41 +70,90 @@ export class GameComponent implements OnInit, OnDestroy {
 
     //get illustration
     this.illustration = await this.games.LoadGameIllustration();
-    console.log("illustration",this.illustration)
 
-    // Subscribe to files channel
-    console.log("subscribing to files channel")
-    this.illustrationUnsubscribe = this.games.client.subscribe('files', response => {
-      //console.log('change in files')
-      if(response.events.includes('buckets.'+environment.GAMEILLUSTRATION_STORAGE_ID+'.files.*.create')) {
-          // Log when a new file is uploaded
-          //console.log('change in bucket',response.payload);
-          this.illustration = this.games.GetIllustrationUrlPreview((response.payload as any).$id);
-      }
-    });
-
-
+    this.SubscribeToEvents()
 
   }
 
   ngOnDestroy(){
-    this.games.currentGame = null;
-    this.illustrationUnsubscribe();
+    this.filesChangesUnsubscribe();
+    this.playerChangesUnsubscribe();
+    this.playerAttributesChangesUnsubscribe();
+  }
+
+  SubscribeToEvents(){
+    // Subscribe to files changes
+    this.filesChangesUnsubscribe = this.games.client.subscribe('files', response => {
+      if(response.events.includes('buckets.'+environment.GAMEILLUSTRATION_STORAGE_ID+'.files.*.create')) {
+          this.illustration = this.games.GetIllustrationUrlPreview((response.payload as any).$id);
+      }
+    });
+
+    let subUrlBase = 'databases.'+environment.DATABASE_ID+'.collections.';
+
+    //subscribe to player changes
+    this.playerChangesUnsubscribe = this.players.client.subscribe(subUrlBase+environment.PLAYER_COLLECTION_ID+".documents", response => {
+      let player = this.players.MapAnyToPlayer(response.payload as any);
+
+      if(player.gameID != this.game?.id) return;
+  
+      if(response.events.includes('documents.delete')){
+        this.toast.Show(player.name+" has left the game",ResponseType.Warning);
+        if(player.id == this.selectedPlayer?.id)
+          this.UpdateCurrentPlayer(player,true)
+
+        this.UpdatePlayersList(response.payload as Player,true);
+      }
+      else{
+        if(player.id == this.selectedPlayer?.id)
+          this.UpdateCurrentPlayer(player)
+
+        this.UpdatePlayersList(player);
+
+      }
+    });
+
+    //subscribe to player attributes changes
+    this.playerAttributesChangesUnsubscribe = this.players.client.subscribe(subUrlBase+environment.PLAYERATTRIBUTES_COLLECTION_ID+".documents", response => {
+      
+      let attribute = this.players.FormatAttributes([response.payload as any])[0];
+      //if document not related to a player, ignore
+      let attributeOwnerIndex = this.playerList.findIndex(p => p.attributes.find(a => a.id == attribute.id) != undefined);
+      if(attributeOwnerIndex == -1) return;
+      
+      //update player attribute
+      let attributeToUpdateIndex =this.playerList[attributeOwnerIndex].attributes.find(a => a.id == attribute.id);
+      if(attributeToUpdateIndex != undefined)
+        attributeToUpdateIndex.valueAddition = attribute.valueAddition;
+
+    });
+  }
+
+  UpdateCurrentPlayer(player:Player,remove:boolean = false){
+    if(remove) this.selectedPlayer = null;
+    else{  
+      this.selectedPlayer = player;
+      this.lifeAttribute = this.GetAttribute("Life");
+      this.manaAttribute = this.GetAttribute("Mana");
+    }
+  }
+
+  UpdatePlayersList(player:Player,remove:boolean=false){
+    let index = this.playerList.findIndex(p => p.id == player.id);
+
+    if(index != -1){
+      if(remove) this.playerList.splice(index,1);
+      else this.playerList[index] = player;
+    }
+    else{
+      this.playerList.push(player);
+    }
   }
 
   GetAttribute(atr:string):GameAttribute{
     return this.selectedPlayer?.attributes.find(x=>x.name==atr)!;
   }
 
-  getPlayerDetails():Player|null{
-    let player = null;
-    if(this.isMJ) player =  this.selectedPlayer;
-    else{
-      player = this.playerList.find(p => p.ownerID == this.auth.GetUserID());
-      player == undefined ? player = null : player;
-    }
-    return player;
-  }
 
   selectPlayer(player:Player){
     //if this player is already selected, unselect it
@@ -125,7 +182,6 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   async onQuickImageClick(event:any,img:{file:File;url:SafeUrl}){
-    console.log("quick image clicked: "+img.file.name);
     let reponse = await this.games.UploadGameIllustration(img.file);
     this.toast.Show(reponse.value,reponse.type);
   }

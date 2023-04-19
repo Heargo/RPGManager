@@ -7,6 +7,7 @@ import { ResponseType } from 'src/app/models/responses';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.services';
 import { environment } from 'src/environments/environment';
+import { BytesToMegaBytes } from 'src/app/Utils/utils';
 
 @Component({
   selector: 'app-new-game',
@@ -17,7 +18,7 @@ export class NewGameComponent {
 
   attributeName = '';
   attributeDefaultValue = 0;
-  accordions = {'description':true, 'attributes':true};
+  accordions = {'description':true, 'attributes':false, 'other':false};
   game:Game = {
     id: '',
     name: '',
@@ -26,15 +27,17 @@ export class NewGameComponent {
     host: '',
     teamID:'',
     attributes: [
-      {id:'',name: 'Life', baseValue: 0,valueAddition:0,value:0},
-      {id:'',name: 'Mana', baseValue: 0,valueAddition:0,value:0},
+      {id:'',name: 'Life', baseValue: 10,valueAddition:0,value:0},
+      {id:'',name: 'Mana', baseValue: 10,valueAddition:0,value:0},
       {id:'',name: 'Strength', baseValue: 0,valueAddition:0,value:0},
       {id:'',name: 'Dexterity', baseValue: 0,valueAddition:0,value:0},
       {id:'',name: 'Constitution', baseValue: 0,valueAddition:0,value:0},
       {id:'',name: 'Intelligence', baseValue: 0,valueAddition:0,value:0},
       {id:'',name: 'Wisdom', baseValue: 0,valueAddition:0,value:0},
       {id:'',name: 'Charisma', baseValue: 0,valueAddition:0,value:0}
-    ]
+    ],
+    baseStatPoints: 0,
+    baseMoney: 0
   };
   imageFile:File = new File([], 'default_icon.jpg');
 
@@ -85,7 +88,7 @@ export class NewGameComponent {
     if(!this.isValidGame()) return;
 
     //size file is 2 MB max
-    if(this.imageFile.size > environment.MAX_FILE_SIZE) { this.toast.Show('Image size is too big, max 2MB', ResponseType.Warning);return;}
+    if(BytesToMegaBytes(this.imageFile.size) > environment.MAX_FILE_SIZE) { this.toast.Show('Image size is too big, max 2MB', ResponseType.Warning);return;}
     //max game name length is 40
     if(this.game.name.length > environment.MAX_GAME_NAME_SIZE) { this.toast.Show('Game name is too long, max 40 characters', ResponseType.Warning);return;}
     //max game description length is 1000

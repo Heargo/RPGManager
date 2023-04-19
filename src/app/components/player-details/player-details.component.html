@@ -3,15 +3,15 @@
         <img class="player-image" [src]="playerPortrait" alt="player portait">
         <div class="equipment">
             <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/earrings.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/necklace.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/ring.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/chest.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/hand.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/leg.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/weapon.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/foot.svg" alt="head slot"></div>
+            <div><img src="assets/icons/inventory/weapon.svg" alt="head slot"></div>
         </div>
     </div>
     <div class="flex-col right">
@@ -20,14 +20,24 @@
             <div class="flex-row stat" *ngFor="let atr of player?.attributes">
                 <p> {{atr.name}}</p>  
                 <div class="flex-row interractables">
-                    <input value="{{atr.valueAddition + atr.baseValue}} "> 
+                    <input value="{{atr.valueAddition + atr.baseValue}}" (change)="onAttributeChange($event,atr)"> 
                     <img src="assets/icons/pin.svg" alt="">
                 </div>
             </div>
         </div>
-        <p>Availaible stats point : xx</p>
+        <div class="statsPoint flex-row">
+            <p *ngIf="!isMJ">Availaible stats point : {{GetAvailablePlayerStatPoints()}}</p>
+            <div *ngIf="isMJ" class="flex-row">
+                <p>{{player?.statPoints}} stats point</p>
+                <input type="text" #val>
+                <button (click)="AddStatPoint(val)">+</button>
+            </div>
+
+        </div>
         <div class="inventory">
             <div *ngFor="let i of minimumInventory"><img src="assets/icons/inventory/empty.svg" alt=""></div>
+        </div>
+        <div class="flex-row money" [innerHTML]="PlayerMoney()">
         </div>
     </div>
 </section>

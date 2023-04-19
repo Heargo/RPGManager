@@ -34,6 +34,10 @@ export function GetAttributeProgress(attribute:GameAttribute){
   
   //case where max is 0
   if((attribute.baseValue + attribute.valueAddition) ==0) return {display:display,prct:0}
-  
   return {display:display,prct:attribute.value/(attribute.baseValue + attribute.valueAddition)*100 }
+}
+
+
+export function BytesToMegaBytes(bytes:number){
+  return bytes/1000000;
 }

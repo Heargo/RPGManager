@@ -7,15 +7,15 @@
             <app-player-preview *ngFor="let player of playerList" [player]="player" (click)="selectPlayer(player)"></app-player-preview>
         </div>
         <!-- player details [COMPONENT] -->
-        <app-player-details *ngIf="getPlayerDetails()!=null" [player]="getPlayerDetails()"></app-player-details>
+        <app-player-details *ngIf="selectedPlayer!=null" [player]="selectedPlayer" [isMJ]="isMJ"></app-player-details>
         <!-- Life & mana bar -->
         <div *ngIf="!isMJ" class="playerBar">
             <div class="flex-row ">
-                <p>{{AttributeProgress(lifeAttribute).display}} Life</p>
+                <p>{{AttributeProgress(lifeAttribute).display}}</p>
                 <div class="bar" ><span [ngStyle]="{width:AttributeProgress(lifeAttribute).prct+'%'}"></span></div>
             </div>
             <div class="flex-row">
-                <p>{{AttributeProgress(manaAttribute).display}} Mana</p>
+                <p>{{AttributeProgress(manaAttribute).display}}</p>
                 <div class="mana bar" ><span [ngStyle]="{width:AttributeProgress(manaAttribute).prct+'%'}"></span></div>
             </div>
         </div>
