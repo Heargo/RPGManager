@@ -1,4 +1,5 @@
 @import "../../styles/var.scss";
+@import "../../styles/mixins.scss";
 
 nav{
     position: fixed;
@@ -21,20 +22,64 @@ nav{
         margin: 0 10px;
         text-decoration: none;
     }
-}
 
-.logo{
-    font-weight: bold;
-    font-size: 1.5rem;
-}
-
-.left{
-    p{
-        font-size: .7rem;
-        color:$background;
-        background-color: $red;
-        padding: 5px 10px;
-        border-radius: 10px;
-
+    .nav-icon{
+        display: none;
+    
+        @include width-under(800px){
+            display: block;
+        }
+        img{
+            width: 50px;
+            height: 50px;
+        }
     }
+
+    .logo{
+        font-weight: bold;
+        font-size: 1.5rem;
+    }
+    
+    .left{
+        p{
+            font-size: .7rem;
+            color:$background;
+            background-color: $red;
+            padding: 5px 10px;
+            border-radius: 10px;
+    
+        }
+    }
+    
+    .right{
+        @include width-under(800px){
+            display: none;
+            justify-content:center;
+            align-items: center;
+            flex-direction: column;
+            gap: 2rem;
+            &.active, &.nav-icon{
+                display: flex;
+            }
+
+            &.content{
+                position: absolute;
+                top: $nav-height;
+                left: 0;
+                width: 100%;
+                min-height: calc(100vh - $nav-height);
+                background-color: $background;
+                z-index: 10000;
+
+                a,p{
+                    font-size: 3rem;
+                }
+            }
+    
+    
+        }
+    }
+    
+    
 }
+
