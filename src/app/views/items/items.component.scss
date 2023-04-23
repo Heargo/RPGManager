@@ -1,3 +1,62 @@
+@import "src/app/styles/mixins.scss";
+@import "src/app/styles/var.scss";
+
 section{
-    min-height: 100vh;
+    margin-top: calc($nav-height + 1rem);
+    min-height: calc(100vh - calc($nav-height + 1rem)) ;
+    justify-content: flex-start;
+}
+
+.search-options{
+    width: calc(100% - 2rem);
+    justify-content: space-between;
+    padding: 2rem 0;
+    gap:0;
+    .left{
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .search, .price{
+        max-width:200px;
+    }
+
+    a{
+        text-align: center;
+        width: 120px;
+        font-weight: normal;
+    }
+    .rarity, .type{
+        max-width: 200px;
+    }
+
+    .search{
+        max-width: calc(20% - 2rem);
+        padding:.5rem;
+    }
+
+    @include width-under(950px){
+        flex-direction: column;
+        gap:2rem;
+        .left{
+            flex-direction: column;
+        }
+        .search, .rarity, .type, .price{
+            width: 90%;
+            max-width: 90%;
+        }
+        a{
+            width: 90%;
+            max-width: 200px;
+        }
+        .search{
+            max-width: calc(90% - 1rem);
+            padding:.5rem;
+        }
+    }
+}
+
+.item-list{
+    flex-wrap: wrap;
+    width: 100%;
 }
