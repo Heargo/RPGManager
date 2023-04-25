@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <a class="black-btn">Create item</a>
+        <a class="black-btn" routerLink="/create-item" routerLinkActive="active">Create item</a>
     </div>
     <div class="item-list flex-row">
         <p *ngFor="let item of GetItems()">{{item.id}}</p>

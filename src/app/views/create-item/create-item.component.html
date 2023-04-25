@@ -1,0 +1,20 @@
+<section class="flex-row">
+    <div class="form flex-col">
+        <div class="tabs flex-row">
+            <button (click)="ToggleTab('manual')" [ngClass]="{active:tabs.manual}">Manual</button>
+            <button (click)="ToggleTab('json')" [ngClass]="{active:tabs.json}">JSON</button>
+        </div>
+        <div class="content">
+
+            <form *ngIf="tabs.manual" id="manual form" action="">
+                form
+            </form>
+            <textarea *ngIf="tabs.json" (change)="onUpdateItemFromJson($event)">{{GetItemAsJson()}}</textarea>
+        </div>
+    </div>
+
+    <div class="preview">
+        preview
+    </div>
+
+</section>

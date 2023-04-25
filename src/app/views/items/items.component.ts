@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Item, ItemRarity, ItemType } from 'src/app/models/items';
+import { DEFAULT_ITEM, Item, ItemRarity, ItemType } from 'src/app/models/items';
 
 @Component({
   selector: 'app-items',
@@ -15,7 +15,7 @@ export class ItemsComponent {
 
   GetItems():Item[]{
     return [
-      {id:'id1'},{id:"id2"},{id:"id3"}
+      DEFAULT_ITEM,DEFAULT_ITEM,DEFAULT_ITEM
     ]
   }
 }

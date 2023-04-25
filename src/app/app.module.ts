@@ -23,6 +23,7 @@ import { PlayerPreviewComponent } from './components/player-preview/player-previ
 import { PlayerDetailsComponent } from './components/player-details/player-details.component';
 import { DiceComponent } from './components/dice/dice.component';
 import { ItemsComponent } from './views/items/items.component';
+import { CreateItemComponent } from './views/create-item/create-item.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { ItemsComponent } from './views/items/items.component';
     PlayerPreviewComponent,
     PlayerDetailsComponent,
     DiceComponent,
-    ItemsComponent
+    ItemsComponent,
+    CreateItemComponent
   ],
   imports: [
     BrowserModule,
