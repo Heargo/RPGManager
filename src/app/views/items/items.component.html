@@ -2,24 +2,9 @@
     <div class="flex-row search-options">
         <div class="flex-row left">
             <input type="text" placeholder="search" class="search">
-            <!-- select rarity -->
-            <div class="select rarity">
-                <select>
-                    <option selected>- Rarity -</option>
-                    <option *ngFor="let rarity of ItemRarityValues" [value]="rarity">{{rarity}}</option>
-                </select>
-                <div class="select_arrow">
-                </div>
-            </div>
-            <!-- select type -->
-            <div class="select type">
-                <select>
-                    <option selected>- Type -</option>
-                    <option *ngFor="let type of ItemTypesValues" [value]="type">{{type}}</option>
-                </select>
-                <div class="select_arrow">
-                </div>
-            </div>
+            <!-- select rarity & type -->
+            <app-drop-down class="rarity" [options]="ItemRarityValues" [defaultOption]="'Rarity'"></app-drop-down>
+            <app-drop-down class="rarity" [options]="ItemTypesValues" [defaultOption]="'Type'"></app-drop-down>
             <!-- price range -->
             <div class="flex-row price">
                 <p>price</p>

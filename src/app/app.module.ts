@@ -24,6 +24,7 @@ import { PlayerDetailsComponent } from './components/player-details/player-detai
 import { DiceComponent } from './components/dice/dice.component';
 import { ItemsComponent } from './views/items/items.component';
 import { CreateItemComponent } from './views/create-item/create-item.component';
+import { DropDownComponent } from './components/drop-down/drop-down.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { CreateItemComponent } from './views/create-item/create-item.component';
     PlayerDetailsComponent,
     DiceComponent,
     ItemsComponent,
-    CreateItemComponent
+    CreateItemComponent,
+    DropDownComponent
   ],
   imports: [
     BrowserModule,

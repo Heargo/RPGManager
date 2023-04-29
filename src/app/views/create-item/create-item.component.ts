@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DEFAULT_ITEM, Item, isValidItem } from 'src/app/models/items';
+import { DEFAULT_ITEM, Item, ItemRarity, ItemType, isValidItem } from 'src/app/models/items';
 import { ResponseType } from 'src/app/models/responses';
 import { GamesService } from 'src/app/services/games.services';
 import { ToastService } from 'src/app/services/toast.services';
@@ -12,11 +12,14 @@ import { ToastService } from 'src/app/services/toast.services';
 export class CreateItemComponent {
 
   item:Item = DEFAULT_ITEM;
-  tabs:any = {'manual':false,'json':true};
+  tabs:any = {'manual':true,'json':false};
+
+  ItemRarityValues = Object.keys(ItemRarity);
+  ItemTypesValues = Object.keys(ItemType);
 
   constructor(private games:GamesService,private toast:ToastService) {
 
-    this.item.attributes = this.games.currentGame!.attributes;
+    //this.item.attributes = this.games.currentGame!.attributes;
   }
 
   ToggleTab(tab:string){
@@ -55,5 +58,13 @@ export class CreateItemComponent {
       this.toast.Show("Invalid item properties",ResponseType.Error)
     }
 
+  }
+
+  onSelectItemType(event:any){
+    this.item.type = event.target.value;
+  }
+
+  onSelectItemRarity(event:any){
+    this.item.rarity = event.target.value;
   }
 }

@@ -2,7 +2,7 @@
 
 
 section{
-    height: calc(100vh - $nav-height);
+    height: calc(100vh - $nav-height - 1rem);
     margin-top: $nav-height;
     padding-top: 1rem;
     justify-content: space-between;
@@ -18,6 +18,69 @@ section{
     gap: .3rem;
     margin: 1rem;
 
+    .content form{
+        height: calc(100% - 2rem);
+        justify-content: flex-start;
+        padding: 1rem;
+    }
+
+    .flex-row{
+        width: 100%;
+    }
+
+    #first-part, #second-part{
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    #first-part{
+        height: 20%;
+        align-items: flex-start;
+        .item-image{
+            height: 100%;
+            img{
+                border-radius: 10px;
+                height: 100%;
+                aspect-ratio: 1/1;
+                object-fit: cover;
+            }
+        }
+
+        #itemImage{
+            display: none;
+        }
+
+        div{
+            width: 70%;
+            max-width: 400px;
+            align-items: flex-start;
+
+            app-drop-down{
+                width: 100%;
+            }
+
+            // input,app-drop-down{
+            //     border:solid 2px $text1;
+            // }
+            
+        }
+    }
+
+
+    #second-part{
+        height: 10%;
+        app-drop-down{
+            width: 70%;
+        }
+        input{
+            width: 30%;
+        }
+    }
+
+    #third-part{
+        height: 70%;
+    }
+    
     .tabs{
         width: 100%;
         justify-content: flex-start;
@@ -43,16 +106,19 @@ section{
 
     .content{
         width: 100%;
+        max-width:500px;
         height: calc(100% - 50px);
+        border: solid 2px $text1;
     }
 
     textarea{
         background-color: $background-light;
         padding: .5rem;
-        width: calc(100% - 2rem - 1rem);
-        height: calc(100% - 2rem - 1rem);
-        border: solid 1px $text1;
+        width: calc(100% - 1rem);
+        height: calc(100% - 1rem);
+        border: 0;
         color:$text1;
         resize: none;
+        font-size: 1.2rem;
     }
 }

@@ -6,9 +6,26 @@
         </div>
         <div class="content">
 
-            <form *ngIf="tabs.manual" id="manual form" action="">
-                form
+            <!-- MANUAL -->
+            <form *ngIf="tabs.manual" id="manual form" action="" class="flex-col">
+                <div class="flex-row" id="first-part">
+                    <label class="item-image" for="itemImage"><img src="assets/illustrations/default_item.jpg" alt=""></label>
+                    <input id="itemImage" type="file">
+                    <div class="flex-col">
+                        <input type="text" name="Name" placeholder="Name">
+                        <app-drop-down [options]="ItemRarityValues" defaultOption="Rarity" (onSelect)="onSelectItemRarity($event)"></app-drop-down>
+                    </div>
+                </div>
+                <div class="flex-row" id="second-part">
+                    <app-drop-down [options]="ItemTypesValues" defaultOption="Type" (onSelect)="onSelectItemType($event)"></app-drop-down>
+                    <input type="text" placeholder="Price">
+                </div>
+                <div class="flex-col" id="third-part">
+                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                </div>
             </form>
+
+            <!-- JSON -->
             <textarea *ngIf="tabs.json" (change)="onUpdateItemFromJson($event)">{{GetItemAsJson()}}</textarea>
         </div>
     </div>

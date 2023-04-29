@@ -1,0 +1,8 @@
+<div class="select">
+    <select>
+        <option selected>- {{defaultOption}} -</option>
+        <option *ngFor="let item of options" [value]="item">{{item}}</option>
+    </select>
+    <div class="select_arrow">
+    </div>
+</div>
