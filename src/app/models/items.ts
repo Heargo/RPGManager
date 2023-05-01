@@ -55,6 +55,7 @@ export const DEFAULT_ITEM:Item = {
 
 
 export function isValidItem(item:Item):boolean{
+    //console.log("id",item.id != undefined,"name",item.name != undefined,"description",item.description != undefined,"rarity",item.rarity != undefined,"type",item.type != undefined,"price",item.price != undefined,"slot",item.slot != undefined,"imageID",item.imageID != undefined,"attributes",item.attributes != undefined)
     return item.id != undefined && 
         item.name != undefined && 
         item.description != undefined && 

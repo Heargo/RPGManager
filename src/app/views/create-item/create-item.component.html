@@ -7,26 +7,40 @@
         <div class="content">
 
             <!-- MANUAL -->
-            <form *ngIf="tabs.manual" id="manual form" action="" class="flex-col">
+            <form [ngClass]="{inactive:!tabs.manual}" id="manual form" action="" class="flex-col" [formGroup]="itemForm">
                 <div class="flex-row" id="first-part">
-                    <label class="item-image" for="itemImage"><img src="assets/illustrations/default_item.jpg" alt=""></label>
-                    <input id="itemImage" type="file">
+                    <label class="item-image" for="itemImage"><img [src]="itemImageUrl" alt=""></label>
+                    <input id="itemImage" type="file" (change)="onImageChange($event)" formControlName="image">
                     <div class="flex-col">
-                        <input type="text" name="Name" placeholder="Name">
-                        <app-drop-down [options]="ItemRarityValues" defaultOption="Rarity" (onSelect)="onSelectItemRarity($event)"></app-drop-down>
+                        <input type="text" name="Name" placeholder="Name" formControlName="name">
+                        <app-drop-down [options]="ItemRarityValues" formControlName="rarity" ></app-drop-down>
                     </div>
                 </div>
                 <div class="flex-row" id="second-part">
-                    <app-drop-down [options]="ItemTypesValues" defaultOption="Type" (onSelect)="onSelectItemType($event)"></app-drop-down>
-                    <input type="text" placeholder="Price">
+                    <app-drop-down [options]="ItemTypesValues" formControlName="type" ></app-drop-down>
+                    <app-drop-down *ngIf="itemForm.value.type =='Equipment'" [options]="ItemSlotValues" formControlName="slot" ></app-drop-down>
+                    <input type="text" placeholder="Price" formControlName="price">
                 </div>
                 <div class="flex-col" id="third-part">
-                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                    <textarea name="" id="" cols="30" rows="10" placeholder="Description" formControlName="description">{{itemForm.value.description}}</textarea>
+                    <h3>Stats</h3>
+                    <div class="flex-row new-attribute">
+                        <app-drop-down [options]="GameAttributesNames" [defaultOption]="'Attribute'" (onChangeValue)="onSelectAttribute($event)"></app-drop-down>
+                        <input [(ngModel)]="currentModifierSelected" [ngModelOptions]="{standalone: true}" type="text" placeholder="Modifier">
+                        <button (click)="onAddAttribute()">+</button>
+                    </div>
+                    <div class="flex-col attributes-container">
+                        <div *ngFor="let attribute of item.attributes" class="attributes flex-row">
+                            <p>{{attribute.name}}</p>
+                            <p class="num" [ngClass]="{debuff:(attribute.valueAddition<0)}">{{attribute.valueAddition>0?'+':''}}{{attribute.valueAddition}}</p>
+                            <img (click)="onDeleteAttribute(attribute.name)" src="assets/icons/bin.svg" alt="">
+                        </div>
+                    </div>
                 </div>
             </form>
 
             <!-- JSON -->
-            <textarea *ngIf="tabs.json" (change)="onUpdateItemFromJson($event)">{{GetItemAsJson()}}</textarea>
+            <textarea [ngClass]="{inactive:!tabs.json}" (change)="onUpdateItemFromJson($event)" [value]="GetItemAsJson()"></textarea>
         </div>
     </div>
 
