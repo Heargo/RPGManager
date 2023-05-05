@@ -1,0 +1,37 @@
+@import "src/app/styles/var.scss";
+
+section{
+    width: calc(100% - 1rem);
+    border:solid 2px $text1;
+    border-radius: 10px;
+    padding:.5rem;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.item-preview{
+    width: 30%;
+    aspect-ratio: 1/1;
+}
+
+.basic-infos{
+    justify-content: flex-start;
+    div{
+        align-items: flex-start;
+        gap:.5rem;
+    }
+    h3{
+        font-weight: normal;
+    }
+
+    .rarity{
+        background-color: $text1;
+        padding: .2rem;
+        gap:.1rem;
+        border-radius: 5px;
+        svg{
+            height: 1rem;
+            width: 1rem;
+        }
+    }
+}

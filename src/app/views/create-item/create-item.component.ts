@@ -33,9 +33,11 @@ export class CreateItemComponent implements OnInit {
   currentModifierSelected="";
 
   constructor(private games:GamesService,private toast:ToastService,private formBuilder: FormBuilder,private sanitizer:DomSanitizer) {
-    this.GameAttributes = this.games.currentGame!.attributes;
+    //this.GameAttributes = this.games.currentGame!.attributes;
     //list of all attributes names in the current game
-    this.GameAttributesNames = this.GameAttributes.map(a => a.name);
+    //this.GameAttributesNames = this.GameAttributes.map(a => a.name);
+    this.GameAttributes = [];
+    this.GameAttributesNames = [];
   }
 
   ngOnInit(): void {
@@ -48,6 +50,28 @@ export class CreateItemComponent implements OnInit {
       type: [this.item.type,[Validators.required]],
       slot: [this.item.slot,[Validators.required]],
     });
+
+    this.itemForm.valueChanges.subscribe((val) => {
+      this.UpdateItem(val);
+    });
+  }
+
+  UpdateItem(val:any){
+    //update item 
+    if(val.name)
+      this.item.name = val.name;
+    if(val.description)
+      this.item.description = val.description;
+    if(val.imageID)
+      this.item.imageID = val.imageID;
+    if(val.price)
+      this.item.price = val.price;
+    if(val.rarity)
+      this.item.rarity = val.rarity;
+    if(val.type)
+      this.item.type = val.type;
+    if(val.slot)
+      this.item.slot = val.slot;
   }
 
   ToggleTab(tab:string){
@@ -144,6 +168,8 @@ export class CreateItemComponent implements OnInit {
     let file = $event.target.files[0];
     this.currentCustomFile = file;
     this.itemImageUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file));
+    //update image in item
+    this.UpdateItem({imageID:this.itemImageUrl});
 
   }
 }

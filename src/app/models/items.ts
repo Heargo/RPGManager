@@ -49,7 +49,7 @@ export const DEFAULT_ITEM:Item = {
     type: ItemType.Item,
     price: 0,
     slot: ItemSlot.None,
-    imageID: "default",
+    imageID: "assets/illustrations/default_item.jpg",
     attributes: []
 }
 

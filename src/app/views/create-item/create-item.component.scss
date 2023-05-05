@@ -6,6 +6,7 @@ section{
     margin-top: $nav-height;
     padding-top: 1rem;
     justify-content: space-between;
+    align-items: flex-start;
 }
 
 
@@ -15,7 +16,7 @@ section{
 
 .form{
     width: 50%;
-    height: 100%;
+    height: calc(100% - 1rem);
     max-width: 800px;
     justify-content: flex-start;
     align-items: flex-start;
@@ -204,5 +205,25 @@ section{
         color:$text1;
         resize: none;
         font-size: 1.2rem;
+    }
+}
+
+
+
+.preview{
+    width: 50%;
+    margin:1rem;
+    max-width: calc(400px + 1rem);
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: .3rem;
+    p{
+        font-size: 1.2rem;
+        padding-left: .3rem;
+    }
+    app-item-preview{
+        width: 100%;
+        max-width: 400px;
+        display: block;
     }
 }
