@@ -3,9 +3,9 @@
         <div class="tabs flex-row">
             <button (click)="ToggleTab('manual')" [ngClass]="{active:tabs.manual}">Manual</button>
             <button (click)="ToggleTab('json')" [ngClass]="{active:tabs.json}">JSON</button>
+            <button (click)="ToggleTab('ai')" [ngClass]="{active:tabs.ai}">AI generation</button>
         </div>
         <div class="content">
-
             <!-- MANUAL -->
             <form [ngClass]="{inactive:!tabs.manual}" id="manual form" action="" class="flex-col" [formGroup]="itemForm">
                 <div class="flex-row" id="first-part">
@@ -38,9 +38,20 @@
                     </div>
                 </div>
             </form>
-
             <!-- JSON -->
             <textarea [ngClass]="{inactive:!tabs.json}" (change)="onUpdateItemFromJson($event)" [value]="GetItemAsJson()"></textarea>
+            <!-- AI -->
+            <div [ngClass]="{inactive:!tabs.ai}" class="flex-col ai">
+                <h3>Generate your item with AI</h3>
+                <p>A prompt as been generated based on your game settings.
+                    Click on the button bellow to copy it, then paste it into chat gpt or similar language model AI to generate a json.
+                    The AI will also give you a prompt you can use to generate an image. </p>
+                <button (click)="CopyPrompt()" class="black-btn">Copy prompt</button>
+                <h3>Where to use the prompt ?</h3>
+                <a href="https://chat.openai.com/">Chat GPT</a>
+                <a href="https://app.leonardo.ai/">Leonardo.ai</a>
+                <a href="https://www.midjourney.com">Midjourney</a>
+            </div>
         </div>
     </div>
 

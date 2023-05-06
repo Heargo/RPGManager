@@ -15,7 +15,7 @@ import { ToastService } from 'src/app/services/toast.services';
 export class CreateItemComponent implements OnInit {
 
   item:Item = DEFAULT_ITEM;
-  tabs:any = {'manual':true,'json':false};
+  tabs:any = {'manual':true,'json':false,'ai':false};
 
   ItemRarityValues = Object.values(ItemRarity);
   ItemTypesValues = Object.values(ItemType);
@@ -75,8 +75,9 @@ export class CreateItemComponent implements OnInit {
   }
 
   ToggleTab(tab:string){
-    this.tabs.manual = false;
-    this.tabs.json = false;
+    Object.keys(this.tabs).forEach((key) => {
+      this.tabs[key] = false;
+    });
     this.tabs[tab] = true;
   }
 
@@ -85,9 +86,11 @@ export class CreateItemComponent implements OnInit {
     let attributes = this.item.attributes.map((attribute:any) => {
       return {
         name: attribute.name,
-        modifier: attribute.valueAddition
+        modifier: attribute.valueAddition //this is done to make the json more readable for user
       }
     });
+    //remove image from json (for user experience, since it's not possible to upload an image from json)
+    delete item.image;
     item.attributes = attributes;
     let val = JSON.stringify(item, null, 2);
     return val
@@ -99,14 +102,16 @@ export class CreateItemComponent implements OnInit {
     let item:any = JSON.parse(json);
     //add id to attributes
     item.attributes.forEach((attribute:any) => {
-      attribute.id = this.item.attributes.find((a:any) => a.name == attribute.name)!.id;
+      //console.log("looking for attribute id",attribute.name,this.item.attributes.find((a:any) => a.name == attribute.name));
+      attribute.id = this.GameAttributes.find((a:any) => a.name == attribute.name)!.id;
+      //update valueAddition with modifier value (because valueAddition is used in the form but modifier is used in the json for user)
+      attribute.valueAddition = attribute.modifier;
     });
     //add id to item
     item.id = this.item.id;
 
-    //change item.image to item.imageID
-    item.imageID = item.image;
-    delete item.image;
+    //udpate item.imageID
+    item.imageID = this.itemImageUrl;
 
     //update item if of type Item
     if(isValidItem(item)){
@@ -120,6 +125,8 @@ export class CreateItemComponent implements OnInit {
         type: item.type,
         slot: item.slot,
       });
+      //update item
+      this.item = item;
       this.itemJson = json;
       this.toast.Show("Changes applied successfully!",ResponseType.Success)
     }else{
@@ -171,5 +178,49 @@ export class CreateItemComponent implements OnInit {
     //update image in item
     this.UpdateItem({imageID:this.itemImageUrl});
 
+  }
+
+  GeneratePromptForItemCreation(){
+    //get list of all attributes
+    let attributes = this.games.currentGame!.attributes.map(a => a.name);
+    //get list of all rarities
+    let rarities = Object.values(ItemRarity);
+    //get list of all types
+    let types = Object.values(ItemType);
+    //get list of all slots
+    let slots = Object.values(ItemSlot);
+
+    let prompt = "I want you to act as a json generator and prompt expert. You will reply ONLY with the json then the prompt to generate the image needed. You will be asked to provide the following information That are coherent:\n\n";
+    prompt += "name: The name of the item\n";
+    prompt += "description: The description of the item\n";
+    prompt += "price: The price of the item. The price is a float number. ex: 1.2546 = 1 gold coin, 25 silver coin, 46 copper coins\n";
+    prompt += "rarity: The rarity of the item. here are the ONLY possible values: ["+rarities+"]\n";
+    prompt += "type: The type of the item. here are the ONLY possible values: ["+types+"]\n";
+    prompt += "slot: The slot of the item. Slot is none if the item is not a equipment type. here are the ONLY possible values: ["+slots+"]\n";
+    prompt += "attributes: The attributes of the item. here are the ONLY possible attributes names: ["+attributes+"]\n\n";
+    prompt += "Each attribute as the following format : {name: \"attributeName\", modifier: 1}\n";
+    prompt += "The modifier is a number that will be added to the player attributes. ex: {name: \"strength\", modifier: 1} will add 1 to the strength attribute of the character. Modifier can be negative\n\n";
+    prompt += "here is a json example:\n\n";
+    prompt += this.GetItemAsJson();
+    prompt += "\n\n";
+    prompt += "The informations generated must be interesting. Try to create interesting name and descriptions as well as coherents attributes. If attributes are not necessary you can have a empty list\n";
+    prompt += "Based on the informations you provided, I will generate an image for the item. You will use you Midjourney and other AI tools expertise to provide me a complete prompt that I can used to help me as well.\n\n"
+    prompt += "Start by asking by what I have in mind. You will need to generate the correct json and prompt based on my needs. Please only reply with the json and prompt\n";
+    
+    return prompt;
+  
+  }
+
+  CopyPrompt(){
+    let prompt =this.GeneratePromptForItemCreation();
+
+    //copy to clipboard
+    navigator.clipboard.writeText(prompt).then(() => {
+      this.toast.Show("Copied to clipboard!",ResponseType.Success);
+    }
+    ).catch(() => {
+      this.toast.Show("Failed to copy to clipboard",ResponseType.Error);
+    }
+    );
   }
 }

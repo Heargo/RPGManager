@@ -4,7 +4,6 @@ import { FormatMoney } from 'src/app/Utils/utils';
 import { GameAttribute, MoneyFormat } from 'src/app/models/games';
 import { DEFAULT_ITEM, Item, ItemRarity } from 'src/app/models/items';
 import { ItemsService } from 'src/app/services/items.services';
-import { PlayersService } from 'src/app/services/players.services';
 
 @Component({
   selector: 'app-item-preview',
@@ -52,13 +51,11 @@ export class ItemPreviewComponent {
 
     GetPositiveAttributes():GameAttribute[]{
       let array = this.item.attributes.filter(x=>x.valueAddition>0);
-      console.log("positive attributes",array)
       return array;
     }
 
     GetNegativeAttributes():GameAttribute[]{
       let array = this.item.attributes.filter(x=>x.valueAddition<0);
-      console.log("negative attributes",array)
       return array;
     }
 
