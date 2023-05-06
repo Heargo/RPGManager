@@ -5,6 +5,7 @@ import { GameAttribute } from 'src/app/models/games';
 import { DEFAULT_ITEM, Item, ItemRarity, ItemSlot, ItemType, isValidItem } from 'src/app/models/items';
 import { ResponseType } from 'src/app/models/responses';
 import { GamesService } from 'src/app/services/games.services';
+import { ItemsService } from 'src/app/services/items.services';
 import { ToastService } from 'src/app/services/toast.services';
 
 @Component({
@@ -32,7 +33,8 @@ export class CreateItemComponent implements OnInit {
   currentAttributeSelected="";
   currentModifierSelected="";
 
-  constructor(private games:GamesService,private toast:ToastService,private formBuilder: FormBuilder,private sanitizer:DomSanitizer) {
+  constructor(private games:GamesService,private toast:ToastService,
+    private formBuilder: FormBuilder,private sanitizer:DomSanitizer, private items:ItemsService) {
     this.GameAttributes = this.games.currentGame!.attributes;
     //list of all attributes names in the current game
     this.GameAttributesNames = this.GameAttributes.map(a => a.name);
@@ -211,7 +213,7 @@ export class CreateItemComponent implements OnInit {
   
   }
 
-  CopyPrompt(){
+  onCopyPrompt(){
     let prompt =this.GeneratePromptForItemCreation();
 
     //copy to clipboard
@@ -222,5 +224,13 @@ export class CreateItemComponent implements OnInit {
       this.toast.Show("Failed to copy to clipboard",ResponseType.Error);
     }
     );
+  }
+
+
+  onCreateItem(){
+    console.log("creating item");
+    if(this.games.currentGame == undefined){return;}
+    
+    this.items.CreateItem(this.item,this.currentCustomFile,this.games.currentGame);
   }
 }

@@ -16,6 +16,6 @@
         <a class="black-btn" routerLink="/create-item" routerLinkActive="active">Create item</a>
     </div>
     <div class="item-list flex-row">
-        <p *ngFor="let item of GetItems()">{{item.id}}</p>
+        <p *ngFor="let item of loadedItems">{{item.name}}</p>
     </div>
 </section>

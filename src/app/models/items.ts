@@ -13,17 +13,17 @@ export interface Item{
 }
 
 export enum ItemRarity{
-    Common = "Common",
-    Uncommon = "Uncommon",
-    Rare = "Rare",
-    Mythic = "Mythic",
-    Legendary = "Legendary"
+    Common = "common",
+    Uncommon = "uncommon",
+    Rare = "rare",
+    Mythic = "mythic",
+    Legendary = "legendary"
 }
 
 export enum ItemType{
-    Item = "Item",
-    Consumable = "Consumable",
-    Equipment = "Equipment"
+    Item = "item",
+    Consumable = "consumable",
+    Equipment = "equipment"
 }
 
 export enum ItemSlot{

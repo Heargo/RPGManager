@@ -46,7 +46,7 @@
                 <p>A prompt as been generated based on your game settings.
                     Click on the button bellow to copy it, then paste it into chat gpt or similar language model AI to generate a json.
                     The AI will also give you a prompt you can use to generate an image. </p>
-                <button (click)="CopyPrompt()" class="black-btn">Copy prompt</button>
+                <button (click)="onCopyPrompt()" class="black-btn">Copy prompt</button>
                 <h3>Where to use the prompt ?</h3>
                 <a href="https://chat.openai.com/">Chat GPT</a>
                 <a href="https://app.leonardo.ai/">Leonardo.ai</a>
@@ -58,6 +58,7 @@
     <div class="preview flex-col">
         <p>Preview</p>
         <app-item-preview [item]="item"></app-item-preview>
+        <button (click)="onCreateItem()" class="black-btn">Save</button>
     </div>
 
 </section>
