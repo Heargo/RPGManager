@@ -1,5 +1,6 @@
 import { FormGroup } from "@angular/forms";
 import { GameAttribute, MoneyFormat } from "../models/games";
+import { ItemRarity } from "../models/items";
 
 export function getErrorMessage(error: unknown) {
     if (error instanceof Error) return error.message
@@ -58,6 +59,23 @@ export function FormatMoney(money:number,type:MoneyFormat):string{
           return GetFantasyCoinsFormat(money);
       default:
           return "$"+money;
+  }
+
+}
+
+export function GetItemRarityColor(rarity:ItemRarity):string{
+  //get rarity color
+  switch(rarity){
+    case ItemRarity.Common:
+      return "#AFBCBD";
+    case ItemRarity.Uncommon:
+      return "#7CD18F";
+    case ItemRarity.Rare:
+      return "#7CC8D1";
+    case ItemRarity.Mythic:
+      return "#BB7CD1";
+    case ItemRarity.Legendary:
+      return "#DFD366";
   }
 
 }

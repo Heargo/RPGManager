@@ -18,7 +18,7 @@
                 </div>
                 <div class="flex-row" id="second-part">
                     <app-drop-down [options]="ItemTypesValues" formControlName="type" ></app-drop-down>
-                    <app-drop-down *ngIf="itemForm.value.type =='Equipment'" [options]="ItemSlotValues" formControlName="slot" ></app-drop-down>
+                    <app-drop-down *ngIf="itemForm.value.type =='equipment'" [options]="ItemSlotValues" formControlName="slot" ></app-drop-down>
                     <input type="text" placeholder="Price" formControlName="price">
                 </div>
                 <div class="flex-col" id="third-part">
@@ -39,7 +39,7 @@
                 </div>
             </form>
             <!-- JSON -->
-            <textarea [ngClass]="{inactive:!tabs.json}" (change)="onUpdateItemFromJson($event)" [value]="GetItemAsJson()"></textarea>
+            <textarea [ngClass]="{inactive:!tabs.json}" (change)="onUpdateItemFromJson($event)" [value]="GetItemAsJson(itemForm.value)"></textarea>
             <!-- AI -->
             <div [ngClass]="{inactive:!tabs.ai}" class="flex-col ai">
                 <h3>Generate your item with AI</h3>

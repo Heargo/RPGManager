@@ -15,7 +15,7 @@ import { ToastService } from 'src/app/services/toast.services';
 })
 export class CreateItemComponent implements OnInit {
 
-  item:Item = DEFAULT_ITEM;
+  item:Item = {...DEFAULT_ITEM};
   tabs:any = {'manual':true,'json':false,'ai':false};
 
   ItemRarityValues = Object.values(ItemRarity);
@@ -83,8 +83,9 @@ export class CreateItemComponent implements OnInit {
     this.tabs[tab] = true;
   }
 
-  GetItemAsJson() {
-    let item:any = {...this.itemForm.value};
+  GetItemAsJson(itemToConvert:any,debug=false) {
+    if(debug) console.log("itemToConvert",itemToConvert)
+    let item:any = {...itemToConvert};
     let attributes = this.item.attributes.map((attribute:any) => {
       return {
         name: attribute.name,
@@ -95,6 +96,7 @@ export class CreateItemComponent implements OnInit {
     delete item.image;
     item.attributes = attributes;
     let val = JSON.stringify(item, null, 2);
+    if(debug) console.log("val",val)
     return val
   }
 
@@ -203,7 +205,7 @@ export class CreateItemComponent implements OnInit {
     prompt += "Each attribute as the following format : {name: \"attributeName\", modifier: 1}\n";
     prompt += "The modifier is a number that will be added to the player attributes. ex: {name: \"strength\", modifier: 1} will add 1 to the strength attribute of the character. Modifier can be negative\n\n";
     prompt += "here is a json example:\n\n";
-    prompt += this.GetItemAsJson();
+    prompt += this.GetItemAsJson(DEFAULT_ITEM,true);
     prompt += "\n\n";
     prompt += "The informations generated must be interesting. Try to create interesting name and descriptions as well as coherents attributes. If attributes are not necessary you can have a empty list\n";
     prompt += "Based on the informations you provided, I will generate an image for the item. You will use you Midjourney and other AI tools expertise to provide me a complete prompt that I can used to help me as well.\n\n"

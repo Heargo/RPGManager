@@ -16,6 +16,8 @@
         <a class="black-btn" routerLink="/create-item" routerLinkActive="active">Create item</a>
     </div>
     <div class="item-list flex-row">
-        <p *ngFor="let item of loadedItems">{{item.name}}</p>
+        <div *ngFor="let item of loadedItems" class="item-icon">
+            <img [src]="GetImageUrl(item)" [alt]="item.name" [ngStyle]="{borderColor:GetRarityColor(item.rarity)}">
+        </div>
     </div>
 </section>
