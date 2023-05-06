@@ -33,11 +33,11 @@ export class CreateItemComponent implements OnInit {
   currentModifierSelected="";
 
   constructor(private games:GamesService,private toast:ToastService,private formBuilder: FormBuilder,private sanitizer:DomSanitizer) {
-    //this.GameAttributes = this.games.currentGame!.attributes;
+    this.GameAttributes = this.games.currentGame!.attributes;
     //list of all attributes names in the current game
-    //this.GameAttributesNames = this.GameAttributes.map(a => a.name);
-    this.GameAttributes = [];
-    this.GameAttributesNames = [];
+    this.GameAttributesNames = this.GameAttributes.map(a => a.name);
+    //this.GameAttributes = [];
+    //this.GameAttributesNames = [];
   }
 
   ngOnInit(): void {

@@ -16,12 +16,17 @@
     <p>{{item.description}}
         lorem ipsum balba bla balbba ndlan lanl lorem ipsum balba bla balbba ndlan lanl lorem ipsum balba bla balbba ndlan lanl lorem ipsum balba bla balbba ndlan lanl lorem ipsum balba bla balbba ndlan lanl lorem ipsum balba bla balbba ndlan lanl
     </p>
-    <div class="attributes">
+    <div class="attributes flex-row">
         <div class="flex-col plus">
-
+            <div *ngFor="let atr of GetPositiveAttributes()" class="flex-row">
+                <p>+{{atr.valueAddition}} {{atr.name}}</p>
+            </div>
         </div>
+        <div class="separator" [ngStyle]="{height:GetSeparatorSize()+'rem'}"></div>
         <div class="flex-col minus">
-
+            <div *ngFor="let atr of GetNegativeAttributes()" class="flex-row">
+                <p>{{atr.valueAddition}} {{atr.name}}</p>
+            </div>
         </div>
     </div>
 </section>

@@ -35,3 +35,35 @@ section{
         }
     }
 }
+
+.attributes{
+    width: 100%;
+    align-items: flex-start;
+    .plus,.minus{
+        width: 50%;
+        align-items: flex-start;
+        gap:.2rem;
+        p{
+            font-weight: bold;
+            line-height: 1rem;
+        }
+    }
+
+    .plus{
+        p{
+            color: $green;
+        }
+    }
+
+    .minus{
+        border-left: 1px $text1;
+        p{
+            color: $red;
+        }
+    }
+
+    .separator{
+        background-color: $text1;
+        width: 2px;
+    }
+}
