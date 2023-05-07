@@ -112,12 +112,23 @@ export class CreateItemComponent implements OnInit {
     //get json
     let item:any = JSON.parse(json);
     //add id to attributes
+    let invalidsAtr:any=[]
     item.attributes.forEach((attribute:any) => {
       //console.log("looking for attribute id",attribute.name,this.item.attributes.find((a:any) => a.name == attribute.name));
-      attribute.id = this.GameAttributes.find((a:any) => a.name == attribute.name)!.id;
-      //update valueAddition with modifier value (because valueAddition is used in the form but modifier is used in the json for user)
-      attribute.valueAddition = attribute.modifier;
+      let atr = this.GameAttributes.find((a:any) => a.name == attribute.name);
+      if(atr != undefined) {
+        attribute.id = atr.id
+        //update valueAddition with modifier value (because valueAddition is used in the form but modifier is used in the json for user)
+        attribute.valueAddition = attribute.modifier;
+      }else{
+        invalidsAtr.push(attribute);
+      }
     });
+
+    if(invalidsAtr.length > 0){
+      this.toast.Show("Invalid attributes: "+invalidsAtr.map((a:any) => a.name).join(", "),ResponseType.Error)
+      return;
+    }
     //add id to item
     item.id = this.item.id;
 
