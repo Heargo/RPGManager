@@ -1,7 +1,7 @@
 @import "src/app/styles/var.scss";
 
 section{
-    width: calc(100% - 1rem);
+    width: calc(100% - 1rem - 4px);
     border:solid 2px $text1;
     border-radius: 10px;
     padding:.5rem;
@@ -25,15 +25,9 @@ section{
     }
 
     .rarity{
-        background-color: $text1;
-        padding: .2rem;
-        gap:.1rem;
-        border-radius: 5px;
-        svg{
-            height: 1rem;
-            width: 1rem;
-        }
+        height: 1rem;
     }
+    
 }
 
 .attributes{

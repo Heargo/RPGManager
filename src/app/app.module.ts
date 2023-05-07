@@ -26,6 +26,8 @@ import { ItemsComponent } from './views/items/items.component';
 import { CreateItemComponent } from './views/create-item/create-item.component';
 import { DropDownComponent } from './components/drop-down/drop-down.component';
 import { ItemPreviewComponent } from './components/item-preview/item-preview.component';
+import { RarityIconComponent } from './components/rarity-icon/rarity-icon.component';
+import { ItemSmallPreviewComponent } from './components/item-small-preview/item-small-preview.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { ItemPreviewComponent } from './components/item-preview/item-preview.com
     ItemsComponent,
     CreateItemComponent,
     DropDownComponent,
-    ItemPreviewComponent
+    ItemPreviewComponent,
+    RarityIconComponent,
+    ItemSmallPreviewComponent
   ],
   imports: [
     BrowserModule,

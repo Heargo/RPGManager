@@ -38,7 +38,6 @@ export class ItemsService {
     
 
     GetImageUrlPreview(id:string):string{
-        console.log("id is ",id)
         if(id == undefined || id == "" || id === this.DEFAULT_ITEM_ICON)
             return this.DEFAULT_ITEM_ICON;
         //if is object return it
@@ -103,7 +102,7 @@ export class ItemsService {
                         imageID:doc.imageID,
                         type:doc.type,
                         rarity:doc.rarity,
-                        attributes:doc.attributes,
+                        attributes:this.FormatAttributeForLoad(doc.attributes),
                     }
                     items.push(item);
                 }
@@ -139,7 +138,6 @@ export class ItemsService {
                 rarity:item.rarity,
                 attributes:this.FormatAttributesForUpload(item.attributes),
             }
-            console.log("creating item :",ItemData)
             await this.databases.createDocument(environment.DATABASE_ID, environment.ITEM_COLLECTION_ID, ID.unique() , ItemData, [
                 //team permissions for read
                 Permission.read(Role.team(game.teamID)),

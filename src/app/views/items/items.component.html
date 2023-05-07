@@ -1,23 +1,27 @@
 <section class="flex-col">
     <div class="flex-row search-options">
-        <div class="flex-row left">
-            <input type="text" placeholder="search" class="search">
+        <form class="flex-row left" [formGroup]="searchForm">
+            <input type="text" placeholder="search" class="search" formControlName="search">
             <!-- select rarity & type -->
-            <app-drop-down class="rarity" [options]="ItemRarityValues" [defaultOption]="'Rarity'"></app-drop-down>
-            <app-drop-down class="rarity" [options]="ItemTypesValues" [defaultOption]="'Type'"></app-drop-down>
+            <app-drop-down class="rarity" [options]="ItemRarityValues" [defaultOption]="'Rarity'" formControlName="rarity"></app-drop-down>
+            <app-drop-down class="rarity" [options]="ItemTypesValues" [defaultOption]="'Type'" formControlName="type"></app-drop-down>
             <!-- price range -->
             <div class="flex-row price">
                 <p>price</p>
-                <input type="text">
-                <input type="text">
+                <input type="text" placeholder="min" formControlName="minPrice">
+                <input type="text" placeholder="max" formControlName="maxPrice">
             </div>
-        </div>
+        </form>
 
         <a class="black-btn" routerLink="/create-item" routerLinkActive="active">Create item</a>
     </div>
-    <div class="item-list flex-row">
-        <div *ngFor="let item of loadedItems" class="item-icon">
-            <img [src]="GetImageUrl(item)" [alt]="item.name" [ngStyle]="{borderColor:GetRarityColor(item.rarity)}">
+    <img *ngIf="(searchResults.length==0)" class="no-item" src="assets/illustrations/galaxie.svg" alt="no games">
+    <p *ngIf="(searchResults.length==0)">No item found !</p>
+    
+    <div class="flex-row result" *ngIf="(searchResults.length!=0)">
+        <div class="item-list flex-row">
+            <app-item-small-preview *ngFor="let item of searchResults" [item]="item" (mouseover)="selectedItem = item"></app-item-small-preview>
         </div>
+        <app-item-preview *ngIf="selectedItem" [item]="selectedItem"></app-item-preview>
     </div>
 </section>

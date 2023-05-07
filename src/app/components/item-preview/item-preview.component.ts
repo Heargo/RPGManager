@@ -21,18 +21,6 @@ export class ItemPreviewComponent {
       return url
     }
 
-    GetRarityStarsNumber():string[]{
-      //return array until rarity
-      let array = Object.values(ItemRarity);
-      let slice = array.slice(0,array.indexOf(this.item.rarity)+1);
-      return slice;
-    }
-    
-    GetRarityColor():string{
-      return GetItemRarityColor(this.item.rarity);
-    
-    }
-
     PlayerMoney():SafeHtml{
       return this.sanitizer.bypassSecurityTrustHtml(FormatMoney(this.item.price,MoneyFormat.FantasyCoins));
     }

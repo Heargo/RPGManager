@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { BytesToMegaBytes } from 'src/app/Utils/utils';
 import { GameAttribute } from 'src/app/models/games';
 import { DEFAULT_ITEM, Item, ItemRarity, ItemSlot, ItemType, isValidItem } from 'src/app/models/items';
-import { ResponseType } from 'src/app/models/responses';
+import { Response, ResponseType } from 'src/app/models/responses';
 import { GamesService } from 'src/app/services/games.services';
 import { ItemsService } from 'src/app/services/items.services';
 import { ToastService } from 'src/app/services/toast.services';
@@ -21,7 +23,7 @@ export class CreateItemComponent implements OnInit {
   ItemRarityValues = Object.values(ItemRarity);
   ItemTypesValues = Object.values(ItemType);
   ItemSlotValues = Object.values(ItemSlot);
-  GameAttributes:GameAttribute[];
+  GameAttributes!:GameAttribute[];
   GameAttributesNames!:string[];
   currentCustomFile:File|null = null;
 
@@ -33,13 +35,15 @@ export class CreateItemComponent implements OnInit {
   currentAttributeSelected="";
   currentModifierSelected="";
 
-  constructor(private games:GamesService,private toast:ToastService,
-    private formBuilder: FormBuilder,private sanitizer:DomSanitizer, private items:ItemsService) {
+  constructor(private games:GamesService,private toast:ToastService,private formBuilder: FormBuilder,private sanitizer:DomSanitizer, private items:ItemsService,private router:Router) {
+
+    if(!this.games.currentGame){
+      this.router.navigate(["/games"]);
+      return;
+    }
+    
     this.GameAttributes = this.games.currentGame!.attributes;
-    //list of all attributes names in the current game
     this.GameAttributesNames = this.GameAttributes.map(a => a.name);
-    //this.GameAttributes = [];
-    //this.GameAttributesNames = [];
   }
 
   ngOnInit(): void {
@@ -92,8 +96,11 @@ export class CreateItemComponent implements OnInit {
         modifier: attribute.valueAddition //this is done to make the json more readable for user
       }
     });
-    //remove image from json (for user experience, since it's not possible to upload an image from json)
+    //remove image,imageID and id from json (for user experience, since it's not possible to upload an image from json)
     delete item.image;
+    delete item.imageID;
+    delete item.id;
+    
     item.attributes = attributes;
     let val = JSON.stringify(item, null, 2);
     if(debug) console.log("val",val)
@@ -229,10 +236,18 @@ export class CreateItemComponent implements OnInit {
   }
 
 
-  onCreateItem(){
-    console.log("creating item");
+  async onCreateItem(){
     if(this.games.currentGame == undefined){return;}
+    //if image is bigger than 2mb
+    if(this.currentCustomFile != undefined && BytesToMegaBytes(this.currentCustomFile.size) >2){
+      this.toast.Show("Image is too big. Max size is 2mb",ResponseType.Warning);
+      return;
+    }
     
-    this.items.CreateItem(this.item,this.currentCustomFile,this.games.currentGame);
+    let response:Response = await this.items.CreateItem(this.item,this.currentCustomFile,this.games.currentGame);
+
+    if(response.type == ResponseType.Success){
+      this.router.navigate(["/items"]);
+    }
   }
 }

@@ -1,0 +1,15 @@
+@import "src/app/styles/var.scss";
+
+.rarity{
+    width: fit-content;
+    height: 100%;
+    background-color: $text1;
+    padding: .2rem;
+    gap:.1rem;
+    border-radius: 5px;
+    svg{
+        height: 100%;
+        width: auto;
+        aspect-ratio: 1/1;
+    }
+}
