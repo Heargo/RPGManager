@@ -30,6 +30,7 @@ import { RarityIconComponent } from './components/rarity-icon/rarity-icon.compon
 import { ItemSmallPreviewComponent } from './components/item-small-preview/item-small-preview.component';
 import { ContactComponent } from './views/contact/contact.component';
 import { HttpClientModule } from '@angular/common/http';
+import { PrivacyPolicyComponent } from './views/privacy-policy/privacy-policy.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { HttpClientModule } from '@angular/common/http';
     ItemPreviewComponent,
     RarityIconComponent,
     ItemSmallPreviewComponent,
-    ContactComponent
+    ContactComponent,
+    PrivacyPolicyComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,24 @@
+@import "src/app/styles/var.scss";
+
+section{
+    min-height: calc(100vh - $nav-height - 2rem);
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 1rem;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: $nav-height;
+    margin-bottom: 2rem;
+
+    h1{
+        width: 100%;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    h2{
+        font-size: 1.1rem;
+    }
+}
