@@ -20,7 +20,7 @@ export class GamesService {
     teams:Teams;
     functions:Functions;
     currentGame:Game | null;
-    DEFAULT_GAME_PREVIEW = "assets/illustrations/default_icon.jpg";
+    DEFAULT_GAME_PREVIEW = "assets/illustrations/default_icon.png";
 
     constructor(private auth:AuthentificationService,private toast:ToastService,private playersService:PlayersService) {
 

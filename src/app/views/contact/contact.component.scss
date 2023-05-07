@@ -1,0 +1,27 @@
+@import "src/app/styles/var.scss";
+
+section{
+    min-height: calc(100vh - $nav-height);
+    margin-top: $nav-height;
+}
+
+form{
+    width: 50%;
+    max-width: 500px;
+}
+
+p{
+    font-size: .7rem;
+}
+
+
+textarea{
+    width: calc(100% - 1rem);
+    padding: .5rem;
+    //no resize
+    resize: none;
+    border:solid 2px $text1;
+    border-radius: 10px;
+    background-color: $background-light;
+    min-height: 100px;
+}

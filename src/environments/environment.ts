@@ -5,6 +5,8 @@ export const environment = {
 	PROJECT_ID : process.env['NG_APP_PROJECT_ID'] ? process.env['NG_APP_PROJECT_ID'] :'example_project_id',
 	DATABASE_ID : process.env['NG_APP_DATABASE_ID'] ? process.env['NG_APP_DATABASE_ID'] :'example_database_id',
 
+	CONTACT_KEY : process.env['NG_APP_CONTACT_KEY'] ? process.env['NG_APP_CONTACT_KEY'] :'example_contact_key',
+
 	//COLLECTIONS
 	GAME_COLLECTION_ID : "Game",
 	PLAYER_COLLECTION_ID : "Player",

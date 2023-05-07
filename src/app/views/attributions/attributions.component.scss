@@ -1,0 +1,6 @@
+@import "src/app/styles/var.scss";
+
+section{
+    min-height: calc(100vh - $nav-height);
+    margin-top: $nav-height;
+}

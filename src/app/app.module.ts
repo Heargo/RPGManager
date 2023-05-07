@@ -28,6 +28,8 @@ import { DropDownComponent } from './components/drop-down/drop-down.component';
 import { ItemPreviewComponent } from './components/item-preview/item-preview.component';
 import { RarityIconComponent } from './components/rarity-icon/rarity-icon.component';
 import { ItemSmallPreviewComponent } from './components/item-small-preview/item-small-preview.component';
+import { ContactComponent } from './views/contact/contact.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -54,13 +56,15 @@ import { ItemSmallPreviewComponent } from './components/item-small-preview/item-
     DropDownComponent,
     ItemPreviewComponent,
     RarityIconComponent,
-    ItemSmallPreviewComponent
+    ItemSmallPreviewComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule 
+    FormsModule,
+    HttpClientModule
   ],
   providers: [AuthentificationService],
   bootstrap: [AppComponent]
