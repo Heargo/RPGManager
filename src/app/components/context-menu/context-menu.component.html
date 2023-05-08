@@ -1,0 +1,6 @@
+<div class="context-menu">
+    <div *ngFor="let menuItem of menu" class="item" (mouseover)="onEnableSubMenu(menuItem)" (click)="onExecuteFunction(menuItem)">
+        {{menuItem.name}}
+        <app-context-menu *ngIf="menuItem.subMenu && enableSubMenu==menuItem.name" class="sub-menu" [menu]="menuItem.subMenu"></app-context-menu>
+    </div>
+</div>

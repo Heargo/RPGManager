@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FormatMoney } from 'src/app/Utils/utils';
 import { GameAttribute, MoneyFormat, Player } from 'src/app/models/games';
+import { PlayerItem } from 'src/app/models/items';
 import { ResponseType } from 'src/app/models/responses';
 import { GamesService } from 'src/app/services/games.services';
 import { PlayersService } from 'src/app/services/players.services';
@@ -12,20 +13,44 @@ import { ToastService } from 'src/app/services/toast.services';
   templateUrl: './player-details.component.html',
   styleUrls: ['./player-details.component.scss']
 })
-export class PlayerDetailsComponent implements OnInit {
+export class PlayerDetailsComponent implements OnInit, OnChanges {
   @Input() player!: Player|null;
   @Input() isMJ = true;
   playerPortrait!:string;
-  minimumInventory = [null,null,null,null,
+  minimumInventory: (PlayerItem|null)[] = [null,null,null,null,
                       null,null,null,null,
                       null,null,null,null,];
 
   constructor(private players:PlayersService,private games:GamesService,private toast:ToastService,private sanitizer:DomSanitizer) { }
 
   ngOnInit(): void {
-    if(this.player != null)
-      this.playerPortrait = this.players.GetImageUrlPreview(this.player.imageID);
+    if(this.player == null) return
+
+    this.playerPortrait = this.players.GetImageUrlPreview(this.player.imageID);
+
+    //fill inventory
+    this.player.inventory.forEach((item,index) => {
+      this.minimumInventory[index] = item;
+    });
   }
+
+  ngOnChanges(): void {
+    if(this.player == null) return
+
+    this.playerPortrait = this.players.GetImageUrlPreview(this.player.imageID);
+
+    //reset inventory
+    this.minimumInventory = [null,null,null,null,
+                      null,null,null,null,
+                      null,null,null,null,];
+    //fill inventory
+    this.player.inventory.forEach((item,index) => {
+      console.log("filling inventory with",item)
+      this.minimumInventory[index] = item;
+    });
+  }
+
+
 
 
   GetAvailablePlayerStatPoints():number{

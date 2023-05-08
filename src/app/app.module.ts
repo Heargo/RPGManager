@@ -31,6 +31,7 @@ import { ItemSmallPreviewComponent } from './components/item-small-preview/item-
 import { ContactComponent } from './views/contact/contact.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PrivacyPolicyComponent } from './views/privacy-policy/privacy-policy.component';
+import { ContextMenuComponent } from './components/context-menu/context-menu.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { PrivacyPolicyComponent } from './views/privacy-policy/privacy-policy.co
     RarityIconComponent,
     ItemSmallPreviewComponent,
     ContactComponent,
-    PrivacyPolicyComponent
+    PrivacyPolicyComponent,
+    ContextMenuComponent
   ],
   imports: [
     BrowserModule,

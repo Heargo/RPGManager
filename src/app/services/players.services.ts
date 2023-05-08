@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
 import { environment } from 'src/environments/environment';
-import { getErrorMessage } from '../Utils/utils';
+import { FormatAttributeForLoad, getErrorMessage } from '../Utils/utils';
 import { ResponseType, Response } from '../models/responses';
 import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute, MoneyFormat, Player } from '../models/games';
 import { ToastService } from './toast.services';
+import { Item, PlayerItem } from '../models/items';
 
 @Injectable({
   providedIn: 'root'
@@ -66,13 +67,18 @@ export class PlayersService {
 
     async GetPlayers(gameID:string): Promise<Player[]> {
 
-        let players = new Array<Player>();
+        let players:Player[]= new Array<Player>();
         
         try{
             let result = await this.databases.listDocuments(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID, [Query.equal('gameID',gameID)]);
-            players = result.documents.map((doc:any) => {
-                return this.MapAnyToPlayer(doc);
+            result.documents.forEach((doc) => {
+                let p = this.MapAnyToPlayer(doc);
+                players.push(p);
             });
+
+            for (let i = 0; i < players.length; i++) {
+                players[i].inventory = await this.LoadPlayerInventory(players[i].id);
+            }
         }
         catch(error){
             console.log(error);
@@ -89,7 +95,8 @@ export class PlayersService {
             name: doc.name,
             money: doc.money,
             statPoints: doc.statPoints,
-            attributes: this.FormatAttributes(doc.attributes)
+            attributes: this.FormatAttributes(doc.attributes),
+            inventory:[]
         }
     }
 
@@ -212,6 +219,81 @@ export class PlayersService {
             console.log(error);
             response= {value:getErrorMessage(error),type:ResponseType.Error};
         }
+        this.toast.Show(response.value,response.type);
+        return response;
+    }
+
+    async LoadPlayerInventory(playerID:string):Promise<PlayerItem[]>{
+        let items:PlayerItem[] = [];
+        try{
+            this.toast.ShowLoading("Loading inventory");
+            let result = await this.databases.listDocuments(environment.DATABASE_ID, environment.PLAYERITEMS_COLLECTION_ID,[Query.equal("playerID", playerID)]);
+            result.documents.forEach((doc:any) => {
+                    let item:PlayerItem = {
+                        playerItemID:doc.playerID,
+                        playerID:doc.playerID,
+                        equiped:doc.equiped,
+                        inventorySlotPosition:doc.slotID,
+                        id:doc.item.$id,
+                        name:doc.item.name,
+                        description:doc.item.description,
+                        price:doc.item.price,
+                        slot:doc.item.slot,
+                        imageID:doc.item.imageID,
+                        type:doc.item.type,
+                        rarity:doc.item.rarity,
+                        attributes:FormatAttributeForLoad(doc.item.attributes),
+                    }
+                    items.push(item);
+            });
+        }
+        catch(error){
+            console.log(error);
+        }
+
+        this.toast.HideLoading();
+        return items;
+    }
+
+    async GiveItem(playerID:string,teamID:string,item:Item):Promise<Response>
+    {
+        let response:Response;
+        //load player inventory to find the first available slot (start from 0)
+        let inventory = await this.LoadPlayerInventory(playerID);
+        //sort inventory by slot position
+        inventory.sort((a,b) => (a.inventorySlotPosition > b.inventorySlotPosition) ? 1 : ((b.inventorySlotPosition > a.inventorySlotPosition) ? -1 : 0));
+        
+        //find first slot available
+        let slot = 0;
+        for(let i = 0; i < inventory.length; i++){
+            if(inventory[i].inventorySlotPosition != slot){
+                break;
+            }
+            slot++;
+        }
+
+        //give item to player
+        let playerItemData = {
+            slotID:slot,
+            item:item.id,
+            equipped:false,
+            playerID:playerID,
+        }
+
+        try{
+            await this.databases.createDocument(environment.DATABASE_ID, environment.PLAYERITEMS_COLLECTION_ID, ID.unique() , playerItemData, [
+                //team permissions for read
+                Permission.read(Role.team(teamID)),
+                Permission.delete(Role.team(teamID)),
+                Permission.update(Role.team(teamID)),
+             ]);
+             response = {value:'Item given',type:ResponseType.Success};
+            }
+        catch(error){
+            console.log(error);
+            response= {value:getErrorMessage(error),type:ResponseType.Error};
+        }
+
         this.toast.Show(response.value,response.type);
         return response;
     }

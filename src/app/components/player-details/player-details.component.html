@@ -35,7 +35,10 @@
 
         </div>
         <div class="inventory">
-            <div *ngFor="let i of minimumInventory"><img src="assets/icons/inventory/empty.svg" alt=""></div>
+            <div *ngFor="let item of minimumInventory">
+                <img *ngIf="item==null" src="assets/icons/inventory/empty.svg" alt="">
+                <app-item-small-preview *ngIf="item!=null" [item]="item"></app-item-small-preview>
+            </div>
         </div>
         <div class="flex-row money" [innerHTML]="PlayerMoney()">
         </div>

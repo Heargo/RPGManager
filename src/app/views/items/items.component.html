@@ -20,8 +20,9 @@
     
     <div class="flex-row result" *ngIf="(searchResults.length!=0)">
         <div class="item-list flex-row">
-            <app-item-small-preview *ngFor="let item of searchResults" [item]="item" (mouseover)="selectedItem = item"></app-item-small-preview>
+            <app-item-small-preview (click)="onToggleContextMenu($event)" (contextmenu)="onToggleContextMenu($event)" *ngFor="let item of searchResults" [item]="item" (mouseover)="selectedItem = item"></app-item-small-preview>
         </div>
         <app-item-preview *ngIf="selectedItem" [item]="selectedItem"></app-item-preview>
     </div>
+    <app-context-menu (mouseleave)="contextMenuToggle=false" *ngIf="contextMenuToggle" [ngStyle]="contextMenuStyle" class="context-menu"  [menu]="contextMenu"></app-context-menu>
 </section>

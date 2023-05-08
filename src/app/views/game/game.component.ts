@@ -56,6 +56,8 @@ export class GameComponent implements OnInit, OnDestroy {
     this.isMJ = this.games.IsUserHost();
     this.userNotes = "default notes";
 
+    console.log("players",this.playerList)
+
     //load player as selected player if not MJ
     if(!this.isMJ){
       let player = this.playerList.find(p => p.ownerID == this.auth.GetUserID());

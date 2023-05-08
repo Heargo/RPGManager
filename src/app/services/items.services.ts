@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Client, Databases, Functions, ID, Permission, Query, Role, Storage, Teams} from "appwrite";
 import { environment } from 'src/environments/environment';
-import { getErrorMessage } from '../Utils/utils';
+import { FormatAttributeForLoad, FormatAttributesForUpload, getErrorMessage } from '../Utils/utils';
 import { Response, ResponseType } from '../models/responses';
 import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute, MoneyFormat, Player } from '../models/games';
 import { ToastService } from './toast.services';
-import { Item } from '../models/items';
+import { Item, PlayerItem } from '../models/items';
 
 @Injectable({
     providedIn: 'root'
@@ -62,28 +62,6 @@ export class ItemsService {
         return result.$id;
     }
 
-    FormatAttributesForUpload(attributes:GameAttribute[]):any[]{
-        return attributes.map((atr) => {
-            return {
-                $id:ID.unique(),
-                name:atr.name,
-                modifier:atr.valueAddition,
-            }
-        })
-    }
-
-    FormatAttributeForLoad(attributes:any[]):GameAttribute[]{
-        return attributes.map((atr) => {
-            return {
-                id:atr.$id,
-                name:atr.name,
-                valueAddition:atr.modifier,
-                value:0,
-                baseValue:0,
-            }
-        })
-    }
-
     async LoadItems(game:Game):Promise<Item[]>{
         let items:Item[] = [];
         let response:Response;
@@ -102,7 +80,7 @@ export class ItemsService {
                         imageID:doc.imageID,
                         type:doc.type,
                         rarity:doc.rarity,
-                        attributes:this.FormatAttributeForLoad(doc.attributes),
+                        attributes:FormatAttributeForLoad(doc.attributes),
                     }
                     items.push(item);
                 }
@@ -136,7 +114,7 @@ export class ItemsService {
                 imageID:imageID,
                 type:item.type,
                 rarity:item.rarity,
-                attributes:this.FormatAttributesForUpload(item.attributes),
+                attributes:FormatAttributesForUpload(item.attributes),
             }
             await this.databases.createDocument(environment.DATABASE_ID, environment.ITEM_COLLECTION_ID, ID.unique() , ItemData, [
                 //team permissions for read
@@ -160,4 +138,5 @@ export class ItemsService {
         this.toast.Show(response.value,response.type);
         return response
     }
+
 }  

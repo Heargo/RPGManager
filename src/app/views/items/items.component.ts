@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { ContextMenu } from 'src/app/models/context-menu';
 import { Item, ItemRarity, ItemType } from 'src/app/models/items';
 import { GamesService } from 'src/app/services/games.services';
 import { ItemsService } from 'src/app/services/items.services';
+import { PlayersService } from 'src/app/services/players.services';
 
 @Component({
   selector: 'app-items',
@@ -19,8 +21,11 @@ export class ItemsComponent implements OnInit {
   searchResults:Item[] = [];
   selectedItem:Item|null = null;
   searchForm!:FormGroup;
+  contextMenuToggle:boolean = false;
+  contextMenu:ContextMenu[] = [];
+  contextMenuStyle = {};
 
-  constructor(private items:ItemsService,private games:GamesService,private router:Router,private formBuilder:FormBuilder) { }
+  constructor(private items:ItemsService,private games:GamesService,private router:Router,private formBuilder:FormBuilder,private players:PlayersService) { }
 
   async ngOnInit() {
     this.searchForm = this.formBuilder.group({
@@ -38,6 +43,8 @@ export class ItemsComponent implements OnInit {
     this.loadedItems = await this.GetItems();
     this.selectedItem = this.loadedItems[0];
     this.searchResults = [...this.loadedItems];
+
+    this.contextMenu = await this.GenerateContextMenu();
 
     
 
@@ -82,4 +89,58 @@ export class ItemsComponent implements OnInit {
 
     return results;
   }
+
+  async EditItem(item:Item){
+    console.log("edit item",item.name);
+  }
+
+  async DeleteItem(item:Item){
+    console.log("delete item",item.name);
+  }
+
+  async GiveItem(item:Item,playerID:string){
+    if(!this.games.currentGame) return;
+
+    console.log("give item to player",playerID);
+    this.players.GiveItem(playerID,this.games.currentGame.teamID,item);
+
+    
+  }
+
+  async GenerateContextMenu():Promise<ContextMenu[]>{
+    let menu:ContextMenu[] = [];
+
+    if(!this.games.currentGame) return menu;
+    if (this.selectedItem == null) return menu;
+
+    let playerList = await this.players.GetPlayers(this.games.currentGame.id);
+    let playerMenu:ContextMenu[] = [];
+    playerList.forEach(p => {
+      playerMenu.push({name:p.name,func:()=>{this.GiveItem(this.selectedItem!,p.id)}});
+    });
+    menu.push({name:"Give to",subMenu:playerMenu});
+    
+    menu.push({name:"Edit (WIP)",func:()=>{this.EditItem(this.selectedItem!)}});
+    menu.push({name:"Delete (WIP)",func:()=>{this.DeleteItem(this.selectedItem!)}});
+
+    return menu;
+  }
+
+  onToggleContextMenu(event:any){
+    event.preventDefault() //this will disable default action of the context menu
+    this.contextMenuToggle = !this.contextMenuToggle;
+
+    let mousepos = {
+      x: event.clientX + window.scrollX,
+      y: event.clientY + window.scrollY
+    }
+
+
+    this.contextMenuStyle = {
+      "position":"absolute",
+      "left":mousepos.x + "px",
+      "top":mousepos.y + "px"
+    }
+  }
+
 }
