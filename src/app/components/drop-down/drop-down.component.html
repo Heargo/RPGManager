@@ -1,0 +1,8 @@
+<div class="select">
+    <select (change)="newSelect($event)" >
+        <option *ngIf="defaultOption!==null" selected>- {{defaultOption}} -</option>
+        <option [selected]="selected==item" *ngFor="let item of options" [value]="item">{{item}}</option>
+    </select>
+    <div class="select_arrow">
+    </div>
+</div>

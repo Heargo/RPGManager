@@ -1,0 +1,15 @@
+<section class="flex-col">
+    <h1>Contact me</h1>
+    <form ngNoForm  action="https://api.web3forms.com/submit" method="POST">
+
+        <input type="hidden" name="access_key" [value]="access_key">
+    
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="email" name="email" placeholder="email" required>
+        <textarea name="message" required placeholder="Message"></textarea>
+        <input type="hidden" name="redirect" value="https://web3forms.com/success">
+    
+        <button type="submit">Submit Message</button>
+    </form>
+    <p>Contact form powered by <a href="https://web3forms.com/">web3forms</a></p>
+</section>

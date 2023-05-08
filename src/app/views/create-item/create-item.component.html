@@ -1,0 +1,64 @@
+<section class="flex-row">
+    <div class="form flex-col">
+        <div class="tabs flex-row">
+            <button (click)="ToggleTab('manual')" [ngClass]="{active:tabs.manual}">Manual</button>
+            <button (click)="ToggleTab('json')" [ngClass]="{active:tabs.json}">JSON</button>
+            <button (click)="ToggleTab('ai')" [ngClass]="{active:tabs.ai}">AI generation</button>
+        </div>
+        <div class="content">
+            <!-- MANUAL -->
+            <form [ngClass]="{inactive:!tabs.manual}" id="manual form" action="" class="flex-col" [formGroup]="itemForm">
+                <div class="flex-row" id="first-part">
+                    <label class="item-image" for="itemImage"><img [src]="itemImageUrl" alt=""></label>
+                    <input id="itemImage" type="file" (change)="onImageChange($event)" formControlName="image">
+                    <div class="flex-col">
+                        <input type="text" name="Name" placeholder="Name" formControlName="name">
+                        <app-drop-down [options]="ItemRarityValues" formControlName="rarity" ></app-drop-down>
+                    </div>
+                </div>
+                <div class="flex-row" id="second-part">
+                    <app-drop-down [options]="ItemTypesValues" formControlName="type" ></app-drop-down>
+                    <app-drop-down *ngIf="itemForm.value.type =='equipment'" [options]="ItemSlotValues" formControlName="slot" ></app-drop-down>
+                    <input type="text" placeholder="Price" formControlName="price">
+                </div>
+                <div class="flex-col" id="third-part">
+                    <textarea name="" id="" cols="30" rows="10" placeholder="Description" formControlName="description">{{itemForm.value.description}}</textarea>
+                    <h3>Stats</h3>
+                    <div class="flex-row new-attribute">
+                        <app-drop-down [options]="GameAttributesNames" [defaultOption]="'Attribute'" (onChangeValue)="onSelectAttribute($event)"></app-drop-down>
+                        <input [(ngModel)]="currentModifierSelected" [ngModelOptions]="{standalone: true}" type="text" placeholder="Modifier">
+                        <button (click)="onAddAttribute()">+</button>
+                    </div>
+                    <div class="flex-col attributes-container">
+                        <div *ngFor="let attribute of item.attributes" class="attributes flex-row">
+                            <p>{{attribute.name}}</p>
+                            <p class="num" [ngClass]="{debuff:(attribute.valueAddition<0)}">{{attribute.valueAddition>0?'+':''}}{{attribute.valueAddition}}</p>
+                            <img (click)="onDeleteAttribute(attribute.name)" src="assets/icons/bin.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- JSON -->
+            <textarea [ngClass]="{inactive:!tabs.json}" (change)="onUpdateItemFromJson($event)" [value]="GetItemAsJson(itemForm.value)"></textarea>
+            <!-- AI -->
+            <div [ngClass]="{inactive:!tabs.ai}" class="flex-col ai">
+                <h3>Generate your item with AI</h3>
+                <p>A prompt as been generated based on your game settings.
+                    Click on the button bellow to copy it, then paste it into chat gpt or similar language model AI to generate a json.
+                    The AI will also give you a prompt you can use to generate an image. </p>
+                <button (click)="onCopyPrompt()" class="black-btn">Copy prompt</button>
+                <h3>Where to use the prompt ?</h3>
+                <a href="https://chat.openai.com/">Chat GPT</a>
+                <a href="https://app.leonardo.ai/">Leonardo.ai</a>
+                <a href="https://www.midjourney.com">Midjourney</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview flex-col">
+        <p>Preview</p>
+        <app-item-preview [item]="item"></app-item-preview>
+        <button (click)="onCreateItem()" class="black-btn">Save</button>
+    </div>
+
+</section>

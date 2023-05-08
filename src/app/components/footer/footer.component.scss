@@ -5,7 +5,7 @@ footer{
     flex-direction: row;
     justify-content: space-evenly;
     align-items: flex-start;
-
+    padding-bottom: 1rem;
     @include width-under(767px){
         flex-direction: column;
         padding-left: 2rem;

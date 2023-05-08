@@ -1,0 +1,25 @@
+<section class="flex-col">
+    <div class="flex-row  basic-infos">
+        <img [src]="GetImageUrl()" alt="icon image" class="item-preview">
+        <div class="flex-col" >
+            <h3>{{item.name}}</h3>
+            <app-rarity-icon class="rarity" [rarity]="item.rarity"></app-rarity-icon>
+            <p>{{item.type}}</p>
+            <div class="flex-row money" [innerHTML]="PlayerMoney()"> </div>
+        </div>
+    </div>
+    <p>{{item.description}}</p>
+    <div class="attributes flex-row">
+        <div class="flex-col plus">
+            <div *ngFor="let atr of GetPositiveAttributes()" class="flex-row">
+                <p>+{{atr.valueAddition}} {{atr.name}}</p>
+            </div>
+        </div>
+        <div class="separator" [ngStyle]="{height:GetSeparatorSize()+'rem'}"></div>
+        <div class="flex-col minus">
+            <div *ngFor="let atr of GetNegativeAttributes()" class="flex-row">
+                <p>{{atr.valueAddition}} {{atr.name}}</p>
+            </div>
+        </div>
+    </div>
+</section>

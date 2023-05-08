@@ -7,21 +7,19 @@
         <p *ngIf="isInGame() && !isMJ()">Player</p>
     </div>
 
-    <!-- Not connected -->
-    <div *ngIf="!isConnected()" class="right">
-        <a routerLink="/login" routerLinkActive="active" class="hover-scale" >Login</a>
-        <a routerLink="/signup" routerLinkActive="active" class="black-btn hover-scale">Sign-up</a>
-    </div>
-    
     <!-- Connected -->
-    <div *ngIf="isConnected()" class="right">
-        <a *ngIf="!isInGame()" routerLink="/games" routerLinkActive="active">My games</a>
-        <a *ngIf="isInGame()" routerLink="/game" routerLinkActive="active">Game</a>
-        <div *ngIf="isMJ()" >
-            <a routerLinkActive="active">NPCS</a>
-            <a routerLink="/items" routerLinkActive="active">Items</a>
-        </div>
-        <a *ngIf="isInGame()" routerLink="/games" routerLinkActive="active" (click)='ExitGame()' >Exit</a>
-        <a routerLink="/settings" routerLinkActive="active">Settings</a>
+    <div class="right content" [ngClass]="{'active':phoneMenuOpen}" >
+        <a *ngIf="!isConnected()" (click)="phoneMenuOpen=false" routerLink="/login" routerLinkActive="active" class="hover-scale" >Login</a>
+        <a *ngIf="!isConnected()" (click)="phoneMenuOpen=false" routerLink="/signup" routerLinkActive="active" class="black-btn hover-scale">Sign-up</a>
+        <a *ngIf="isConnected() && !isInGame()" (click)="phoneMenuOpen=false" routerLink="/games" routerLinkActive="active">My games</a>
+        <a *ngIf="isInGame()" (click)="phoneMenuOpen=false" routerLink="/game" routerLinkActive="active">Game</a>
+        <a *ngIf="isMJ()" (click)="phoneMenuOpen=false" routerLinkActive="active">NPCS</a>
+        <a *ngIf="isMJ()" (click)="phoneMenuOpen=false" routerLink="/items" routerLinkActive="active">Items</a>
+        <a *ngIf="isInGame()" (click)="phoneMenuOpen=false" routerLink="/games" routerLinkActive="active" (click)='ExitGame()' >Exit</a>
+        <a *ngIf="isConnected()" (click)="phoneMenuOpen=false" routerLink="/settings" routerLinkActive="active">Settings</a>
+    </div>
+    <div class="right nav-icon" >
+        <img *ngIf="!phoneMenuOpen" (click)="phoneMenuOpen=true"  src="assets/icons/navbar.svg" alt="open menu">
+        <img *ngIf="phoneMenuOpen" (click)="phoneMenuOpen=false"  src="assets/icons/close.svg" alt="close menu">
     </div>
 </nav>

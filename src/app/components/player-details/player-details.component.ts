@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FormatMoney } from 'src/app/Utils/utils';
 import { GameAttribute, MoneyFormat, Player } from 'src/app/models/games';
 import { ResponseType } from 'src/app/models/responses';
 import { GamesService } from 'src/app/services/games.services';
@@ -98,7 +99,7 @@ export class PlayerDetailsComponent implements OnInit {
 
   PlayerMoney():SafeHtml{
     if(this.player == null) return "0";
-    return this.sanitizer.bypassSecurityTrustHtml(this.players.FormatMoney(this.player.money,MoneyFormat.FantasyCoins));
+    return this.sanitizer.bypassSecurityTrustHtml(FormatMoney(this.player.money,MoneyFormat.FantasyCoins));
   }
 
   

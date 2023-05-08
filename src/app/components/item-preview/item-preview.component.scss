@@ -1,0 +1,63 @@
+@import "src/app/styles/var.scss";
+
+section{
+    width: calc(100% - 1rem - 4px);
+    border:solid 2px $text1;
+    border-radius: 10px;
+    padding:.5rem;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.item-preview{
+    width: 30%;
+    aspect-ratio: 1/1;
+}
+
+.basic-infos{
+    justify-content: flex-start;
+    div{
+        align-items: flex-start;
+        gap:.5rem;
+    }
+    h3{
+        font-weight: normal;
+    }
+
+    .rarity{
+        height: 1rem;
+    }
+    
+}
+
+.attributes{
+    width: 100%;
+    align-items: flex-start;
+    .plus,.minus{
+        width: 50%;
+        align-items: flex-start;
+        gap:.2rem;
+        p{
+            font-weight: bold;
+            line-height: 1rem;
+        }
+    }
+
+    .plus{
+        p{
+            color: $green;
+        }
+    }
+
+    .minus{
+        border-left: 1px $text1;
+        p{
+            color: $red;
+        }
+    }
+
+    .separator{
+        background-color: $text1;
+        width: 2px;
+    }
+}

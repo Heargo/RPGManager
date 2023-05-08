@@ -10,6 +10,7 @@ import { GamesService } from 'src/app/services/games.services';
 export class NavBarComponent {
   //isConnected = false;
   //use AuthentificationService to get the current user
+  phoneMenuOpen = false;
   constructor(private authService:AuthentificationService,private games:GamesService) {  }
 
   isInGame():boolean{

@@ -9,6 +9,10 @@ import { NewGameComponent } from './views/new-game/new-game.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { SignupComponent } from './views/signup/signup.component';
 import { ItemsComponent } from './views/items/items.component';
+import { CreateItemComponent } from './views/create-item/create-item.component';
+import { AttributionsComponent } from './views/attributions/attributions.component';
+import { ContactComponent } from './views/contact/contact.component';
+import { PrivacyPolicyComponent } from './views/privacy-policy/privacy-policy.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -21,6 +25,10 @@ const routes: Routes = [
   { path: 'new-game', component: NewGameComponent },
   { path: 'create-player', component: CreatePlayerComponent },
   { path: 'items', component: ItemsComponent},
+  { path: 'create-item', component: CreateItemComponent },
+  { path: 'credits', component: AttributionsComponent},
+  { path: 'contact', component: ContactComponent},
+  { path: 'privacy-policy', component: PrivacyPolicyComponent},
   { path: '**', redirectTo: '/home' }
 ];
 

@@ -23,6 +23,14 @@ import { PlayerPreviewComponent } from './components/player-preview/player-previ
 import { PlayerDetailsComponent } from './components/player-details/player-details.component';
 import { DiceComponent } from './components/dice/dice.component';
 import { ItemsComponent } from './views/items/items.component';
+import { CreateItemComponent } from './views/create-item/create-item.component';
+import { DropDownComponent } from './components/drop-down/drop-down.component';
+import { ItemPreviewComponent } from './components/item-preview/item-preview.component';
+import { RarityIconComponent } from './components/rarity-icon/rarity-icon.component';
+import { ItemSmallPreviewComponent } from './components/item-small-preview/item-small-preview.component';
+import { ContactComponent } from './views/contact/contact.component';
+import { HttpClientModule } from '@angular/common/http';
+import { PrivacyPolicyComponent } from './views/privacy-policy/privacy-policy.component';
 
 @NgModule({
   declarations: [
@@ -44,13 +52,21 @@ import { ItemsComponent } from './views/items/items.component';
     PlayerPreviewComponent,
     PlayerDetailsComponent,
     DiceComponent,
-    ItemsComponent
+    ItemsComponent,
+    CreateItemComponent,
+    DropDownComponent,
+    ItemPreviewComponent,
+    RarityIconComponent,
+    ItemSmallPreviewComponent,
+    ContactComponent,
+    PrivacyPolicyComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    FormsModule 
+    FormsModule,
+    HttpClientModule
   ],
   providers: [AuthentificationService],
   bootstrap: [AppComponent]

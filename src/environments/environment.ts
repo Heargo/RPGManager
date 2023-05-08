@@ -5,6 +5,8 @@ export const environment = {
 	PROJECT_ID : process.env['NG_APP_PROJECT_ID'] ? process.env['NG_APP_PROJECT_ID'] :'example_project_id',
 	DATABASE_ID : process.env['NG_APP_DATABASE_ID'] ? process.env['NG_APP_DATABASE_ID'] :'example_database_id',
 
+	CONTACT_KEY : process.env['NG_APP_CONTACT_KEY'] ? process.env['NG_APP_CONTACT_KEY'] :'example_contact_key',
+
 	//COLLECTIONS
 	GAME_COLLECTION_ID : "Game",
 	PLAYER_COLLECTION_ID : "Player",
@@ -16,7 +18,7 @@ export const environment = {
 
 	//STORAGE
 	MAPS_STORAGE_ID : "64247684a99da3b8a6a7",
-	ITEMS_STORAGE_ID : "6424768a80ef122f265d",
+	ITEMS_STORAGE_ID : "Items",
 	PROFILES_STORAGE_ID : "6424769b1baa624b77a7",
 	GAMEPREVIEWS_STORAGE_ID : "GamePreviews",
 	GAMEILLUSTRATION_STORAGE_ID : "6439b56f1c616eec169e",
