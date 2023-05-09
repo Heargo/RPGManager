@@ -230,7 +230,7 @@ export class PlayersService {
             let result = await this.databases.listDocuments(environment.DATABASE_ID, environment.PLAYERITEMS_COLLECTION_ID,[Query.equal("playerID", playerID)]);
             result.documents.forEach((doc:any) => {
                     let item:PlayerItem = {
-                        playerItemID:doc.playerID,
+                        playerItemID:doc.$id,
                         playerID:doc.playerID,
                         equiped:doc.equiped,
                         inventorySlotPosition:doc.slotID,
@@ -295,6 +295,20 @@ export class PlayersService {
         }
 
         this.toast.Show(response.value,response.type);
+        return response;
+    }
+
+    async DeleteItemFromInventory(playerItemID:string):Promise<Response>{
+        let response:Response;
+        try{
+            await this.databases.deleteDocument(environment.DATABASE_ID, environment.PLAYERITEMS_COLLECTION_ID, playerItemID);
+            response = {value:'Item deleted',type:ResponseType.Success};
+        }
+        catch(error){
+            console.log(error);
+            response= {value:getErrorMessage(error),type:ResponseType.Error};
+        }
+
         return response;
     }
 

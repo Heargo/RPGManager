@@ -94,7 +94,7 @@ export class GameComponent implements OnInit, OnDestroy {
     let subUrlBase = 'databases.'+environment.DATABASE_ID+'.collections.';
 
     //subscribe to player changes
-    this.playerChangesUnsubscribe = this.players.client.subscribe(subUrlBase+environment.PLAYER_COLLECTION_ID+".documents", response => {
+    this.playerChangesUnsubscribe = this.players.client.subscribe(subUrlBase+environment.PLAYER_COLLECTION_ID+".documents", async response => {
       let player = this.players.MapAnyToPlayer(response.payload as any);
 
       if(player.gameID != this.game?.id) return;
@@ -107,6 +107,9 @@ export class GameComponent implements OnInit, OnDestroy {
         this.UpdatePlayersList(response.payload as Player,true);
       }
       else{
+        //load player inventory
+        player.inventory = await this.players.LoadPlayerInventory(player.id);
+
         if(player.id == this.selectedPlayer?.id)
           this.UpdateCurrentPlayer(player)
 
