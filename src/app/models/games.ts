@@ -1,3 +1,5 @@
+import { PlayerItem } from "./items";
+
 export interface Game{
     id: string;
     name: string;
@@ -27,6 +29,7 @@ export interface Player{
     money: number;
     statPoints: number;
     attributes: GameAttribute[];
+    inventory: PlayerItem[];
 }
 
 export enum MoneyFormat{

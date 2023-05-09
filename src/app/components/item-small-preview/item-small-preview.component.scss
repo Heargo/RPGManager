@@ -1,6 +1,6 @@
 .item-icon{
-    width:100px;
-    height:100px;
+    width:100%;
+    height:100%;
     position: relative;
     img{
         width: 100%;
@@ -11,8 +11,8 @@
 
     app-rarity-icon{
         position: absolute;
-        bottom: .5rem;
-        left: .1rem;
-        height: .5rem;
+        bottom: 4px;
+        left: 1px;
+        height: 10%;
     }
 }

@@ -1,6 +1,7 @@
 import { FormGroup } from "@angular/forms";
 import { GameAttribute, MoneyFormat } from "../models/games";
 import { ItemRarity } from "../models/items";
+import { ID } from "appwrite";
 
 export function getErrorMessage(error: unknown) {
     if (error instanceof Error) return error.message
@@ -92,4 +93,27 @@ function GetFantasyCoinsFormat(n:number):string{
   if(silver>0 || gold>0) str += silver+" <img src='assets/icons/money/silver-coin.svg'  /> ";
   str += copper+" <img src='assets/icons/money/copper-coin.svg'  /> ";
   return str;
+}
+
+export function FormatAttributesForUpload(attributes:GameAttribute[]):any[]{
+  return attributes.map((atr) => {
+      return {
+          $id:ID.unique(),
+          name:atr.name,
+          modifier:atr.valueAddition,
+      }
+  })
+}
+
+export function FormatAttributeForLoad(attributes:any[]):GameAttribute[]{
+  if(attributes == undefined) return [];
+  return attributes.map((atr) => {
+      return {
+          id:atr.$id,
+          name:atr.name,
+          valueAddition:atr.modifier,
+          value:0,
+          baseValue:0,
+      }
+  })
 }

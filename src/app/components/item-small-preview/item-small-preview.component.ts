@@ -3,6 +3,7 @@ import { SafeUrl } from '@angular/platform-browser';
 import { Item } from 'src/app/models/items';
 import { ItemsService } from 'src/app/services/items.services';
 
+
 @Component({
   selector: 'app-item-small-preview',
   templateUrl: './item-small-preview.component.html',
@@ -18,5 +19,7 @@ export class ItemSmallPreviewComponent {
     let url = this.items.GetImageUrlPreview(item.imageID);
     return url
   }
+
+
 }
 

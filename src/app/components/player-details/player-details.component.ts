@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FormatMoney } from 'src/app/Utils/utils';
+import { ContextMenu } from 'src/app/models/context-menu';
 import { GameAttribute, MoneyFormat, Player } from 'src/app/models/games';
+import { PlayerItem } from 'src/app/models/items';
 import { ResponseType } from 'src/app/models/responses';
 import { GamesService } from 'src/app/services/games.services';
 import { PlayersService } from 'src/app/services/players.services';
@@ -12,20 +14,86 @@ import { ToastService } from 'src/app/services/toast.services';
   templateUrl: './player-details.component.html',
   styleUrls: ['./player-details.component.scss']
 })
-export class PlayerDetailsComponent implements OnInit {
+export class PlayerDetailsComponent implements OnInit, OnChanges {
   @Input() player!: Player|null;
   @Input() isMJ = true;
   playerPortrait!:string;
-  minimumInventory = [null,null,null,null,
+  minimumInventory: (PlayerItem|null)[] = [null,null,null,null,
                       null,null,null,null,
                       null,null,null,null,];
+
+  contextMenuVisible = false;
+  contextMenuStyle = {};
+  contextMenu!:ContextMenu[];
+  selectedItem:PlayerItem|null = null;
 
   constructor(private players:PlayersService,private games:GamesService,private toast:ToastService,private sanitizer:DomSanitizer) { }
 
   ngOnInit(): void {
-    if(this.player != null)
-      this.playerPortrait = this.players.GetImageUrlPreview(this.player.imageID);
+    this.setup();
   }
+
+  setup():void{
+    if(this.player == null) return
+
+    this.playerPortrait = this.players.GetImageUrlPreview(this.player.imageID);
+
+    //reset inventory
+    this.minimumInventory = [null,null,null,null,
+      null,null,null,null,
+      null,null,null,null,];
+
+    //fill inventory
+    this.player.inventory.forEach((item,index) => {
+      this.minimumInventory[index] = item;
+    });
+
+    //setup context menu
+    this.contextMenu = []
+    this.contextMenu.push({name:"Sell",func:()=>{this.contextMenuVisible = false;this.SellItem();}});
+  }
+
+  ngOnChanges(): void {
+    this.setup();
+  }
+
+  async SellItem(){
+    if(this.player == null) return;
+    if(this.games.currentGame == null) return;
+    if(this.selectedItem == null) return;
+
+    let deleteItem = await this.players.DeleteItemFromInventory(this.selectedItem.playerItemID);
+    if(deleteItem.type == ResponseType.Success){ 
+      let money = this.player.money + this.selectedItem.price
+      this.players.UpdatePlayer(this.player.id,{money:money});
+      this.toast.Show("Item sold for "+FormatMoney(this.selectedItem.price,MoneyFormat.FantasyCoins),ResponseType.Success);
+    }
+    else{
+      this.toast.Show("Failed to sell item",ResponseType.Error);
+    }
+  }
+
+  onToggleContextMenu(event:any,item:PlayerItem|null){
+    if(item == null) return;
+
+    this.selectedItem = item;
+    event.preventDefault() //this will disable default action of the context menu
+    this.contextMenuVisible = !this.contextMenuVisible;
+
+    let mousepos = {
+      x: event.clientX + window.scrollX,
+      y: event.clientY + window.scrollY
+    }
+
+
+    this.contextMenuStyle = {
+      "position":"absolute",
+      "left":mousepos.x + "px",
+      "top":mousepos.y + "px"
+    }
+  }
+
+
 
 
   GetAvailablePlayerStatPoints():number{
@@ -100,6 +168,11 @@ export class PlayerDetailsComponent implements OnInit {
   PlayerMoney():SafeHtml{
     if(this.player == null) return "0";
     return this.sanitizer.bypassSecurityTrustHtml(FormatMoney(this.player.money,MoneyFormat.FantasyCoins));
+  }
+
+  GenerateContextMenu()
+  {
+
   }
 
   

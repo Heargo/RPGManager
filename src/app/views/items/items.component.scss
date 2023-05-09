@@ -75,6 +75,12 @@ section{
         justify-content: flex-start;
         align-items: flex-start;
         width: 80%;
+
+        app-item-small-preview{
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+        }
     }
     
     app-item-preview{

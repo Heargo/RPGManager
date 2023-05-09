@@ -12,6 +12,13 @@ export interface Item{
     attributes:GameAttribute[]
 }
 
+export interface PlayerItem extends Item{
+    playerItemID:string,
+    playerID:string,
+    equiped:boolean,
+    inventorySlotPosition:number
+}
+
 export enum ItemRarity{
     Common = "common",
     Uncommon = "uncommon",

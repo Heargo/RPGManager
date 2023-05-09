@@ -35,7 +35,11 @@
 
         </div>
         <div class="inventory">
-            <div *ngFor="let i of minimumInventory"><img src="assets/icons/inventory/empty.svg" alt=""></div>
+            <div *ngFor="let item of minimumInventory" class="item">
+                <img *ngIf="item==null" src="assets/icons/inventory/empty.svg" alt="">
+                <app-item-small-preview (click)="onToggleContextMenu($event,item)" (contextmenu)="onToggleContextMenu($event,item)" *ngIf="item!=null" [item]="item"></app-item-small-preview>
+            </div>
+            <app-context-menu (mouseleave)="contextMenuVisible=false" *ngIf="selectedItem!=null && contextMenuVisible" [menu]="contextMenu" [ngStyle]="contextMenuStyle" class="context-menu" ></app-context-menu>
         </div>
         <div class="flex-row money" [innerHTML]="PlayerMoney()">
         </div>
