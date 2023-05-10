@@ -229,22 +229,24 @@ export class PlayersService {
             this.toast.ShowLoading("Loading inventory");
             let result = await this.databases.listDocuments(environment.DATABASE_ID, environment.PLAYERITEMS_COLLECTION_ID,[Query.equal("playerID", playerID)]);
             result.documents.forEach((doc:any) => {
-                    let item:PlayerItem = {
-                        playerItemID:doc.$id,
-                        playerID:doc.playerID,
-                        equiped:doc.equiped,
-                        inventorySlotPosition:doc.slotID,
-                        id:doc.item.$id,
-                        name:doc.item.name,
-                        description:doc.item.description,
-                        price:doc.item.price,
-                        slot:doc.item.slot,
-                        imageID:doc.item.imageID,
-                        type:doc.item.type,
-                        rarity:doc.item.rarity,
-                        attributes:FormatAttributeForLoad(doc.item.attributes),
+                    if(doc.item !=null){
+                        let item:PlayerItem = {
+                            playerItemID:doc.$id,
+                            playerID:doc.playerID,
+                            equipped:doc.equipped,
+                            inventorySlotPosition:doc.slotID,
+                            id:doc.item.$id,
+                            name:doc.item.name,
+                            description:doc.item.description,
+                            price:doc.item.price,
+                            slot:doc.item.slot,
+                            imageID:doc.item.imageID,
+                            type:doc.item.type,
+                            rarity:doc.item.rarity,
+                            attributes:FormatAttributeForLoad(doc.item.attributes),
+                        }
+                        items.push(item);
                     }
-                    items.push(item);
             });
         }
         catch(error){
@@ -305,6 +307,48 @@ export class PlayersService {
             response = {value:'Item deleted',type:ResponseType.Success};
         }
         catch(error){
+            console.log(error);
+            response= {value:getErrorMessage(error),type:ResponseType.Error};
+        }
+
+        return response;
+    }
+
+    async ToggleEquipementItem(playerItemID:string,equip:boolean):Promise<Response>{
+        let response:Response;
+        try{
+            await this.databases.updateDocument(environment.DATABASE_ID, environment.PLAYERITEMS_COLLECTION_ID, playerItemID, {equipped:equip});
+            response = {value:'Item equipped',type:ResponseType.Success};
+        }
+        catch(error){
+            console.log(error);
+            response= {value:getErrorMessage(error),type:ResponseType.Error};
+        }
+
+        return response;
+    }
+
+    async UseItem(player:Player,playerItem:PlayerItem):Promise<Response>{
+        let response:Response = {value:'Item not used',type:ResponseType.Error};
+        console.log("use item",playerItem);
+        try{
+            //for each attribute of the item, add it to the player attribute value
+            for(let i = 0; i < playerItem.attributes.length; i++){
+                console.log("item attribute",playerItem.attributes[i])
+                let itemAttribute = playerItem.attributes[i];
+                let playerAttribute = player.attributes.find(x => x.name == itemAttribute.name);
+                if(playerAttribute!=undefined){
+                    let newvalue = Math.min(playerAttribute.value + itemAttribute.valueAddition,playerAttribute.baseValue+ playerAttribute.valueAddition);
+                    console.log("update attribute",playerAttribute.name,newvalue)
+                    let r = await this.UpdateAttribute(playerAttribute.id,{value:Math.max(newvalue,0)});
+                    response =r;
+                }
+                else{
+                    response = {value:'Attribute not found',type:ResponseType.Error};
+                }
+            }
+            response = {value:'Item used',type:ResponseType.Success};
+        }catch(error){
             console.log(error);
             response= {value:getErrorMessage(error),type:ResponseType.Error};
         }

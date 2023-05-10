@@ -128,8 +128,11 @@ export class GameComponent implements OnInit, OnDestroy {
       
       //update player attribute
       let attributeToUpdateIndex =this.playerList[attributeOwnerIndex].attributes.find(a => a.id == attribute.id);
-      if(attributeToUpdateIndex != undefined)
+      if(attributeToUpdateIndex != undefined){
         attributeToUpdateIndex.valueAddition = attribute.valueAddition;
+        attributeToUpdateIndex.value = attribute.value;
+      }
+
 
     });
   }

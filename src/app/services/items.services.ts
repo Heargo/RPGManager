@@ -116,6 +116,7 @@ export class ItemsService {
                 rarity:item.rarity,
                 attributes:FormatAttributesForUpload(item.attributes),
             }
+            console.log('creating item with item data',ItemData)
             await this.databases.createDocument(environment.DATABASE_ID, environment.ITEM_COLLECTION_ID, ID.unique() , ItemData, [
                 //team permissions for read
                 Permission.read(Role.team(game.teamID)),
@@ -136,6 +137,23 @@ export class ItemsService {
 
         this.toast.HideLoading();
         this.toast.Show(response.value,response.type);
+        return response
+    }
+
+    async DeleteItem(item:Item):Promise<Response>{
+        let response:Response;
+        try{
+            this.toast.ShowLoading("Deleting the item "+item.name);
+            await this.databases.deleteDocument(environment.DATABASE_ID, environment.ITEM_COLLECTION_ID, item.id);
+            await this.storage.deleteFile(environment.ITEMS_STORAGE_ID, item.imageID);
+            response = {value:'Item deleted',type:ResponseType.Success}
+        }
+        catch(error){
+            console.log(error);
+            response = {value:getErrorMessage(error),type:ResponseType.Error}
+        }
+        this.toast.HideLoading();
+
         return response
     }
 
