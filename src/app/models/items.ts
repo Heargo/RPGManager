@@ -15,7 +15,7 @@ export interface Item{
 export interface PlayerItem extends Item{
     playerItemID:string,
     playerID:string,
-    equiped:boolean,
+    equipped:boolean,
     inventorySlotPosition:number
 }
 
@@ -36,14 +36,14 @@ export enum ItemType{
 export enum ItemSlot{
     None = "none",
     Head = "head",
-    Chest = "chest",
-    Legs = "legs",
-    Foot = "foot",
-    Hand = "hand",
-    Ring = "ring",
     Earring = "earring",
     Necklace = "necklace",
+    Ring = "ring",
+    Chest = "chest",
+    Hand = "hand",
+    Legs = "legs",
     Weapon1 = "weapon1",
+    Foot = "foot",
     Weapon2 = "weapon2"
 }
 

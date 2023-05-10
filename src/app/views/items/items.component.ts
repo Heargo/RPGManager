@@ -4,9 +4,11 @@ import { SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ContextMenu } from 'src/app/models/context-menu';
 import { Item, ItemRarity, ItemType } from 'src/app/models/items';
+import { ResponseType } from 'src/app/models/responses';
 import { GamesService } from 'src/app/services/games.services';
 import { ItemsService } from 'src/app/services/items.services';
 import { PlayersService } from 'src/app/services/players.services';
+import { ToastService } from 'src/app/services/toast.services';
 
 @Component({
   selector: 'app-items',
@@ -25,7 +27,7 @@ export class ItemsComponent implements OnInit {
   contextMenu:ContextMenu[] = [];
   contextMenuStyle = {};
 
-  constructor(private items:ItemsService,private games:GamesService,private router:Router,private formBuilder:FormBuilder,private players:PlayersService) { }
+  constructor(private items:ItemsService,private games:GamesService,private router:Router,private formBuilder:FormBuilder,private players:PlayersService,private toast:ToastService) { }
 
   async ngOnInit() {
     this.searchForm = this.formBuilder.group({
@@ -95,7 +97,19 @@ export class ItemsComponent implements OnInit {
   }
 
   async DeleteItem(item:Item){
-    console.log("delete item",item.name);
+    let response = await this.items.DeleteItem(item);
+    if(response.type == ResponseType.Success){
+      this.toast.Show("Item deleted successfully",ResponseType.Success);
+      //remove item from loaded items & search results
+      this.loadedItems = this.loadedItems.filter(i => i.id != item.id);
+      this.searchResults = this.searchResults.filter(i => i.id != item.id);
+      this.selectedItem = this.searchResults[0];
+    }
+    else{
+      console.log(response.value)
+      this.toast.Show("Failed to delete item",ResponseType.Error);
+    }
+
   }
 
   async GiveItem(item:Item,playerID:string){
@@ -121,7 +135,7 @@ export class ItemsComponent implements OnInit {
     menu.push({name:"Give to",subMenu:playerMenu});
     
     menu.push({name:"Edit (WIP)",func:()=>{this.EditItem(this.selectedItem!)}});
-    menu.push({name:"Delete (WIP)",func:()=>{this.DeleteItem(this.selectedItem!)}});
+    menu.push({name:"Delete",func:()=>{this.DeleteItem(this.selectedItem!)}});
 
     return menu;
   }

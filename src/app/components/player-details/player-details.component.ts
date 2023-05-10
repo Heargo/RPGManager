@@ -3,6 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FormatMoney } from 'src/app/Utils/utils';
 import { ContextMenu } from 'src/app/models/context-menu';
 import { GameAttribute, MoneyFormat, Player } from 'src/app/models/games';
+import { Item, ItemSlot, ItemType } from 'src/app/models/items';
 import { PlayerItem } from 'src/app/models/items';
 import { ResponseType } from 'src/app/models/responses';
 import { GamesService } from 'src/app/services/games.services';
@@ -22,9 +23,12 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
                       null,null,null,null,
                       null,null,null,null,];
 
+  //without the first value (none)
+  equippedSlots = Object.values(ItemSlot).slice(1); 
+
   contextMenuVisible = false;
   contextMenuStyle = {};
-  contextMenu!:ContextMenu[];
+  contextMenu:ContextMenu[] = [];
   selectedItem:PlayerItem|null = null;
 
   constructor(private players:PlayersService,private games:GamesService,private toast:ToastService,private sanitizer:DomSanitizer) { }
@@ -43,18 +47,48 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
       null,null,null,null,
       null,null,null,null,];
 
-    //fill inventory
-    this.player.inventory.forEach((item,index) => {
-      this.minimumInventory[index] = item;
-    });
-
-    //setup context menu
-    this.contextMenu = []
-    this.contextMenu.push({name:"Sell",func:()=>{this.contextMenuVisible = false;this.SellItem();}});
   }
 
   ngOnChanges(): void {
     this.setup();
+  }
+
+  GenerateContextMenu(){
+    if(this.selectedItem == null) return;
+    this.contextMenu = [];
+
+    //if item is equiment
+    if(this.selectedItem.type == ItemType.Equipment && this.selectedItem.equipped == false)
+      this.contextMenu.push({name:"Equip",func:()=>{this.contextMenuVisible = false;this.EquipItem();}});
+    if(this.selectedItem.equipped == true)
+      this.contextMenu.push({name:"Unequip",func:()=>{this.contextMenuVisible = false;this.UnequipItem();}});
+
+    //if item is consumable
+    if(this.selectedItem.type == ItemType.Consumable)
+      this.contextMenu.push({name:"Use",func:()=>{this.contextMenuVisible = false;this.UseItem();}});
+    
+    this.contextMenu.push({name:"Sell",func:()=>{this.contextMenuVisible = false;this.SellItem();}});
+  }
+
+  getInventory():(PlayerItem|null)[]{
+    if(this.player == null) return this.minimumInventory;
+    //reset inventory
+    this.minimumInventory = [null,null,null,null,
+      null,null,null,null,
+      null,null,null,null,];
+    //fill inventory
+    this.player.inventory.forEach((item,index) => {
+      if(!item.equipped){
+        this.minimumInventory[index] = item;
+      };
+    });
+
+    return this.minimumInventory;
+  }
+
+  async RefreshPlayer(){
+    if(this.player == null) return;
+    await this.players.UpdatePlayer(this.player.id,{money:this.player.money}); // to refresh the player in realtime
   }
 
   async SellItem(){
@@ -73,10 +107,87 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
     }
   }
 
-  onToggleContextMenu(event:any,item:PlayerItem|null){
-    if(item == null) return;
+  async EquipItem(){
+    if(this.player == null) return;
+    if(this.selectedItem == null) return;
+
+    this.selectedItem.equipped = !this.selectedItem.equipped;
+    this.selectedItem.inventorySlotPosition = -1;
+    let response = await this.players.ToggleEquipementItem(this.selectedItem.playerItemID,true);
+    if(response.type == ResponseType.Success){
+      await this.RefreshPlayer()
+      this.toast.Show("Item equipped",ResponseType.Success);
+    }
+    console.log("Equip item");
+  }
+
+  async UnequipItem(){
+    if(this.player == null) return;
+    if(this.selectedItem == null) return;
+
+    this.selectedItem.equipped = !this.selectedItem.equipped;
+    //find the first empty slot
+    for(let i = 0; i < this.minimumInventory.length; i++){
+      if(this.minimumInventory[i] == null){
+        this.selectedItem.inventorySlotPosition = i;
+        break;
+      }
+    }
+    let response = await this.players.ToggleEquipementItem(this.selectedItem.playerItemID,false);
+    if(response.type == ResponseType.Success){
+      await this.RefreshPlayer()
+      this.toast.Show("Item unequipped",ResponseType.Success);
+    }
+    else{
+      console.log(response.value);
+      this.toast.Show("Failed to unequip item",ResponseType.Error);
+    }
+
+  }
+
+  async UseItem(){
+    if(this.player == null) return;
+    if(this.selectedItem == null) return;
+
+    let response = await this.players.UseItem(this.player,this.selectedItem);
+    if(response.type == ResponseType.Success){
+      console.log("let's now delete the item",this.selectedItem.playerItemID)
+      await this.players.DeleteItemFromInventory(this.selectedItem.playerItemID);
+      await this.RefreshPlayer()
+      this.toast.Show("Item used",ResponseType.Success);
+    }
+    else{
+      console.log(response.value);
+      this.toast.Show("Failed to use item",ResponseType.Error);
+    }
+  }
+
+  getEquippedItems():(PlayerItem|string)[]{
+    let items: (PlayerItem|string)[] = [];
+    
+    //for each slot, find the item that is equipped
+    this.equippedSlots.forEach((slot) => {
+      let item = this.player?.inventory.find(i => (i.slot == slot) && (i.equipped == true));
+      if(item != undefined){
+        items.push(item);
+      }else{
+        items.push(slot);
+      }
+    });
+    
+    return items;
+  }
+
+  isItemEquipped(slot:PlayerItem|string):boolean{
+    return (typeof slot != "string");
+  }
+
+
+  onToggleContextMenu(event:any,item:PlayerItem|null|string){
+    if(item == null || typeof item =='string') return;
 
     this.selectedItem = item;
+    this.GenerateContextMenu();
     event.preventDefault() //this will disable default action of the context menu
     this.contextMenuVisible = !this.contextMenuVisible;
 
@@ -169,11 +280,5 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
     if(this.player == null) return "0";
     return this.sanitizer.bypassSecurityTrustHtml(FormatMoney(this.player.money,MoneyFormat.FantasyCoins));
   }
-
-  GenerateContextMenu()
-  {
-
-  }
-
   
 }

@@ -2,16 +2,10 @@
     <div class="flex-col left">
         <img class="player-image" [src]="playerPortrait" alt="player portait">
         <div class="equipment">
-            <div><img src="assets/icons/inventory/head.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/earrings.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/necklace.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/ring.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/chest.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/hand.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/leg.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/weapon.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/foot.svg" alt="head slot"></div>
-            <div><img src="assets/icons/inventory/weapon.svg" alt="head slot"></div>
+            <div *ngFor="let item of getEquippedItems()">
+                <img *ngIf="!isItemEquipped(item)" src="assets/icons/inventory/{{item}}.svg" alt="{{item}} slot">
+                <app-item-small-preview  *ngIf="isItemEquipped(item)" (click)="onToggleContextMenu($event,item)" (contextmenu)="onToggleContextMenu($event,item)" [item]="item"></app-item-small-preview>
+            </div>
         </div>
     </div>
     <div class="flex-col right">
@@ -35,11 +29,11 @@
 
         </div>
         <div class="inventory">
-            <div *ngFor="let item of minimumInventory" class="item">
+            <div *ngFor="let item of getInventory()" class="item">
                 <img *ngIf="item==null" src="assets/icons/inventory/empty.svg" alt="">
                 <app-item-small-preview (click)="onToggleContextMenu($event,item)" (contextmenu)="onToggleContextMenu($event,item)" *ngIf="item!=null" [item]="item"></app-item-small-preview>
             </div>
-            <app-context-menu (mouseleave)="contextMenuVisible=false" *ngIf="selectedItem!=null && contextMenuVisible" [menu]="contextMenu" [ngStyle]="contextMenuStyle" class="context-menu" ></app-context-menu>
+            <app-context-menu (mouseleave)="contextMenuVisible=false" *ngIf="contextMenuVisible" [menu]="contextMenu" [ngStyle]="contextMenuStyle" class="context-menu" ></app-context-menu>
         </div>
         <div class="flex-row money" [innerHTML]="PlayerMoney()">
         </div>
