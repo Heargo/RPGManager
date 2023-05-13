@@ -184,8 +184,27 @@ export class PlayersService {
     async DeletePlayer(playerID:string): Promise<Response> {
         let response:Response;
         try{
+            let invdeleted = await this.DeletePlayerInventory(playerID);
+            // don't delete the player if the inventory is not deleted
+            if(invdeleted.type == ResponseType.Error) return invdeleted;
             await this.databases.deleteDocument(environment.DATABASE_ID, environment.PLAYER_COLLECTION_ID, playerID);
             response = {value:'Player deleted',type:ResponseType.Success};
+        }
+        catch(error){
+            console.log(error);
+            response= {value:getErrorMessage(error),type:ResponseType.Error};
+        }
+        return response;
+    }
+
+    async DeletePlayerInventory(playerID:string): Promise<Response> {
+        let response:Response;
+        try{
+            let inv = await this.LoadPlayerInventory(playerID);
+            for (let i = 0; i < inv.length; i++) {
+                await this.databases.deleteDocument(environment.DATABASE_ID, environment.PLAYERITEMS_COLLECTION_ID, inv[i].playerItemID);
+            }
+            response = {value:'Player inventory deleted',type:ResponseType.Success};
         }
         catch(error){
             console.log(error);
