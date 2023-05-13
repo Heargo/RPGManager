@@ -131,15 +131,6 @@ export class GamesService {
                 Permission.update(Role.user(hostID))
             ]
             );
-            
-            // //step 3: add the attributes to the game
-            // attributes.forEach(async (attribute) => {
-            //     let atr = await this.databases.createDocument(DATABASE_ID, ATTRIBUTE_COLLECTION_ID, ID.unique(), {
-            //         name: attribute.name,
-            //         gameID: game.$id,
-            //         baseValue: attribute.baseValue
-            //     });
-            // });
 
             //fake waiting time
             await new Promise(resolve => setTimeout(resolve, 3000));

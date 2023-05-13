@@ -4,7 +4,7 @@
         <div class="equipment">
             <div *ngFor="let item of getEquippedItems()">
                 <img *ngIf="!isItemEquipped(item)" src="assets/icons/inventory/{{item}}.svg" alt="{{item}} slot">
-                <app-item-small-preview  *ngIf="isItemEquipped(item)" (click)="onToggleContextMenu($event,item)" (contextmenu)="onToggleContextMenu($event,item)" [item]="item"></app-item-small-preview>
+                <app-item-small-preview *ngIf="isItemEquipped(item)" (click)="onToggleContextMenu($event,item)" (contextmenu)="onToggleContextMenu($event,item)" [item]="item"></app-item-small-preview>
             </div>
         </div>
     </div>
@@ -37,5 +37,9 @@
         </div>
         <div class="flex-row money" [innerHTML]="PlayerMoney()">
         </div>
+    </div>
+    <div class="item-preview" *ngIf="viewItemPreview && selectedItem ">
+        <app-item-preview [item]="selectedItem" [ngStyle]="previewMenuStyle"></app-item-preview>
+        <img class="close" src="assets/icons/close.svg" alt="" (click)="viewItemPreview=false">
     </div>
 </section>

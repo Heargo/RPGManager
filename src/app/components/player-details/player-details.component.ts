@@ -28,8 +28,10 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
 
   contextMenuVisible = false;
   contextMenuStyle = {};
+  previewMenuStyle = {};
   contextMenu:ContextMenu[] = [];
   selectedItem:PlayerItem|null = null;
+  viewItemPreview = false;
 
   constructor(private players:PlayersService,private games:GamesService,private toast:ToastService,private sanitizer:DomSanitizer) { }
 
@@ -49,6 +51,12 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
 
   }
 
+
+  viewItem(item:PlayerItem|null){
+      this.selectedItem = item;
+      this.viewItemPreview = item!=null;
+  }
+
   ngOnChanges(): void {
     this.setup();
   }
@@ -56,6 +64,8 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
   GenerateContextMenu(){
     if(this.selectedItem == null) return;
     this.contextMenu = [];
+    
+    this.contextMenu.push({name:"View details",func:()=>{this.contextMenuVisible = false;this.viewItem(this.selectedItem);}});
 
     //if item is equiment
     if(this.selectedItem.type == ItemType.Equipment && this.selectedItem.equipped == false)
