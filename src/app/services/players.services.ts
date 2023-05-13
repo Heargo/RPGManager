@@ -7,6 +7,7 @@ import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute, MoneyFormat, Player } from '../models/games';
 import { ToastService } from './toast.services';
 import { Item, PlayerItem } from '../models/items';
+import { toNumber } from '@vue/shared';
 
 @Injectable({
   providedIn: 'root'
@@ -264,10 +265,12 @@ export class PlayersService {
         let inventory = await this.LoadPlayerInventory(playerID);
         //sort inventory by slot position
         inventory.sort((a,b) => (a.inventorySlotPosition > b.inventorySlotPosition) ? 1 : ((b.inventorySlotPosition > a.inventorySlotPosition) ? -1 : 0));
-        
+        //remove equipped items
+        inventory = inventory.filter(item => !item.equipped);
         //find first slot available
         let slot = 0;
         for(let i = 0; i < inventory.length; i++){
+            console.log("slot: "+slot+" inventorySlotPosition: "+inventory[i].inventorySlotPosition+" equipped: "+inventory[i].equipped)
             if(inventory[i].inventorySlotPosition != slot){
                 break;
             }
@@ -314,10 +317,15 @@ export class PlayersService {
         return response;
     }
 
-    async ToggleEquipementItem(playerItemID:string,equip:boolean):Promise<Response>{
+    async ToggleEquipementItem(playerItem:PlayerItem,equip:boolean):Promise<Response>{
         let response:Response;
         try{
-            await this.databases.updateDocument(environment.DATABASE_ID, environment.PLAYERITEMS_COLLECTION_ID, playerItemID, {equipped:equip});
+            let data = {
+                equipped:equip,
+                slotID:playerItem.inventorySlotPosition,
+            }
+            console.log("toggle equip",data)
+            await this.databases.updateDocument(environment.DATABASE_ID, environment.PLAYERITEMS_COLLECTION_ID, playerItem.playerItemID, data);
             response = {value:'Item equipped',type:ResponseType.Success};
         }
         catch(error){
