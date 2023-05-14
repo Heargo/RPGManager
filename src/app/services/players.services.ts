@@ -7,7 +7,6 @@ import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute, MoneyFormat, Player } from '../models/games';
 import { ToastService } from './toast.services';
 import { Item, PlayerItem } from '../models/items';
-import { toNumber } from '@vue/shared';
 
 @Injectable({
   providedIn: 'root'
