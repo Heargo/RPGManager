@@ -7,6 +7,7 @@ import { AuthentificationService } from './auth.services';
 import { Game, GameAttribute, Player } from '../models/games';
 import { ToastService } from './toast.services';
 import { PlayersService } from './players.services';
+import { ItemsService } from './items.services';
 
 
 @Injectable({
@@ -22,7 +23,7 @@ export class GamesService {
     currentGame:Game | null;
     DEFAULT_GAME_PREVIEW = "assets/illustrations/default_icon.png";
 
-    constructor(private auth:AuthentificationService,private toast:ToastService,private playersService:PlayersService) {
+    constructor(private auth:AuthentificationService,private toast:ToastService,private playersService:PlayersService,private items:ItemsService) {
 
         this.client = new Client();
         this.client
@@ -131,15 +132,6 @@ export class GamesService {
                 Permission.update(Role.user(hostID))
             ]
             );
-            
-            // //step 3: add the attributes to the game
-            // attributes.forEach(async (attribute) => {
-            //     let atr = await this.databases.createDocument(DATABASE_ID, ATTRIBUTE_COLLECTION_ID, ID.unique(), {
-            //         name: attribute.name,
-            //         gameID: game.$id,
-            //         baseValue: attribute.baseValue
-            //     });
-            // });
 
             //fake waiting time
             await new Promise(resolve => setTimeout(resolve, 3000));
@@ -165,8 +157,6 @@ export class GamesService {
 
         try{
             this.toast.ShowLoading("Deleting the game");
-            await this.teams.delete(game.teamID);
-            console.log("team deleted")
             await this.databases.deleteDocument(environment.DATABASE_ID, environment.GAME_COLLECTION_ID, game.id);
             console.log("game deleted")
             if(game.image !== this.DEFAULT_GAME_PREVIEW){
@@ -183,6 +173,14 @@ export class GamesService {
             });
             console.log("all players deleted")
 
+            //delete all items
+            let res = await this.DeleteGameItems(game);
+            if(res.type === ResponseType.Error) throw new Error(res.value);
+            console.log("all items deleted")
+
+            await this.teams.delete(game.teamID);
+            console.log("team deleted")
+
             val = "The game has been deleted";
             type = ResponseType.Success;
         }catch(error){
@@ -194,6 +192,22 @@ export class GamesService {
         this.toast.Show(val,type);
         return {value:val,type:type}
     }
+
+    async DeleteGameItems(game:Game): Promise<Response> {
+        let res:Response;
+        try{
+            let items = await this.items.LoadItems(game);
+            items.forEach(async (item) => {
+                let res = await this.items.DeleteItem(item);
+                if(res.type === ResponseType.Error) throw new Error(res.value);
+            });
+            res = {value:"Items deleted",type:ResponseType.Success};
+        }catch(error){
+            res = {value:getErrorMessage(error),type:ResponseType.Error};
+        }
+        return res;
+    }
+
 
     async JoinGame(id:string): Promise<Response> {
 

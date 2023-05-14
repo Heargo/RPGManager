@@ -1,4 +1,5 @@
 @import 'src/app/styles/var.scss';
+@import 'src/app/styles/mixins.scss';
 
 section{
     background-color: $text1-07;
@@ -10,6 +11,32 @@ section{
     align-items: flex-start;
 }
 
+.relative{
+    position: relative;
+}
+
+.item-preview{
+    position: absolute;
+    left:1rem;
+    bottom: 1rem;
+    width: calc(100% - 2rem);
+    max-width: 350px;
+    display: block;
+    z-index: 9;
+    .close{
+        position: absolute;
+        top:.5rem;
+        right:.5rem;
+        z-index: 10;
+        width: 1rem;
+        height: 1rem;
+        cursor: pointer;
+        border:2px solid $text1;
+        border-radius: 50%;
+        padding: .2rem;
+    }
+}
+
 .left{
     width: 30%;
     gap:.5rem;
@@ -19,9 +46,9 @@ section{
 
 .right{
     width: 70%;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-
+    gap: .5rem;
     h3{
         height: 5%;
     }
@@ -38,6 +65,11 @@ section{
     max-width: 200px;
     object-fit: cover;
     border-radius: 5px;
+}
+
+app-item-small-preview{
+    height: 100%;
+    width: 100%;
 }
 
 .equipment{
@@ -63,12 +95,13 @@ section{
             height: 80%;
             width: 80%;
         }
+
     }
 }
 
 .stats{
     width: calc(100% - 1rem);
-    height: 50%;
+    min-height: 25%;
     padding: .5rem 0;
     overflow: scroll;
     padding-right: 1rem;
@@ -139,9 +172,10 @@ section{
     grid-template-columns: repeat(4, 1fr);
     align-items: center;
     justify-items: center;
-    gap: .3rem;   
+    gap: .2rem;   
     width: 90%;
-    height: 40%;
+    min-height: 40%;//calc(100% + 2rem);
+    overflow-y: scroll;
     div{
         aspect-ratio: 1/ 1;
         //height: 100%;
@@ -154,10 +188,6 @@ section{
         background-color: $text1-20;
 
         img{
-            height: 80%;
-            width: 80%;
-        }
-        app-item-small-preview{
             height: 80%;
             width: 80%;
         }

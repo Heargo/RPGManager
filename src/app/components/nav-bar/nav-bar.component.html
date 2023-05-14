@@ -13,8 +13,9 @@
         <a *ngIf="!isConnected()" (click)="phoneMenuOpen=false" routerLink="/signup" routerLinkActive="active" class="black-btn hover-scale">Sign-up</a>
         <a *ngIf="isConnected() && !isInGame()" (click)="phoneMenuOpen=false" routerLink="/games" routerLinkActive="active">My games</a>
         <a *ngIf="isInGame()" (click)="phoneMenuOpen=false" routerLink="/game" routerLinkActive="active">Game</a>
-        <a *ngIf="isMJ()" (click)="phoneMenuOpen=false" routerLinkActive="active">NPCS</a>
+        <!-- <a *ngIf="isMJ()" (click)="phoneMenuOpen=false" routerLinkActive="active">NPCS</a> -->
         <a *ngIf="isMJ()" (click)="phoneMenuOpen=false" routerLink="/items" routerLinkActive="active">Items</a>
+        <a *ngIf="isConnected()" (click)="phoneMenuOpen=false" routerLink="/tools" routerLinkActive="active">Tools</a>
         <a *ngIf="isInGame()" (click)="phoneMenuOpen=false" routerLink="/games" routerLinkActive="active" (click)='ExitGame()' >Exit</a>
         <a *ngIf="isConnected()" (click)="phoneMenuOpen=false" routerLink="/settings" routerLinkActive="active">Settings</a>
     </div>

@@ -13,6 +13,7 @@ import { CreateItemComponent } from './views/create-item/create-item.component';
 import { AttributionsComponent } from './views/attributions/attributions.component';
 import { ContactComponent } from './views/contact/contact.component';
 import { PrivacyPolicyComponent } from './views/privacy-policy/privacy-policy.component';
+import { ToolsComponent } from './views/tools/tools.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'create-player', component: CreatePlayerComponent },
   { path: 'items', component: ItemsComponent},
   { path: 'create-item', component: CreateItemComponent },
+  { path:'tools', component: ToolsComponent},
   { path: 'credits', component: AttributionsComponent},
   { path: 'contact', component: ContactComponent},
   { path: 'privacy-policy', component: PrivacyPolicyComponent},

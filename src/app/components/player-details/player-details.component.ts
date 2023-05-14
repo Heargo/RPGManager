@@ -28,8 +28,10 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
 
   contextMenuVisible = false;
   contextMenuStyle = {};
+  previewMenuStyle = {};
   contextMenu:ContextMenu[] = [];
   selectedItem:PlayerItem|null = null;
+  viewItemPreview = false;
 
   constructor(private players:PlayersService,private games:GamesService,private toast:ToastService,private sanitizer:DomSanitizer) { }
 
@@ -49,6 +51,12 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
 
   }
 
+
+  viewItem(item:PlayerItem|null){
+      this.selectedItem = item;
+      this.viewItemPreview = item!=null;
+  }
+
   ngOnChanges(): void {
     this.setup();
   }
@@ -56,6 +64,8 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
   GenerateContextMenu(){
     if(this.selectedItem == null) return;
     this.contextMenu = [];
+
+    this.contextMenu.push({name:"View details",func:()=>{this.contextMenuVisible = false;this.viewItem(this.selectedItem);}});
 
     //if item is equiment
     if(this.selectedItem.type == ItemType.Equipment && this.selectedItem.equipped == false)
@@ -77,9 +87,9 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
       null,null,null,null,
       null,null,null,null,];
     //fill inventory
-    this.player.inventory.forEach((item,index) => {
+    this.player.inventory.forEach((item) => {
       if(!item.equipped){
-        this.minimumInventory[index] = item;
+        this.minimumInventory[item.inventorySlotPosition] = item;
       };
     });
 
@@ -112,8 +122,7 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
     if(this.selectedItem == null) return;
 
     this.selectedItem.equipped = !this.selectedItem.equipped;
-    this.selectedItem.inventorySlotPosition = -1;
-    let response = await this.players.ToggleEquipementItem(this.selectedItem.playerItemID,true);
+    let response = await this.players.ToggleEquipementItem(this.selectedItem,true);
     if(response.type == ResponseType.Success){
       await this.RefreshPlayer()
       this.toast.Show("Item equipped",ResponseType.Success);
@@ -127,13 +136,16 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
 
     this.selectedItem.equipped = !this.selectedItem.equipped;
     //find the first empty slot
+    let slot=0;
     for(let i = 0; i < this.minimumInventory.length; i++){
       if(this.minimumInventory[i] == null){
-        this.selectedItem.inventorySlotPosition = i;
+        this.selectedItem.inventorySlotPosition = slot;
+        console.log("found empty slot at",slot)
         break;
       }
+      slot++;
     }
-    let response = await this.players.ToggleEquipementItem(this.selectedItem.playerItemID,false);
+    let response = await this.players.ToggleEquipementItem(this.selectedItem,false);
     if(response.type == ResponseType.Success){
       await this.RefreshPlayer()
       this.toast.Show("Item unequipped",ResponseType.Success);
