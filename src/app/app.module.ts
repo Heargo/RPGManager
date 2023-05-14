@@ -32,6 +32,7 @@ import { ContactComponent } from './views/contact/contact.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PrivacyPolicyComponent } from './views/privacy-policy/privacy-policy.component';
 import { ContextMenuComponent } from './components/context-menu/context-menu.component';
+import { ToolsComponent } from './views/tools/tools.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { ContextMenuComponent } from './components/context-menu/context-menu.com
     ItemSmallPreviewComponent,
     ContactComponent,
     PrivacyPolicyComponent,
-    ContextMenuComponent
+    ContextMenuComponent,
+    ToolsComponent
   ],
   imports: [
     BrowserModule,
