@@ -111,10 +111,17 @@ app-item-small-preview{
     p,input{
         font-size: .7rem;
     }
+
+
     .interractables{
-        width: 25%;
+        width: 50%;
         gap:.5rem;
         justify-content: space-between;
+        
+        .green,.red{
+            font-weight: bold;
+            font-style: normal;
+        }
     }
     input{
         width: 4ch;

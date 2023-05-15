@@ -194,6 +194,21 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
     return (typeof slot != "string");
   }
 
+  getAtrTotalValue(attribute:GameAttribute):number{
+    if(this.player == null) return 0;
+    let bonus = attribute.baseValue + attribute.valueAddition;
+    this.player.inventory.forEach(item => {
+      if(item.equipped){
+        item.attributes.forEach(atr=> {
+          if(atr.name == attribute.name){
+            bonus += atr.valueAddition;
+          }
+        });
+      }
+    });
+    return bonus;
+  }
+
 
   onToggleContextMenu(event:any,item:PlayerItem|null|string){
     if(item == null || typeof item =='string') return;
