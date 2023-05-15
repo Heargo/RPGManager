@@ -14,6 +14,7 @@
             <div class="flex-row stat" *ngFor="let atr of player?.attributes">
                 <p> {{atr.name}}</p>  
                 <div class="flex-row interractables">
+                    <p [ngClass]="{'red':getAtrTotalValue(atr)<0,'green':getAtrTotalValue(atr)>0}">{{getAtrTotalValue(atr)>0?'+':''}}{{getAtrTotalValue(atr)}}</p>
                     <input value="{{atr.valueAddition + atr.baseValue}}" (change)="onAttributeChange($event,atr)"> 
                     <img src="assets/icons/pin.svg" alt="">
                 </div>
