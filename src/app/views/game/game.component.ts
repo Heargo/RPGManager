@@ -121,13 +121,13 @@ export class GameComponent implements OnInit, OnDestroy {
     //subscribe to player attributes changes
     this.playerAttributesChangesUnsubscribe = this.players.client.subscribe(subUrlBase+environment.PLAYERATTRIBUTES_COLLECTION_ID+".documents", response => {
       
-      let attribute = this.players.FormatAttributes([response.payload as any])[0];
+      let attribute = response.payload as any; //this.players.FormatAttributes([response.payload as any])[0];
       //if document not related to a player, ignore
-      let attributeOwnerIndex = this.playerList.findIndex(p => p.attributes.find(a => a.id == attribute.id) != undefined);
+      let attributeOwnerIndex = this.playerList.findIndex(p => p.attributes.find(a => a.id == attribute.$id) != undefined);
       if(attributeOwnerIndex == -1) return;
       
       //update player attribute
-      let attributeToUpdateIndex =this.playerList[attributeOwnerIndex].attributes.find(a => a.id == attribute.id);
+      let attributeToUpdateIndex =this.playerList[attributeOwnerIndex].attributes.find(a => a.id == attribute.$id);
       if(attributeToUpdateIndex != undefined){
         attributeToUpdateIndex.valueAddition = attribute.valueAddition;
         attributeToUpdateIndex.value = attribute.value;

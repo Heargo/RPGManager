@@ -16,7 +16,7 @@
                 <div class="flex-row interractables">
                     <p [ngClass]="{'red':getAtrTotalValue(atr)<0,'green':getAtrTotalValue(atr)>0}">{{getAtrTotalValue(atr)>0?'+':''}}{{getAtrTotalValue(atr)}}</p>
                     <input value="{{atr.valueAddition + atr.baseValue}}" (change)="onAttributeChange($event,atr)"> 
-                    <img src="assets/icons/pin.svg" alt="">
+                    <!-- <img src="assets/icons/pin.svg" alt=""> hidden for now as not implemented -->
                 </div>
             </div>
         </div>

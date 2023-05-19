@@ -1,10 +1,10 @@
 <section class="flex-col">
     <div class="flex-row  basic-infos">
         <img [src]="GetImageUrl()" alt="icon image" class="item-preview">
-        <div class="flex-col" >
-            <h3>{{item.name}}</h3>
+        <div class="flex-col items-infos" >
+            <h3 class="item-name">{{item.name}}<span class="item-type"> [{{item.type}}]</span></h3>
+            
             <app-rarity-icon class="rarity" [rarity]="item.rarity"></app-rarity-icon>
-            <p>{{item.type}}</p>
             <div class="flex-row money" [innerHTML]="PlayerMoney()"> </div>
         </div>
     </div>
