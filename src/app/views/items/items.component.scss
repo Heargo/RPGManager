@@ -70,6 +70,13 @@ section{
     align-items: flex-start;
     width: calc(100% - 2rem);
     min-height: calc(100vh - 200px);
+
+    @include width-under(750px){
+        flex-direction: column-reverse;
+        align-items: center;
+        min-height: auto;
+    }
+
     .item-list{
         flex-wrap: wrap;
         justify-content: flex-start;
@@ -84,7 +91,7 @@ section{
     }
     
     app-item-preview{
-        width: 20%;
-        max-width: 300px;
+        width: 100%;
+        max-width: 400px;
     }
 }

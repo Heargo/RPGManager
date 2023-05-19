@@ -23,7 +23,7 @@ export class NewGameComponent {
     id: '',
     name: '',
     description: '',
-    image: 'assets/illustrations/default_icon.png',
+    image: 'assets/illustrations/default_icon.jpg',
     host: '',
     teamID:'',
     attributes: [
@@ -39,7 +39,7 @@ export class NewGameComponent {
     baseStatPoints: 0,
     baseMoney: 0
   };
-  imageFile:File = new File([], 'default_icon.png');
+  imageFile:File = new File([], 'default_icon.jpg');
 
   constructor(private games:GamesService, private sanitizer:DomSanitizer,private router:Router, private toast:ToastService) { }
 

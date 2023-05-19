@@ -21,7 +21,7 @@ export class GamesService {
     teams:Teams;
     functions:Functions;
     currentGame:Game | null;
-    DEFAULT_GAME_PREVIEW = "assets/illustrations/default_icon.png";
+    DEFAULT_GAME_PREVIEW = "assets/illustrations/default_icon.jpg";
 
     constructor(private auth:AuthentificationService,private toast:ToastService,private playersService:PlayersService,private items:ItemsService) {
 
@@ -270,28 +270,37 @@ export class GamesService {
 
     async UploadGameIllustration(image:File): Promise<Response> {
         if(this.currentGame == null ) return {value:"You are not connected to a game",type:ResponseType.Error};
-        let teamID = this.currentGame.teamID;
+        if(image == null) return {value:"No image selected",type:ResponseType.Error};
+        if(BytesToMegaBytes(image.size) > environment.MAX_FILE_SIZE) return {value:"The image is too big (max is "+environment.MAX_FILE_SIZE+"Mbytes)",type:ResponseType.Error};
         
-        //select old file (the one that as team id in permission)
-        let images = await this.storage.listFiles(environment.GAMEILLUSTRATION_STORAGE_ID);
-        console.log("images",images)
-        let oldImage = images.files.find((file) => hasPermission(file.$permissions,Role.team(teamID)));
-        //delete if exists
-        if(oldImage) this.storage.deleteFile(environment.GAMEILLUSTRATION_STORAGE_ID, oldImage.$id);
+        let res:Response;
+        let teamID = this.currentGame.teamID;
+        try{
+            //select old file (the one that as team id in permission)
+            let images = await this.storage.listFiles(environment.GAMEILLUSTRATION_STORAGE_ID);
+            console.log("images",images)
+            let oldImage = images.files.find((file) => hasPermission(file.$permissions,Role.team(teamID)));
+            //delete if exists
+            if(oldImage) await this.storage.deleteFile(environment.GAMEILLUSTRATION_STORAGE_ID, oldImage.$id);
+            
+            let userid = this.auth.GetUserID();
+            //upload the new image
+            await this.storage.createFile(environment.GAMEILLUSTRATION_STORAGE_ID, ID.unique(), image,
+            [
+                Permission.read(Role.team(teamID)),
+                
+                Permission.read(Role.user(userid)),
+                Permission.write(Role.user(userid)),
+                Permission.delete(Role.user(userid)),
+                Permission.update(Role.user(userid))
+            ]);
+            res = {value:"The image has been uploaded",type:ResponseType.Success};
+        }
+        catch(error){
+            res= {value:getErrorMessage(error),type:ResponseType.Error};
+        }
 
-        let userid = this.auth.GetUserID();
-        //upload the new image
-        this.storage.createFile(environment.GAMEILLUSTRATION_STORAGE_ID, ID.unique(), image,
-        [
-            Permission.read(Role.team(teamID)),
-
-            Permission.read(Role.user(userid)),
-            Permission.write(Role.user(userid)),
-            Permission.delete(Role.user(userid)),
-            Permission.update(Role.user(userid))
-        ]);
-
-        return {value:"The image has been uploaded",type:ResponseType.Success}
+        return res
 
     }
 
