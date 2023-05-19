@@ -157,8 +157,6 @@ export class GamesService {
 
         try{
             this.toast.ShowLoading("Deleting the game");
-            await this.databases.deleteDocument(environment.DATABASE_ID, environment.GAME_COLLECTION_ID, game.id);
-            console.log("game deleted")
             if(game.image !== this.DEFAULT_GAME_PREVIEW){
                 await this.storage.deleteFile(environment.GAMEPREVIEWS_STORAGE_ID, game.image);
                 console.log("game preview deleted")
@@ -178,9 +176,13 @@ export class GamesService {
             if(res.type === ResponseType.Error) throw new Error(res.value);
             console.log("all items deleted")
 
+            
             await this.teams.delete(game.teamID);
             console.log("team deleted")
-
+            
+            await this.databases.deleteDocument(environment.DATABASE_ID, environment.GAME_COLLECTION_ID, game.id);
+            console.log("game deleted")
+            
             val = "The game has been deleted";
             type = ResponseType.Success;
         }catch(error){
