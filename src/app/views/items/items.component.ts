@@ -97,6 +97,10 @@ export class ItemsComponent implements OnInit {
   }
 
   async DeleteItem(item:Item){
+    //ask confirm before deleting
+    let confirm = window.confirm("Are you sure you want to delete "+item.name+" ?");
+    if(!confirm) return;
+
     let response = await this.items.DeleteItem(item);
     if(response.type == ResponseType.Success){
       this.toast.Show("Item deleted successfully",ResponseType.Success);
@@ -152,8 +156,8 @@ export class ItemsComponent implements OnInit {
 
     this.contextMenuStyle = {
       "position":"absolute",
-      "left":mousepos.x + "px",
-      "top":mousepos.y + "px"
+      "left":mousepos.x - 10 + "px",
+      "top":mousepos.y - 10 + "px"
     }
   }
 
