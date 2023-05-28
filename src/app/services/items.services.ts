@@ -68,9 +68,9 @@ export class ItemsService {
         try{
             this.toast.ShowLoading("Loading items");
             let result = await this.databases.listDocuments(environment.DATABASE_ID, environment.ITEM_COLLECTION_ID);
-            console.log(result.documents)
+            //console.log(result.documents)
             result.documents.forEach((doc:any) => {
-                if(doc.$permissions.find((perm: string | string[]) => perm.includes(Role.team(game.teamID)))){
+                if(doc.$permissions.find((perm: string | string[]) => (perm.includes(Role.team(game.teamID)) || perm.includes(Role.users()) ))){
                     let item:Item = {
                         id:doc.$id,
                         name:doc.name,
@@ -145,7 +145,8 @@ export class ItemsService {
         try{
             this.toast.ShowLoading("Deleting the item "+item.name);
             await this.databases.deleteDocument(environment.DATABASE_ID, environment.ITEM_COLLECTION_ID, item.id);
-            await this.storage.deleteFile(environment.ITEMS_STORAGE_ID, item.imageID);
+            if(item.imageID != this.DEFAULT_ITEM_ICON)
+                await this.storage.deleteFile(environment.ITEMS_STORAGE_ID, item.imageID);
             response = {value:'Item deleted',type:ResponseType.Success}
         }
         catch(error){

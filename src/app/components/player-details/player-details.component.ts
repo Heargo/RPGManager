@@ -226,8 +226,8 @@ export class PlayerDetailsComponent implements OnInit, OnChanges {
 
     this.contextMenuStyle = {
       "position":"absolute",
-      "left":mousepos.x + "px",
-      "top":mousepos.y + "px"
+      "left":mousepos.x - 10+ "px",
+      "top":mousepos.y - 10 + "px"
     }
   }
 
